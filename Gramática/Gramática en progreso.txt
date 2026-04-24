@@ -1,0 +1,110 @@
+Gramática: SmartHome
+
+Lista de Tokens:
+
+.
+WHEN
+EVERY
+DO
+WHEN
+°C
+%
+=
+
+
+------------------------------------------------------------------------------------------------------------------------
+Lista de Terminales:
+
+numero #float
+valor_mov #bool
+
+
+------------------------------------------------------------------------------------------------------------------------
+Lista de no Terminales:
+
+SIGMA
+ACCION
+CICLO
+CONDICIONAL
+ASIGNACION
+TIEMPO
+CONDICION
+ACTUADOR
+OPCOMPARADOR
+OPLOGICO
+SENSOR
+TEMP
+TIEMPO
+HUMEDAD
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+Lista de reglas:
+
+
+//Comienzo
+<SIGMA> -> <ACCION>
+
+//Acciones posibles en el programa
+<ACCION> -> <CICLO>         | <ACCION> -> <CICLO> <ACCION>
+<ACCION> -> <CONDICIONAL>   | <ACCION> -> <CONDICIONAL> <ACCION>
+<ACCION> -> <ASIGNACION>    | <ACCION> -> <ASIGNACION> <ACCION>
+
+
+//ciclos WHEN y EVERY
+<CICLO> -> WHEN <CONDICION> DO <ACCION> END.
+<CICLO> -> EVERY <TIEMPO> DO <ACCION> END.
+
+//estructura IF.
+<CONDICIONAL> -> IF <CONDICION> THEN <ACCION> END.
+<CONDICIONAL> -> IF <CONDICION> THEN <ACCION> ELSE <ACCION> END.
+
+//asignacion
+<ASIGNACION> -> <ACTUADOR>
+
+//actuadores, van dentro del cuerpo de una acción, se les asigna valores
+<ACTUADOR> -> foco_[a-zA-Z0-9]ATRIBUTOS_FOCO = valor_a
+<ACTUADOR> -> aire_[a-zA-Z0-9]ATRIBUTOS_AIRE = valor_b
+<ACTUADOR> -> persiana_[a-zA-Z0-9]ATRIBUTOS_PERSIANA = valor_b
+<ACTUADOR> -> cerradura_[a-zA-Z0-9]ATRIBUTOS_CERRADURA = valor_c
+<ACTUADOR> -> reloj_[a-zA-Z0-9]ATRIBUTOS_RELOJ = valor_d
+<ACTUADOR> -> altavoz_[a-zA-Z0-9]ATRIBUTOS_ALTAVOZ = valor_e
+<ACTUADOR> -> alarma_[a-zA-Z0-9]ATRIBUTOS_ALARMA = valor_f
+
+//Atributos para cada actuador
+<ATRIBUTOS_FOCO>      -> .estado | .brillo | .color |
+<ATRIBUTOS_AIRE>      -> .estado | .modo | .temp_obj | .temp_act 
+<ATRIBUTOS_PERSIANA>  -> .posición
+<ATRIBUTOS_CERRADURA> -> .estado
+<ATRIBUTOS_RELOJ>     -> .hora | .fecha
+<ATRIBUTOS_ALTAVOZ>   -> .volumen | .mute | .mensaje | .email_notif
+<ATRIBUTOS_ALARMA>    -> .estado | .activada
+
+
+
+//operadores comparadores:
+<OPCOMPARADOR> -> == | != | > | < | >= | <=
+
+//operadores logicos:
+<OPLOGICO> -> AND | OR | NOT
+
+//se usan sensores unicamente para las condiciones
+<CONDICION> -> <SENSOR>
+
+//para extender una condición
+<CONTCONDICION> -> <OPCOMPARADOR> <CONDICION>
+
+//condiciones (Cada sensor tiene su estructura, ejemplo para el sensor de temperatura solo se admiten enteros con la unidad de °C)
+<SENSOR> -> sensor_temp_[a-zA-Z0-9] <OPCOMPARADOR> <TEMP>           | sensor_temp_[a-zA-Z0-9] <OPCOMPARADOR> <TEMP> <CONTCONDICION>
+<SENSOR> -> sensor_movimiento_[a-zA-Z0-9] <OPCOMPARADOR> valor_bool | sensor_movimiento_[a-zA-Z0-9] <OPCOMPARADOR> valor_mov <CONTCONDICION> 
+<SENSOR> -> sensor_luz_[a-zA-Z0-9] <OPCOMPARADOR> numero            | sensor_luz_[a-zA-Z0-9] <OPCOMPARADOR> numero <CONTCONDICION> 
+<SENSOR> -> sensor_humedad_[a-zA-Z0-9] <OPCOMPARADOR> <HUMEDAD>     | sensor_humedad_[a-zA-Z0-9] <OPCOMPARADOR> <HUMEDAD> <CONTCONDICION>
+<SENSOR> -> sensor_humo_[a-zA-Z0-9] <OPCOMPARADOR> valor_bool       | sensor_humo_[a-zA-Z0-9] <OPCOMPARADOR> valor_bool <CONTCONDICION>
+
+
+
+//Estructuras con su unidad que usan los distintos sensores:
+<TEMP> -> numero °C
+<TIEMPO> -> numero h | <TIEMPO> -> numero m | <TIEMPO> -> numero s
+<HUMEDAD> -> numero %
