@@ -1,0 +1,82 @@
+Aca estan las cosas generales que identifique. Etan sujetas a cambios y demas, pero para mas o menos tener una base de que hacer y como yo imagino
+puede funcionar cada operacion
+Los terminales si o si son los atributos y demas, como se definen, eso ya se ve en el Lexer
+
+		TERMINALES
+
+	// caracteres literales
+"
+.
+%
+/
+:
+_
+=
+@
+	// tipos de datos
+booldisp (ON|OFF)
+boolsens (TRUE|FALSE)
+entero (cualquier numero)
+	// Unidades
+°C
+lux
+	// palabras reservadas
+WHEN
+DO
+IF
+THEN
+ELSE
+END
+EVERY
+	//atributos
+temp_act
+temp_obj
+temp_act
+posicion
+brillo
+color
+modo
+fecha
+hora
+foco_nombre
+cerradura_nombre
+aire_nombre
+altavoz_nombre
+alarma_nombre
+mute
+email_notif
+activada
+mensaje
+volumen
+	//sensores
+temp
+humedad
+humo
+luz
+movimiento
+	//otros
+valor
+nombrecorreo
+dominio
+extension
+
+		NO TERMINALES
+
+CORREO
+VALOR
+SENSOR
+TIPOSENSOR
+ATRIBUTO
+REAL
+FECHA
+HORA
+
+		REGLAS
+REAL -> entero.entero
+VALOR -> valorUNIDAD | valor
+UNIDAD -> lux | % | °C
+CORREO -> nombrecorreo@dominio.extension
+SENSOR -> sensor_TIPOSENSOR
+TIPOSENSOR -> temp | humedad | humo | luz | movimiento
+HORA -> entero:entero
+FECHA -> entero/entero/entero	//Estas 2 reglas tomenlas con pinzas. Las hice asi para tenerlo como base, pero dudo sea lo correcto
