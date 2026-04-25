@@ -101,7 +101,9 @@ Lista de reglas:
 <MODO> -> modos | .modo = modos
 
 //Lectura-Escritura Posición
-<Posicion> -> posicion |
+<POSICION> -> posiciones | .posicion = posiciones
+
+
 
 
 //operadores comparadores:
@@ -140,4 +142,4 @@ Preguntas:
 
 -Está bien la manera en que definimos un identificador en cada actuador?
 -Como podemos representar las variables de tipo entero, string, y para strings restringidos como los identificadores
--
+-Qué pasa si hacemos una gramática ambigua?
