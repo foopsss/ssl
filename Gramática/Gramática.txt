@@ -28,8 +28,10 @@ cadena #String
 valor_brillo #int
 estado_bool {ON,OFF}
 modos = {FRIO, CALOR, VENT} 
-identificador
-
+identificador #string
+nombre #string
+dominio #string
+extension #string
 
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -114,8 +116,6 @@ Lista de reglas:
 //Lectura-Escritura TEMP_ACT
 <TEMP_ACT> -> TEMP | .temp_act = TEMP
 
-
-
 //operadores comparadores:
 <OPCOMPARADOR> -> == | != | > | < | >= | <=
 
@@ -129,11 +129,11 @@ Lista de reglas:
 <CONTCONDICION> -> <OPCOMPARADOR> <CONDICION>
 
 //condiciones (Cada sensor tiene su estructura, ejemplo para el sensor de temperatura solo se admiten enteros con la unidad de °C)
-<SENSOR> -> sensor_temp_'identificador' <OPCOMPARADOR> <TEMP>                  | sensor_temp_'identificador' <OPCOMPARADOR> <TEMP> <CONTCONDICION>
-<SENSOR> -> sensor_movimiento_'identificador' <OPCOMPARADOR> valor_bool        | sensor_movimiento_'identificador' <OPCOMPARADOR> valor_mov <CONTCONDICION> 
-<SENSOR> -> sensor_luz_'identificador' <OPCOMPARADOR> numero                   | sensor_luz_'identificador' <OPCOMPARADOR> numero <CONTCONDICION> 
-<SENSOR> -> sensor_humedad_'identificador' <OPCOMPARADOR> <NUM_PORCENTAJE>     | sensor_humedad_'identificador' <OPCOMPARADOR> <NUM_PORCENTAJE> <CONTCONDICION>
-<SENSOR> -> sensor_humo_'identificador' <OPCOMPARADOR> valor_bool              | sensor_humo_'identificador' <OPCOMPARADOR> valor_bool <CONTCONDICION>
+<SENSOR> -> sensor_temp_'identificador' <OPCOMPARADOR> <TEMP>                  | '(' sensor_temp_'identificador'  <OPCOMPARADOR> <TEMP> ')' <OPLOGICO> <CONTCONDICION>
+<SENSOR> -> sensor_movimiento_'identificador' <OPCOMPARADOR> valor_bool        | '(' sensor_movimiento_'identificador' <OPCOMPARADOR> valor_mov ')' <OPLOGICO> <CONTCONDICION> 
+<SENSOR> -> sensor_luz_'identificador' <OPCOMPARADOR> numero                   | '(' sensor_luz_'identificador' <OPCOMPARADOR> numero <OPLOGICO> ')' <CONTCONDICION> 
+<SENSOR> -> sensor_humedad_'identificador' <OPCOMPARADOR> <NUM_PORCENTAJE>     | '(' sensor_humedad_'identificador' <OPCOMPARADOR> <NUM_PORCENTAJE> ')' <OPLOGICO> <CONTCONDICION>
+<SENSOR> -> sensor_humo_'identificador' <OPCOMPARADOR> valor_bool              | '(' sensor_humo_'identificador' <OPCOMPARADOR> valor_bool <OPLOGICO> ')' <CONTCONDICION>
 
 //Estructuras con su unidad que usan los distintos sensores:
 <TEMP> -> numero °C
@@ -142,12 +142,10 @@ Lista de reglas:
 
 
 //Correo
-<CORREO> -> cadena'@'cadena'.'extension
+<CORREO> -> nombre'@'dominio'.'extension
 
 
-
-
---------------------------------
+--------------------------------------------------------------------------------------------------------------------------------
 Preguntas:
 
 -Está bien la manera en que definimos un 'identificador en cada actuador?
