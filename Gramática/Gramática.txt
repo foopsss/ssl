@@ -22,9 +22,14 @@ Lista de Terminales:
 numero #float
 num #int
 valor_mov #bool
-valor_estado {ON,OFF}
-Colores {blanco, rojo, azul}
-cadena [a-zA-Z0-9.%+-]
+valor_estado {ON, OFF}
+colores {blanco, rojo, azul}
+cadena #String
+valor_brillo #int
+estado_bool {ON,OFF}
+modos = {FRIO, CALOR, VENT} 
+identificador
+
 
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -43,8 +48,7 @@ OPLOGICO
 SENSOR
 TEMP
 TIEMPO
-HUMEDAD
-
+NUM_PORCENTAJE
 
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -72,13 +76,13 @@ Lista de reglas:
 <ASIGNACION> -> <ACTUADOR>
 
 //actuadores, van dentro del cuerpo de una acción, se les asigna valores
-<ACTUADOR> -> foco_[a-zA-Z0-9]ATRIBUTOS_FOCO
-<ACTUADOR> -> aire_[a-zA-Z0-9]ATRIBUTOS_AIRE
-<ACTUADOR> -> persiana_[a-zA-Z0-9]ATRIBUTOS_PERSIANA
-<ACTUADOR> -> cerradura_[a-zA-Z0-9]ATRIBUTOS_CERRADURA
-<ACTUADOR> -> reloj_[a-zA-Z0-9]ATRIBUTOS_RELOJ
-<ACTUADOR> -> altavoz_[a-zA-Z0-9]ATRIBUTOS_ALTAVOZ
-<ACTUADOR> -> alarma_[a-zA-Z0-9]ATRIBUTOS_ALARMA
+<ACTUADOR> -> foco_'identificador'ATRIBUTOS_FOCO
+<ACTUADOR> -> aire_'identificador'ATRIBUTOS_AIRE
+<ACTUADOR> -> persiana_'identificador'ATRIBUTOS_PERSIANA
+<ACTUADOR> -> cerradura_'identificador'ATRIBUTOS_CERRADURA
+<ACTUADOR> -> reloj_'identificador'ATRIBUTOS_RELOJ
+<ACTUADOR> -> altavoz_'identificador'ATRIBUTOS_ALTAVOZ
+<ACTUADOR> -> alarma_'identificador'ATRIBUTOS_ALARMA
 
 //Atributos para cada actuador
 <ATRIBUTOS_FOCO>      -> ESTADO | BRILLO | COLOR
@@ -102,10 +106,13 @@ Lista de reglas:
 <MODO> -> modos | .modo = modos
 
 //Lectura-Escritura Posición
-<POSICION> -> posiciones | .posicion = posiciones
+<POSICION> -> posiciones | .posicion = NUM_PORCENTAJE
 
-//Lectura-Escritura 
+//Lectura-Escritura TEMP_OBJ
+<TEMP_OBJ> -> TEMP | .temp_obj = TEMP
 
+//Lectura-Escritura TEMP_ACT
+<TEMP_ACT> -> TEMP | .temp_act = TEMP
 
 
 
@@ -122,16 +129,16 @@ Lista de reglas:
 <CONTCONDICION> -> <OPCOMPARADOR> <CONDICION>
 
 //condiciones (Cada sensor tiene su estructura, ejemplo para el sensor de temperatura solo se admiten enteros con la unidad de °C)
-<SENSOR> -> sensor_temp_[a-zA-Z0-9] <OPCOMPARADOR> <TEMP>           | sensor_temp_[a-zA-Z0-9] <OPCOMPARADOR> <TEMP> <CONTCONDICION>
-<SENSOR> -> sensor_movimiento_[a-zA-Z0-9] <OPCOMPARADOR> valor_bool | sensor_movimiento_[a-zA-Z0-9] <OPCOMPARADOR> valor_mov <CONTCONDICION> 
-<SENSOR> -> sensor_luz_[a-zA-Z0-9] <OPCOMPARADOR> numero            | sensor_luz_[a-zA-Z0-9] <OPCOMPARADOR> numero <CONTCONDICION> 
-<SENSOR> -> sensor_humedad_[a-zA-Z0-9] <OPCOMPARADOR> <HUMEDAD>     | sensor_humedad_[a-zA-Z0-9] <OPCOMPARADOR> <HUMEDAD> <CONTCONDICION>
-<SENSOR> -> sensor_humo_[a-zA-Z0-9] <OPCOMPARADOR> valor_bool       | sensor_humo_[a-zA-Z0-9] <OPCOMPARADOR> valor_bool <CONTCONDICION>
+<SENSOR> -> sensor_temp_'identificador' <OPCOMPARADOR> <TEMP>                  | sensor_temp_'identificador' <OPCOMPARADOR> <TEMP> <CONTCONDICION>
+<SENSOR> -> sensor_movimiento_'identificador' <OPCOMPARADOR> valor_bool        | sensor_movimiento_'identificador' <OPCOMPARADOR> valor_mov <CONTCONDICION> 
+<SENSOR> -> sensor_luz_'identificador' <OPCOMPARADOR> numero                   | sensor_luz_'identificador' <OPCOMPARADOR> numero <CONTCONDICION> 
+<SENSOR> -> sensor_humedad_'identificador' <OPCOMPARADOR> <NUM_PORCENTAJE>     | sensor_humedad_'identificador' <OPCOMPARADOR> <NUM_PORCENTAJE> <CONTCONDICION>
+<SENSOR> -> sensor_humo_'identificador' <OPCOMPARADOR> valor_bool              | sensor_humo_'identificador' <OPCOMPARADOR> valor_bool <CONTCONDICION>
 
 //Estructuras con su unidad que usan los distintos sensores:
 <TEMP> -> numero °C
 <TIEMPO> -> numero h | <TIEMPO> -> numero m 
-<HUMEDAD> -> numero %
+<NUM_PORCENTAJE> -> numero %
 
 
 //Correo
@@ -143,6 +150,6 @@ Lista de reglas:
 --------------------------------
 Preguntas:
 
--Está bien la manera en que definimos un identificador en cada actuador?
--Como podemos representar las variables de tipo entero, string, y para strings restringidos como los identificadores
+-Está bien la manera en que definimos un 'identificador en cada actuador?
+-Como podemos representar las variables de tipo entero, string, y para strings restringidos como los 'identificadores?
 -Qué pasa si hacemos una gramática ambigua?
