@@ -54,9 +54,9 @@ Lista de reglas:
 <SIGMA> -> <ACCION>
 
 //Acciones posibles en el programa
-<ACCION> -> <CICLO>         | <ACCION> -> <CICLO> <ACCION>
-<ACCION> -> <CONDICIONAL>   | <ACCION> -> <CONDICIONAL> <ACCION>
-<ACCION> -> <ASIGNACION>    | <ACCION> -> <ASIGNACION> <ACCION>
+<ACCION> -> <CICLO>         | <CICLO> <ACCION>
+<ACCION> -> <CONDICIONAL>   | <CONDICIONAL> <ACCION>
+<ACCION> -> <ASIGNACION>    | <ASIGNACION> <ACCION>
 
 
 //ciclos WHEN y EVERY
@@ -102,6 +102,8 @@ Lista de reglas:
 
 //Lectura-Escritura Posición
 <POSICION> -> posiciones | .posicion = posiciones
+
+//Lectura-Escritura 
 
 
 
