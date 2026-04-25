@@ -7,6 +7,9 @@ WHEN
 EVERY
 DO
 WHEN
+IF
+THEN
+ELSE
 °C
 %
 =
@@ -16,7 +19,11 @@ WHEN
 Lista de Terminales:
 
 numero #float
+num #int
 valor_mov #bool
+valor_estado {ON,OFF}
+Colores {blanco, rojo, azul}
+cadena [a-zA-Z0-9.%+-]
 
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -64,23 +71,37 @@ Lista de reglas:
 <ASIGNACION> -> <ACTUADOR>
 
 //actuadores, van dentro del cuerpo de una acción, se les asigna valores
-<ACTUADOR> -> foco_[a-zA-Z0-9]ATRIBUTOS_FOCO = valor_a
-<ACTUADOR> -> aire_[a-zA-Z0-9]ATRIBUTOS_AIRE = valor_b
-<ACTUADOR> -> persiana_[a-zA-Z0-9]ATRIBUTOS_PERSIANA = valor_b
-<ACTUADOR> -> cerradura_[a-zA-Z0-9]ATRIBUTOS_CERRADURA = valor_c
-<ACTUADOR> -> reloj_[a-zA-Z0-9]ATRIBUTOS_RELOJ = valor_d
-<ACTUADOR> -> altavoz_[a-zA-Z0-9]ATRIBUTOS_ALTAVOZ = valor_e
-<ACTUADOR> -> alarma_[a-zA-Z0-9]ATRIBUTOS_ALARMA = valor_f
+<ACTUADOR> -> foco_[a-zA-Z0-9]ATRIBUTOS_FOCO
+<ACTUADOR> -> aire_[a-zA-Z0-9]ATRIBUTOS_AIRE
+<ACTUADOR> -> persiana_[a-zA-Z0-9]ATRIBUTOS_PERSIANA
+<ACTUADOR> -> cerradura_[a-zA-Z0-9]ATRIBUTOS_CERRADURA
+<ACTUADOR> -> reloj_[a-zA-Z0-9]ATRIBUTOS_RELOJ
+<ACTUADOR> -> altavoz_[a-zA-Z0-9]ATRIBUTOS_ALTAVOZ
+<ACTUADOR> -> alarma_[a-zA-Z0-9]ATRIBUTOS_ALARMA
 
 //Atributos para cada actuador
-<ATRIBUTOS_FOCO>      -> .estado | .brillo | .color |
-<ATRIBUTOS_AIRE>      -> .estado | .modo | .temp_obj | .temp_act 
-<ATRIBUTOS_PERSIANA>  -> .posición
+<ATRIBUTOS_FOCO>      -> ESTADO | BRILLO | COLOR
+<ATRIBUTOS_AIRE>      -> ESTADO | MODO | TEMP_OBJ | TEMP_ACT 
+<ATRIBUTOS_PERSIANA>  -> POSICION
 <ATRIBUTOS_CERRADURA> -> .estado
 <ATRIBUTOS_RELOJ>     -> .hora | .fecha
 <ATRIBUTOS_ALTAVOZ>   -> .volumen | .mute | .mensaje | .email_notif
 <ATRIBUTOS_ALARMA>    -> .estado | .activada
 
+//Lectura-Escritura Brillo
+<BRILLO> -> valor_brillo | .brillo = valor_brillo 
+
+//Lectura-Escritura Estado
+<ESTADO> -> estado_bool | .estado = estado_bool
+
+//Lectura-Escritura Color
+<COLOR> -> colores | .color = colores
+
+//Lectura-Escritura Modo
+<MODO> -> modos | .modo = modos
+
+//Lectura-Escritura Posición
+<Posicion> -> posicion |
 
 
 //operadores comparadores:
@@ -102,9 +123,21 @@ Lista de reglas:
 <SENSOR> -> sensor_humedad_[a-zA-Z0-9] <OPCOMPARADOR> <HUMEDAD>     | sensor_humedad_[a-zA-Z0-9] <OPCOMPARADOR> <HUMEDAD> <CONTCONDICION>
 <SENSOR> -> sensor_humo_[a-zA-Z0-9] <OPCOMPARADOR> valor_bool       | sensor_humo_[a-zA-Z0-9] <OPCOMPARADOR> valor_bool <CONTCONDICION>
 
-
-
 //Estructuras con su unidad que usan los distintos sensores:
 <TEMP> -> numero °C
-<TIEMPO> -> numero h | <TIEMPO> -> numero m | <TIEMPO> -> numero s
+<TIEMPO> -> numero h | <TIEMPO> -> numero m 
 <HUMEDAD> -> numero %
+
+
+//Correo
+<CORREO> -> cadena'@'cadena'.'extension
+
+
+
+
+--------------------------------
+Preguntas:
+
+-Está bien la manera en que definimos un identificador en cada actuador?
+-Como podemos representar las variables de tipo entero, string, y para strings restringidos como los identificadores
+-
