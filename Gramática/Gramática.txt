@@ -3,7 +3,6 @@ Gramática: SmartHome
 ------------------------------------------------------------------------------------------------------------------------
 Lista de Tokens:
 
-//caracteres literales
 ' '
 '.'
 '"'
@@ -25,10 +24,8 @@ Lista de Tokens:
 'AND'
 'OR'
 'NOT'
-//unidades
 '°C'
 'lux'
-//valores específicos 
 'FRIO'
 'CALOR'
 'VENT'
@@ -37,7 +34,6 @@ Lista de Tokens:
 'azul'
 'ON'
 'OFF'
-//palabras reservadas
 WHEN
 DO
 IF
@@ -45,7 +41,6 @@ THEN
 ELSE
 END
 EVERY
-
 
 ------------------------------------------------------------------------------------------------------------------------
 Lista de Terminales (con su tipo de dato):
