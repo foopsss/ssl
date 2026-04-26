@@ -36,6 +36,7 @@ posicion
 brillo
 color
 modo
+
 fecha
 hora
 foco_nombre

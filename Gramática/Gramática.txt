@@ -1,37 +1,47 @@
+
+
+
 Gramática: SmartHome
 
+------------------------------------------------------------------------------------------------------------------------
 Lista de Tokens:
 
+//caracteres literales
 .
+"
+/
+:
+_
+=
+@
+%
+')'
+'('
+//unidades
+°C
+lux
+//palabras reservadas
 WHEN
-EVERY
 DO
 IF
 THEN
 ELSE
-°C
-%
-=
-@
-lux
-
-
+END
+EVERY
 ------------------------------------------------------------------------------------------------------------------------
 Lista de Terminales:
 
-numero #float
-num #int
+numreal #float
+numint #int
 valor_mov #bool
-valor_estado {ON, OFF}
-colores {blanco, rojo, azul}
+valor_estado = {ON, OFF}
 cadena #String
 valor_brillo #int
-estado_bool {ON,OFF}
-modos = {FRIO, CALOR, VENT} 
 identificador #string
-nombre #string
+nombre_usuario #string
 dominio #string
 extension #string
+texto #string
 
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -42,15 +52,14 @@ ACCION
 CICLO
 CONDICIONAL
 ASIGNACION
-TIEMPO
+TIME
 CONDICION
 ACTUADOR
 OPCOMPARADOR
 OPLOGICO
 SENSOR
 TEMP
-TIEMPO
-NUM_PORCENTAJE
+PERCENT
 
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -65,10 +74,9 @@ Lista de reglas:
 <ACCION> -> <CONDICIONAL>   | <CONDICIONAL> <ACCION>
 <ACCION> -> <ASIGNACION>    | <ASIGNACION> <ACCION>
 
-
 //ciclos WHEN y EVERY
 <CICLO> -> WHEN <CONDICION> DO <ACCION> END.
-<CICLO> -> EVERY <TIEMPO> DO <ACCION> END.
+<CICLO> -> EVERY <TIME> DO <ACCION> END.
 
 //estructura IF.
 <CONDICIONAL> -> IF <CONDICION> THEN <ACCION> END.
@@ -90,37 +98,58 @@ Lista de reglas:
 <ATRIBUTOS_FOCO>      -> ESTADO | BRILLO | COLOR
 <ATRIBUTOS_AIRE>      -> ESTADO | MODO | TEMP_OBJ | TEMP_ACT 
 <ATRIBUTOS_PERSIANA>  -> POSICION
-<ATRIBUTOS_CERRADURA> -> .estado
-<ATRIBUTOS_RELOJ>     -> .hora | .fecha
-<ATRIBUTOS_ALTAVOZ>   -> .volumen | .mute | .mensaje | .email_notif
-<ATRIBUTOS_ALARMA>    -> .estado | .activada
+<ATRIBUTOS_CERRADURA> -> ESTADO
+<ATRIBUTOS_RELOJ>     -> HORA | FECHA
+<ATRIBUTOS_ALTAVOZ>   -> VOLUMEN | MUTE | MENSAJE | EMAIL_NOTIF
+<ATRIBUTOS_ALARMA>    -> ESTADO | ACTIVADA
 
-//Lectura-Escritura Brillo
-<BRILLO> -> valor_brillo | .brillo = valor_brillo 
+//Lectura-Escritura BRILLO
+<BRILLO> -> PERCENT | .brillo = PERCENT 
 
-//Lectura-Escritura Estado
-<ESTADO> -> estado_bool | .estado = estado_bool
+//Lectura-Escritura ESTADO
+<ESTADO> -> ESTADO_BOOL | .estado = ESTADO_BOOL
 
-//Lectura-Escritura Color
-<COLOR> -> colores | .color = colores
+//Lectura-Escritura COLOR
+<COLOR> -> NOMBRE_COLORES | .color = NOMBRE_COLORES
 
-//Lectura-Escritura Modo
-<MODO> -> modos | .modo = modos
+//Lectura-Escritura MODO
+<MODO> -> DISCRETO | .modo = DISCRETO
 
-//Lectura-Escritura Posición
-<POSICION> -> posiciones | .posicion = NUM_PORCENTAJE
+//Lectura-Escritura POSICION
+<POSICION> -> posiciones | .posicion = PERCENT
 
 //Lectura-Escritura TEMP_OBJ
 <TEMP_OBJ> -> TEMP | .temp_obj = TEMP
 
-//Lectura-Escritura TEMP_ACT
-<TEMP_ACT> -> TEMP | .temp_act = TEMP
+//Lectura TEMP_ACT
+<TEMP_ACT> -> TEMP 
+
+//Lectura-Escritura MUTE
+<MUTE> -> ESTADO_BOOL | .mute = ESTADO_BOOL
+
+//Lectura-Escritura ACTIVADA
+<ACTIVADA> -> ESTADO_BOOL | .activada = ESTADO_BOOL
+
+//Lectura-Escritura VOLUMEN
+<VOLUMEN> -> PERCENT | .volumen = PERCENT
+
+//Lectura HORA
+<HORA> -> TIME
+
+//Lectura-Escritura FECHA
+<FECHA> -> DATE
+
+//Lectura-Escritura MENSAJE
+<MENSAJE> -> texto | .mensaje = texto
+
+//Lectura-Escritura EMAIL_NOTIF
+<EMAIL_NOTIF> -> EMAIL | .email_notif = EMAIL
 
 //operadores comparadores:
-<OPCOMPARADOR> -> == | != | > | < | >= | <=
+<OPCOMPARADOR> -> '==' | '!=' | '>' | '<' | '>=' | '<='
 
 //operadores logicos:
-<OPLOGICO> -> AND | OR | NOT
+<OPLOGICO> -> 'AND' | OR' | 'NOT'
 
 //se usan sensores unicamente para las condiciones
 <CONDICION> -> <SENSOR>
@@ -131,24 +160,26 @@ Lista de reglas:
 //condiciones (Cada sensor tiene su estructura, ejemplo para el sensor de temperatura solo se admiten enteros con la unidad de °C)
 <SENSOR> -> sensor_temp_'identificador' <OPCOMPARADOR> <TEMP>                  | '(' sensor_temp_'identificador'  <OPCOMPARADOR> <TEMP> ')' <OPLOGICO> <CONTCONDICION>
 <SENSOR> -> sensor_movimiento_'identificador' <OPCOMPARADOR> valor_bool        | '(' sensor_movimiento_'identificador' <OPCOMPARADOR> valor_mov ')' <OPLOGICO> <CONTCONDICION> 
-<SENSOR> -> sensor_luz_'identificador' <OPCOMPARADOR> numero                   | '(' sensor_luz_'identificador' <OPCOMPARADOR> numero <OPLOGICO> ')' <CONTCONDICION> 
-<SENSOR> -> sensor_humedad_'identificador' <OPCOMPARADOR> <NUM_PORCENTAJE>     | '(' sensor_humedad_'identificador' <OPCOMPARADOR> <NUM_PORCENTAJE> ')' <OPLOGICO> <CONTCONDICION>
+<SENSOR> -> sensor_luz_'identificador' <OPCOMPARADOR> numreal                   | '(' sensor_luz_'identificador' <OPCOMPARADOR> numreal <OPLOGICO> ')' <CONTCONDICION> 
+<SENSOR> -> sensor_humedad_'identificador' <OPCOMPARADOR>int <PERCENT>     | '(' sensor_humedad_'identificador' <OPCOMPARADOR> int<PERCENT> ')' <OPLOGICO> <CONTCONDICION>
 <SENSOR> -> sensor_humo_'identificador' <OPCOMPARADOR> valor_bool              | '(' sensor_humo_'identificador' <OPCOMPARADOR> valor_bool <OPLOGICO> ')' <CONTCONDICION>
 
 //Estructuras con su unidad que usan los distintos sensores:
-<TEMP> -> numero °C
-<TIEMPO> -> numero h | <TIEMPO> -> numero m 
-<NUM_PORCENTAJE> -> numero %
-
-
-//Correo
-<CORREO> -> nombre'@'dominio'.'extension
-
+<TEMP> -> numreal '°C'
+<PERCENT> -> numint '%'
+<TIME> -> numint ':' numint
+<DATE> -> numint / numint / numint
+<EMAIL> -> nombre_usuario '@' #dominio'.'extension
+<DISCRETO> -> 'FRIO' | 'CALOR' | 'VENT' 
+<NOMBRE_COLORES> -> 'blanco' | 'rojo' | 'azul'
+<ESTADO_BOOL> -> 'ON' | 'OFF'
+ 
 
 
 --------------------------------------------------------------------------------------------------------------------------------
 Preguntas:
 
 -Está bien la manera en que definimos un 'identificador en cada actuador?
+-Está bien la manera en que ponemos variables enteras sin acotar? como en la hora, solo usamos variables enteras, se debe acotar para este trabajo (gramática) o en el lexer vemos eso?
 -Como podemos representar las variables de tipo entero, string, y para strings restringidos como los 'identificadores?
 -Qué pasa si hacemos una gramática ambigua?
