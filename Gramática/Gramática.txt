@@ -47,7 +47,6 @@ Lista de Terminales (con su tipo de dato):
 
 numreal #float
 numint #int
-cadena #String
 valor_brillo #int
 identificador #string
 nombre_usuario #string
