@@ -230,13 +230,14 @@ Anotaciones:
 -Agregar: Los sensores pueden o no tener identificador. (Listo)
 -Agregar: Cambiar de lugar al operador NOT de operadores lógicos para que no se permita anidar condiciones con NOT. (listo)
 -Deberíamos poner cada no-terminal entre "<>" para que quede más prolijo?
+-Importante: Añadir el valor a comparar en cada condicion de los actuadores.
 
 --------------------------------------------------------------------------------------------------------------------------------
 Preguntas:
 
--Está bien la manera en que definimos un 'identificador en cada actuador?
+-Está bien la manera en que definimos un 'identificador' en cada actuador?
 -Está bien la manera en que ponemos variables enteras sin acotar? como en la hora, solo usamos variables enteras, se debe acotar para este trabajo (gramática) o en el lexer vemos eso?
--Como podemos representar las variables de tipo entero, string, y para strings restringidos como los 'identificadores?
+-Como podemos representar las variables de tipo entero, string, y para strings restringidos como los 'identificadores'?
 -Es necesario que cada token debe estar entre comillas o entre algún símbolo para diferenciarlo del resto?
 -Por más que en las indicaciones lo diga, podemos tomar a los ciclos como acciones? es decir, para que un bucle pueda ir dentro de un condicional, pudiendo tener en el interior del condicional un bucle o bucles.
 -Qué pasa si hacemos una gramática ambigua?
