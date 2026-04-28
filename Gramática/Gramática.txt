@@ -193,20 +193,20 @@ Lista de reglas:
 
 //condiciones, valores de solo lectura para sensores y actuadores (para sensores solo se los referencia, para actuadores se accede al campo)
 //condicion sensores
-<CONDICION> -> <OPNOT> sensor_temp <IDENTIFICADOR> <OPCOMPARADOR> <TEMP> <CONTCONDICION>
-<CONDICION> -> <OPNOT> sensor_humedad <IDENTIFICADOR> <OPCOMPARADOR> <PERCENT> CONTCONDICION>
-<CONDICION> -> <OPNOT> sensor_luz <IDENTIFICADOR> <OPCOMPARADOR> numreal <CONTCONDICION>
-<CONDICION> -> <OPNOT> sensor_movimiento <IDENTIFICADOR> <OPCOMPARADOR> <BOOL_DISPOSITIVO> <CONTCONDICION
-<CONDICION> -> <OPNOT> sensor_humo <IDENTIFICADOR> <OPCOMPARADOR> <BOOL_DISPOSITIVO> <CONTCONDICION>
+<CONDICION> -> <OPNOT> sensor_temp<IDENTIFICADOR> <OPCOMPARADOR> <TEMP> <CONTCONDICION>
+<CONDICION> -> <OPNOT> sensor_humedad<IDENTIFICADOR> <OPCOMPARADOR> <PERCENT> CONTCONDICION>
+<CONDICION> -> <OPNOT> sensor_luz<IDENTIFICADOR> <OPCOMPARADOR> numreal <CONTCONDICION>
+<CONDICION> -> <OPNOT> sensor_movimiento<IDENTIFICADOR> <OPCOMPARADOR> <BOOL_DISPOSITIVO> <CONTCONDICION
+<CONDICION> -> <OPNOT> sensor_humo<IDENTIFICADOR> <OPCOMPARADOR> <BOOL_DISPOSITIVO> <CONTCONDICION>
 
 //condicion actuadores
-<CONDICION> -> OPNOT foco <IDENTIFICADOR> <ATRIBUTOS_LEC_FOCO> <CONTCONDICION>
-<CONDICION> -> OPNOT aire <IDENTIFICADOR> <ATRIBUTOS_LEC_AIRE> <CONTCONDICION>
-<CONDICION> -> OPNOT persiana <IDENTIFICADOR> <ATRIBUTOS_LEC_PERSIANA> <CONTCONDICION>
-<CONDICION> -> OPNOT cerradura <IDENTIFICADOR> <ATRIBUTOS_LEC_CERRADURA> <CONTCONDICION>
-<CONDICION> -> OPNOT reloj <IDENTIFICADOR> <ATRIBUTOS_LEC_RELOJ> <CONTCONDICION>
-<CONDICION> -> OPNOT altavoz <IDENTIFICADOR> <ATRIBUTOS_LEC_ALTAVOZ> <CONTCONDICION>
-<CONDICION> -> OPNOT alarma <IDENTIFICADOR> <ATRIBUTOS_LEC_ALARMA> <CONTCONDICION>
+<CONDICION> -> OPNOT foco<IDENTIFICADOR> <ATRIBUTOS_LEC_FOCO> <CONTCONDICION>
+<CONDICION> -> OPNOT aire<IDENTIFICADOR> <ATRIBUTOS_LEC_AIRE> <CONTCONDICION>
+<CONDICION> -> OPNOT persiana<IDENTIFICADOR> <ATRIBUTOS_LEC_PERSIANA> <CONTCONDICION>
+<CONDICION> -> OPNOT cerradura<IDENTIFICADOR> <ATRIBUTOS_LEC_CERRADURA> <CONTCONDICION>
+<CONDICION> -> OPNOT reloj<IDENTIFICADOR> <ATRIBUTOS_LEC_RELOJ> <CONTCONDICION>
+<CONDICION> -> OPNOT altavoz<IDENTIFICADOR> <ATRIBUTOS_LEC_ALTAVOZ> <CONTCONDICION>
+<CONDICION> -> OPNOT alarma<IDENTIFICADOR> <ATRIBUTOS_LEC_ALARMA> <CONTCONDICION>
 
 //Atributos para cada actuador
 <ATRIBUTOS_LEC_FOCO>      -> .estado <OPCOMPARADOR> <BOOL_ACTUADOR> | .brillo <OPCOMPARADOR> <PERCENT> | .color <OPCOMPARADOR> <NOMBRE_COLORES>
@@ -235,7 +235,7 @@ Anotaciones:
 
 -Agregar: Los sensores pueden o no tener identificador. (Listo)
 -Agregar: Cambiar de lugar al operador NOT de operadores lógicos para que no se permita anidar condiciones con NOT. (listo)
--Deberíamos poner cada no-terminal entre "<>" para que quede más prolijo?
+-Deberíamos poner cada no-terminal entre "<>" para que quede más prolijo? (puesto provisoriamente)
 -Importante: Añadir el valor a comparar en cada condicion de los actuadores.
 
 --------------------------------------------------------------------------------------------------------------------------------
@@ -245,6 +245,7 @@ Preguntas:
 -Está bien la manera en que ponemos variables enteras sin acotar? como en la hora, solo usamos variables enteras, se debe acotar para este trabajo (gramática) o en el lexer vemos eso?
 -Como podemos representar las variables de tipo entero, string, y para strings restringidos como los 'identificadores'?
 -Los no terminales pueden derivar en variables de tipo string o tipo integer? por ejemplo para el caso del email.
+-Pueden algunos no-terminales derivar en lambda? como el caso del NOT.
 -Es necesario que cada token debe estar entre comillas o entre algún símbolo para diferenciarlo del resto? incluido los espacios en blanco? 
 -Por más que en las indicaciones lo diga, podemos tomar a los ciclos como acciones? es decir, para que un bucle pueda ir dentro de un condicional, pudiendo tener en el interior del condicional un bucle o bucles.
 -Qué pasa si hacemos una gramática ambigua?
