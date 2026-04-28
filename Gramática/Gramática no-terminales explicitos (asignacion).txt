@@ -1,6 +1,10 @@
 Gramática: SmartHome
 
-==============================================================================================================================
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------
 Lista de Tokens:
 
 ' '
@@ -104,14 +108,11 @@ NOMBRE_COLORES
 BOOL_ACTUADOR
 BOOL_DISPOSITIVO
 
-==============================================================================================================================
+------------------------------------------------------------------------------------------------------------------------
 Lista de reglas:
 
 //Comienzo
 <SIGMA> -> <ACCION>
-
-------------------------------------------BLOQUES Y ACCIONES---------------------------------------------
-
 
 //Acciones posibles en el programa
 <ACCION> -> <CICLO>         | <CICLO> <ACCION>
@@ -129,10 +130,6 @@ Lista de reglas:
 //identificador
 <IDENTIFICADOR> -> _'identificador' | λ
 
-
-----------------------------------ASIGNACIONES (ESCRITURA DE ACTUADORES)----------------------------------
-
-
 //asignación de actuadores (escritura), van dentro del cuerpo de una acción, se les asigna valores (actuador.campo = valor)
 <ASIGNACION> -> foco<IDENTIFICADOR> <ATRIBUTOS_ESC_FOCO>
 <ASIGNACION> -> aire<IDENTIFICADOR> <ATRIBUTOS_ESC_AIRE>
@@ -142,16 +139,45 @@ Lista de reglas:
 <ASIGNACION> -> alarma<IDENTIFICADOR> <ATRIBUTOS_ESC_ALARMA>
 
 //Atributos con estructura de escritura para cada actuador
-<ATRIBUTOS_ESC_FOCO>      -> .estado = <BOOL_ACTUADOR>  | .brillo = <PERCENT> | .color = <NOMBRE_COLORES>
-<ATRIBUTOS_ESC_AIRE>      -> .estado = <BOOL_ACTUADOR>  | .modo = <DISCRETO>  | .temp_obj = <TEMP> 
-<ATRIBUTOS_ESC_PERSIANA>  -> .posicion = <PERCENT>
-<ATRIBUTOS_ESC_CERRADURA> -> .estado = <BOOL_ACTUADOR>
-<ATRIBUTOS_ESC_ALTAVOZ>   -> .volumen = <PERCENT> | .mute = <BOOL_ACTUADOR> | .mensaje = texto | .email_notif = <EMAIL>
-<ATRIBUTOS_ESC_ALARMA>    -> .estado = <BOOL_ACTUADOR>  | .activada = <BOOL_ACTUADOR>
+<ATRIBUTOS_ESC_FOCO>      -> <ASIGN_ESTADO>  | <ASIGN_BRILLO> | <ASIGN_COLOR>
+<ATRIBUTOS_ESC_AIRE>      -> <ASIGN_ESTADO>  | <ASIGN_MODO>   | <ASIGN_TEMP_OBJ> 
+<ATRIBUTOS_ESC_PERSIANA>  -> <ASIGN_POSICION>
+<ATRIBUTOS_ESC_CERRADURA> -> <ASIGN_ESTADO>
+<ATRIBUTOS_ESC_ALTAVOZ>   -> <ASIGN_VOLUMEN> | <ASIGN_MUTE> | <ASIGN_MENSAJE> | <ASIGN_EMAIL_NOTIF>
+<ATRIBUTOS_ESC_ALARMA>    -> <ASIGN_ESTADO>  | <ASIGN_ACTIVADA<
 
+//Escritura BRILLO
+<ASIGN_BRILLO> -> .brillo = <PERCENT> 
 
-----------------------------CONDICIONES Y OPERADORES (VAN DENTRO DEL CONDICIONAL)---------------------------
------------------------------SE INCLUYEN ACTUADORES Y SENSORES (SOLO DE LECTURA)----------------------------
+//Escritura ESTADO
+<ASIGN_ESTADO> -> .estado = <BOOL_ACTUADOR>
+
+//Escritura COLOR
+<ASIGN_COLOR> -> .color = <NOMBRE_COLORES>
+
+//Escritura MODO
+<ASIGN_MODO> -> .modo = <DISCRETO>
+
+//Escritura POSICION
+<ASIGN_POSICION> -> .posicion = <PERCENT>
+
+//Escritura TEMP_OBJ
+<ASIGN_TEMP_OBJ> -> .temp_obj = <TEMP>
+
+//Escritura MUTE
+<ASIGN_MUTE> -> .mute = <BOOL_ACTUADOR>
+
+//Escritura ACTIVADA
+<ASIGN_ACTIVADA> -> .activada = <BOOL_ACTUADOR>
+
+//Escritura VOLUMEN
+<ASIGN_VOLUMEN> -> .volumen = <PERCENT>
+
+//Escritura MENSAJE
+<ASIGN_MENSAJE> -> .mensaje = texto
+
+//Escritura EMAIL_NOTIF
+<ASIGN_EMAIL_NOTIF> -> .email_notif = <EMAIL>
 
 //operadores comparadores:
 <OPCOMPARADOR> -> '==' | '!=' | '>' | '<' | '>=' | '<='
@@ -164,7 +190,6 @@ Lista de reglas:
 
 //para extender un condicional con más condiciones anidadas mediante operadores lógicos (AND y OR) o simplemente no continuar
 <CONTCONDICION> -> <OPLOGICO> <CONDICION> | λ
-
 
 //condiciones, valores de solo lectura para sensores y actuadores (para sensores solo se los referencia, para actuadores se accede al campo)
 //condicion sensores
@@ -193,8 +218,6 @@ Lista de reglas:
 <ATRIBUTOS_LEC_ALARMA>    -> .estado <OPCOMPARADOR> <BOOL_ACTUADOR> | .activada <OPCOMPARADOR> <BOOL_ACTUADOR>
 
 
----------------------------------ESTRUCTURAS CON VALORES PARA TIPOS DE DATOS--------------------------------
-
 //Estructuras con su unidad que usan los distintos sensores y/o actuadores:
 <TEMP> -> numreal '°C'
 <PERCENT> -> numint '%'
@@ -208,7 +231,7 @@ Lista de reglas:
 <BOOL_DISPOSITIVO> -> 'TRUE' | 'FALSE'                  //para sensores
 <ILUMINANCIA> -> numint'lux'
 
-==============================================================================================================================
+--------------------------------------------------------------------------------------------------------------------------------
 Anotaciones:
 
 -Agregar: Los sensores pueden o no tener identificador. (Listo)
@@ -224,7 +247,6 @@ Preguntas:
 -Como podemos representar las variables de tipo entero, string, y para strings restringidos como los 'identificadores'?
 -Los no terminales pueden derivar en variables de tipo string o tipo integer? por ejemplo para el caso del email.
 -Pueden algunos no-terminales derivar en lambda? como el caso del NOT.
--Para los comentarios dentro del código, debemos manejarlo en la gramática, o eso es recién en el lexer o parser?.
 -Es necesario que cada token debe estar entre comillas o entre algún símbolo para diferenciarlo del resto? incluido los espacios en blanco? 
 -Por más que en las indicaciones lo diga, podemos tomar a los ciclos como acciones? es decir, para que un bucle pueda ir dentro de un condicional, pudiendo tener en el interior del condicional un bucle o bucles.
 -Qué pasa si hacemos una gramática ambigua?
