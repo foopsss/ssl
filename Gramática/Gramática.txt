@@ -1,5 +1,12 @@
 Gramática: SmartHome
 
+Explicación breve:
+Hemos dividido 
+
+
+
+
+
 ------------------------------------------------------------------------------------------------------------------------
 Lista de Tokens:
 
@@ -127,53 +134,53 @@ Lista de reglas:
 <IDENTIFICADOR> -> _'identificador' | λ
 
 //asignación de actuadores (escritura), van dentro del cuerpo de una acción, se les asigna valores (actuador.campo = valor)
-<ASIGNACION> -> foco IDENTIFICADOR ATRIBUTOS_ESC_FOCO
-<ASIGNACION> -> aire IDENTIFICADOR ATRIBUTOS_ESC_AIRE
-<ASIGNACION> -> persiana IDENTIFICADOR ATRIBUTOS_ESC_PERSIANA
-<ASIGNACION> -> cerradura IDENTIFICADOR ATRIBUTOS_ESC_CERRADURA
-<ASIGNACION> -> altavoz IDENTIFICADOR ATRIBUTOS_ESC_ALTAVOZ
-<ASIGNACION> -> alarma IDENTIFICADOR ATRIBUTOS_ESC_ALARMA
+<ASIGNACION> -> foco<IDENTIFICADOR> <ATRIBUTOS_ESC_FOCO>
+<ASIGNACION> -> aire<IDENTIFICADOR> <ATRIBUTOS_ESC_AIRE>
+<ASIGNACION> -> persiana<IDENTIFICADOR> <ATRIBUTOS_ESC_PERSIANA>
+<ASIGNACION> -> cerradura<IDENTIFICADOR> <ATRIBUTOS_ESC_CERRADURA>
+<ASIGNACION> -> altavoz<IDENTIFICADOR> <ATRIBUTOS_ESC_ALTAVOZ>
+<ASIGNACION> -> alarma<IDENTIFICADOR> <ATRIBUTOS_ESC_ALARMA>
 
 //Atributos con estructura de escritura para cada actuador
-<ATRIBUTOS_ESC_FOCO>      -> ASIGN_ESTADO  | ASIGN_BRILLO | ASIGN_COLOR
-<ATRIBUTOS_ESC_AIRE>      -> ASIGN_ESTADO  | ASIGN_MODO   | ASIGN_TEMP_OBJ 
-<ATRIBUTOS_ESC_PERSIANA>  -> ASIGN_POSICION
-<ATRIBUTOS_ESC_CERRADURA> -> ASIGN_ESTADO
-<ATRIBUTOS_ESC_ALTAVOZ>   -> ASIGN_VOLUMEN | ASIGN_MUTE | ASIGN_MENSAJE | ASIGN_EMAIL_NOTIF
-<ATRIBUTOS_ESC_ALARMA>    -> ASIGN_ESTADO  | ASIGN_ACTIVADA
+<ATRIBUTOS_ESC_FOCO>      -> <ASIGN_ESTADO>  | <ASIGN_BRILLO> | <ASIGN_COLOR>
+<ATRIBUTOS_ESC_AIRE>      -> <ASIGN_ESTADO>  | <ASIGN_MODO>   | <ASIGN_TEMP_OBJ> 
+<ATRIBUTOS_ESC_PERSIANA>  -> <ASIGN_POSICION>
+<ATRIBUTOS_ESC_CERRADURA> -> <ASIGN_ESTADO>
+<ATRIBUTOS_ESC_ALTAVOZ>   -> <ASIGN_VOLUMEN> | <ASIGN_MUTE> | <ASIGN_MENSAJE> | <ASIGN_EMAIL_NOTIF>
+<ATRIBUTOS_ESC_ALARMA>    -> <ASIGN_ESTADO>  | <ASIGN_ACTIVADA<
 
 //Escritura BRILLO
-<ASIGN_BRILLO> -> .brillo = PERCENT 
+<ASIGN_BRILLO> -> .brillo = <PERCENT> 
 
 //Escritura ESTADO
-<ASIGN_ESTADO> -> .estado = BOOL_ACTUADOR
+<ASIGN_ESTADO> -> .estado = <BOOL_ACTUADOR>
 
 //Escritura COLOR
-<ASIGN_COLOR> -> .color = NOMBRE_COLORES
+<ASIGN_COLOR> -> .color = <NOMBRE_COLORES>
 
 //Escritura MODO
-<ASIGN_MODO> -> .modo = DISCRETO
+<ASIGN_MODO> -> .modo = <DISCRETO>
 
 //Escritura POSICION
-<ASIGN_POSICION> -> .posicion = PERCENT
+<ASIGN_POSICION> -> .posicion = <PERCENT>
 
 //Escritura TEMP_OBJ
-<ASIGN_TEMP_OBJ> -> .temp_obj = TEMP
+<ASIGN_TEMP_OBJ> -> .temp_obj = <TEMP>
 
 //Escritura MUTE
-<ASIGN_MUTE> -> .mute = BOOL_ACTUADOR
+<ASIGN_MUTE> -> .mute = <BOOL_ACTUADOR>
 
 //Escritura ACTIVADA
-<ASIGN_ACTIVADA> -> .activada = BOOL_ACTUADOR
+<ASIGN_ACTIVADA> -> .activada = <BOOL_ACTUADOR>
 
 //Escritura VOLUMEN
-<ASIGN_VOLUMEN> -> .volumen = PERCENT
+<ASIGN_VOLUMEN> -> .volumen = <PERCENT>
 
 //Escritura MENSAJE
 <ASIGN_MENSAJE> -> .mensaje = texto
 
 //Escritura EMAIL_NOTIF
-<ASIGN_EMAIL_NOTIF> -> .email_notif = EMAIL
+<ASIGN_EMAIL_NOTIF> -> .email_notif = <EMAIL>
 
 //operadores comparadores:
 <OPCOMPARADOR> -> '==' | '!=' | '>' | '<' | '>=' | '<='
@@ -185,34 +192,36 @@ Lista de reglas:
 <OPNOT> -> 'NOT' | λ
 
 //para extender un condicional con más condiciones anidadas mediante operadores lógicos (AND y OR) o simplemente no continuar
-<CONTCONDICION> -> OPLOGICO CONDICION | λ
+<CONTCONDICION> -> <OPLOGICO> <CONDICION> | λ
 
 //condiciones, valores de solo lectura para sensores y actuadores (para sensores solo se los referencia, para actuadores se accede al campo)
 //condicion sensores
-<CONDICION> -> OPNOT sensor_temp IDENTIFICADOR OPCOMPARADOR TEMP CONTCONDICION
-<CONDICION> -> OPNOT sensor_humedad IDENTIFICADOR OPCOMPARADOR PERCENT CONTCONDICION
-<CONDICION> -> OPNOT sensor_luz IDENTIFICADOR OPCOMPARADOR numreal CONTCONDICION
-<CONDICION> -> OPNOT sensor_movimiento IDENTIFICADOR OPCOMPARADOR BOOL_DISPOSITIVO CONTCONDICION
-<CONDICION> -> OPNOT sensor_humo IDENTIFICADOR OPCOMPARADOR BOOL_DISPOSITIVO CONTCONDICION
+<CONDICION> -> <OPNOT> sensor_temp <IDENTIFICADOR> <OPCOMPARADOR> <TEMP> <CONTCONDICION>
+<CONDICION> -> <OPNOT> sensor_humedad <IDENTIFICADOR> <OPCOMPARADOR> <PERCENT> CONTCONDICION>
+<CONDICION> -> <OPNOT> sensor_luz <IDENTIFICADOR> <OPCOMPARADOR> numreal <CONTCONDICION>
+<CONDICION> -> <OPNOT> sensor_movimiento <IDENTIFICADOR> <OPCOMPARADOR> <BOOL_DISPOSITIVO> <CONTCONDICION
+<CONDICION> -> <OPNOT> sensor_humo <IDENTIFICADOR> <OPCOMPARADOR> <BOOL_DISPOSITIVO> <CONTCONDICION>
+
 //condicion actuadores
-<CONDICION> -> OPNOT foco IDENTIFICADOR ATRIBUTOS_LEC_FOCO OPCOMPARADOR CONTCONDICION
-<CONDICION> -> OPNOT aire IDENTIFICADOR ATRIBUTOS_LEC_AIRE OPCOMPARADOR CONTCONDICION
-<CONDICION> -> OPNOT persiana IDENTIFICADOR ATRIBUTOS_LEC_PERSIANA OPCOMPARADOR CONTCONDICION
-<CONDICION> -> OPNOT cerradura IDENTIFICADOR ATRIBUTOS_LEC_CERRADURA OPCOMPARADOR CONTCONDICION
-<CONDICION> -> OPNOT reloj IDENTIFICADOR ATRIBUTOS_LEC_RELOJ OPCOMPARADOR CONTCONDICION
-<CONDICION> -> OPNOT altavoz IDENTIFICADOR ATRIBUTOS_LEC_ALTAVOZ OPCOMPARADOR CONTCONDICION
-<CONDICION> -> OPNOT alarma IDENTIFICADOR ATRIBUTOS_LEC_ALARMA OPCOMPARADOR CONTCONDICION
+<CONDICION> -> OPNOT foco <IDENTIFICADOR> <ATRIBUTOS_LEC_FOCO> <CONTCONDICION>
+<CONDICION> -> OPNOT aire <IDENTIFICADOR> <ATRIBUTOS_LEC_AIRE> <CONTCONDICION>
+<CONDICION> -> OPNOT persiana <IDENTIFICADOR> <ATRIBUTOS_LEC_PERSIANA> <CONTCONDICION>
+<CONDICION> -> OPNOT cerradura <IDENTIFICADOR> <ATRIBUTOS_LEC_CERRADURA> <CONTCONDICION>
+<CONDICION> -> OPNOT reloj <IDENTIFICADOR> <ATRIBUTOS_LEC_RELOJ> <CONTCONDICION>
+<CONDICION> -> OPNOT altavoz <IDENTIFICADOR> <ATRIBUTOS_LEC_ALTAVOZ> <CONTCONDICION>
+<CONDICION> -> OPNOT alarma <IDENTIFICADOR> <ATRIBUTOS_LEC_ALARMA> <CONTCONDICION>
 
 //Atributos para cada actuador
-<ATRIBUTOS_LEC_FOCO>      -> .estado | .brillo | .color
-<ATRIBUTOS_LEC_AIRE>      -> .estado | .modo | .temp_obj | .temp_act 
-<ATRIBUTOS_LEC_PERSIANA>  -> .posicion
-<ATRIBUTOS_LEC_CERRADURA> -> .estado
-<ATRIBUTOS_LEC_RELOJ>     -> .hora | .fecha
-<ATRIBUTOS_LEC_ALTAVOZ>   -> .volumen | .mute | .mensaje | .email_notif
-<ATRIBUTOS_LEC_ALARMA>    -> .estado | .activada
+<ATRIBUTOS_LEC_FOCO>      -> .estado <OPCOMPARADOR> <BOOL_ACTUADOR> | .brillo <OPCOMPARADOR> <PERCENT> | .color <OPCOMPARADOR> <NOMBRE_COLORES>
+<ATRIBUTOS_LEC_AIRE>      -> .estado <OPCOMPARADOR> <BOOL_ACTUADOR> | .modo <OPCOMPARADOR> DISCRETO | .temp_obj <OPCOMPARADOR> <TEMP> | .temp_act <OPCOMPARADOR> <TEMP> 
+<ATRIBUTOS_LEC_PERSIANA>  -> .posicion <OPCOMPARADOR> <PERCENT>
+<ATRIBUTOS_LEC_CERRADURA> -> .estado <OPCOMPARADOR> <BOOL_ACTUADOR>
+<ATRIBUTOS_LEC_RELOJ>     -> .hora <OPCOMPARADOR> <TIME> | .fecha <OPCOMPARADOR> <DATE>
+<ATRIBUTOS_LEC_ALTAVOZ>   -> .volumen <OPCOMPARADOR> <PERCENT> | .mute <OPCOMPARADOR> <BOOL_ACTUADOR> | .mensaje <OPCOMPARADOR> texto| .email_notif <OPCOMPARADOR> <EMAIL>
+<ATRIBUTOS_LEC_ALARMA>    -> .estado <OPCOMPARADOR> <BOOL_ACTUADOR> | .activada <OPCOMPARADOR> <BOOL_ACTUADOR>
 
-//Estructuras con su unidad que usan los distintos sensores:
+
+//Estructuras con su unidad que usan los distintos sensores y/o actuadores:
 <TEMP> -> numreal '°C'
 <PERCENT> -> numint '%'
 <TIME> -> numint ':' numint                             //para el reloj
@@ -221,8 +230,8 @@ Lista de reglas:
 <EMAIL> -> nombre_usuario '@' #dominio'.'extension
 <DISCRETO> -> 'FRIO' | 'CALOR' | 'VENT' 
 <NOMBRE_COLORES> -> 'blanco' | 'rojo' | 'azul'
-<BOOL_ACTUADOR> -> 'ON' | 'OFF'
-<BOOL_DISPOSITIVO> -> 'TRUE' | 'FALSE'
+<BOOL_ACTUADOR> -> 'ON' | 'OFF'                         //para actuadores
+<BOOL_DISPOSITIVO> -> 'TRUE' | 'FALSE'                  //para sensores
  
 --------------------------------------------------------------------------------------------------------------------------------
 Anotaciones:
@@ -238,6 +247,7 @@ Preguntas:
 -Está bien la manera en que definimos un 'identificador' en cada actuador?
 -Está bien la manera en que ponemos variables enteras sin acotar? como en la hora, solo usamos variables enteras, se debe acotar para este trabajo (gramática) o en el lexer vemos eso?
 -Como podemos representar las variables de tipo entero, string, y para strings restringidos como los 'identificadores'?
--Es necesario que cada token debe estar entre comillas o entre algún símbolo para diferenciarlo del resto?
+-Los no terminales pueden derivar en variables de tipo string o tipo integer? por ejemplo para el caso del email.
+-Es necesario que cada token debe estar entre comillas o entre algún símbolo para diferenciarlo del resto? incluido los espacios en blanco? 
 -Por más que en las indicaciones lo diga, podemos tomar a los ciclos como acciones? es decir, para que un bucle pueda ir dentro de un condicional, pudiendo tener en el interior del condicional un bucle o bucles.
 -Qué pasa si hacemos una gramática ambigua?
