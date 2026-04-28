@@ -216,7 +216,7 @@ Anotaciones:
 -Deberíamos poner cada no-terminal entre "<>" para que quede más prolijo? (puesto provisoriamente)
 -Importante: Añadir el valor a comparar en cada condicion de los actuadores.
 
---------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------
 Preguntas:
 
 -Está bien la manera en que definimos un 'identificador' en cada actuador?
