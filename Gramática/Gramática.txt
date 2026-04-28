@@ -52,7 +52,7 @@ identificador #string
 nombre_usuario #string
 dominio #string
 extension #string
-texto #string
+cadena #string
 
 ------------------------------------------------------------------------------------------------------------------------
 Lista de no Terminales:
@@ -135,12 +135,13 @@ Lista de reglas:
 <ATRIBUTOS_ESC_AIRE>      -> .estado = <BOOL_ACTUADOR>  | .modo = <DISCRETO>  | .temp_obj = <TEMP> 
 <ATRIBUTOS_ESC_PERSIANA>  -> .posicion = <PERCENT>
 <ATRIBUTOS_ESC_CERRADURA> -> .estado = <BOOL_ACTUADOR>
-<ATRIBUTOS_ESC_ALTAVOZ>   -> .volumen = <PERCENT> | .mute = <BOOL_ACTUADOR> | .mensaje = texto | .email_notif = <EMAIL>
+<ATRIBUTOS_ESC_ALTAVOZ>   -> .volumen = <PERCENT> | .mute = <BOOL_ACTUADOR> | .mensaje = <TEXTO> | .email_notif = <EMAIL>
 <ATRIBUTOS_ESC_ALARMA>    -> .estado = <BOOL_ACTUADOR>  | .activada = <BOOL_ACTUADOR>
 
 
 ----------------------------CONDICIONES Y OPERADORES (VAN DENTRO DEL CONDICIONAL)---------------------------
 -----------------------------SE INCLUYEN ACTUADORES Y SENSORES (SOLO DE LECTURA)----------------------------
+
 
 //operadores comparadores:
 <OPCOMPARADOR> -> '==' | '!=' | '>' | '<' | '>=' | '<='
@@ -153,7 +154,6 @@ Lista de reglas:
 
 //para extender un condicional con más condiciones anidadas mediante operadores lógicos (AND y OR) o simplemente no continuar
 <CONTCONDICION> -> <OPLOGICO> <CONDICION> | λ
-
 
 //condiciones, valores de solo lectura para sensores y actuadores (para sensores solo se los referencia, para actuadores se accede al campo)
 //condicion sensores
@@ -178,13 +178,14 @@ Lista de reglas:
 <ATRIBUTOS_LEC_PERSIANA>  -> .posicion <OPCOMPARADOR> <PERCENT>
 <ATRIBUTOS_LEC_CERRADURA> -> .estado <OPCOMPARADOR> <BOOL_ACTUADOR>
 <ATRIBUTOS_LEC_RELOJ>     -> .hora <OPCOMPARADOR> <TIME> | .fecha <OPCOMPARADOR> <DATE>
-<ATRIBUTOS_LEC_ALTAVOZ>   -> .volumen <OPCOMPARADOR> <PERCENT> | .mute <OPCOMPARADOR> <BOOL_ACTUADOR> | .mensaje <OPCOMPARADOR> texto| .email_notif <OPCOMPARADOR> <EMAIL>
+<ATRIBUTOS_LEC_ALTAVOZ>   -> .volumen <OPCOMPARADOR> <PERCENT> | .mute <OPCOMPARADOR> <BOOL_ACTUADOR> | .mensaje <OPCOMPARADOR> <TEXTO>| .email_notif <OPCOMPARADOR> <EMAIL>
 <ATRIBUTOS_LEC_ALARMA>    -> .estado <OPCOMPARADOR> <BOOL_ACTUADOR> | .activada <OPCOMPARADOR> <BOOL_ACTUADOR>
 
 
----------------------------------ESTRUCTURAS CON VALORES PARA TIPOS DE DATOS--------------------------------
+---------------------ESTRUCTURAS CON VALORES PARA TIPOS DE DATOS (TOKENS COMPUESTOS)------------------------
 
 //Estructuras con su unidad que usan los distintos sensores y/o actuadores:
+<TEXTO> -> "cadena"
 <TEMP> -> numreal '°C'
 <PERCENT> -> numint '%'
 <TIME> -> numint ':' numint                             //para el reloj
@@ -202,8 +203,8 @@ Anotaciones:
 
 -Agregar: Los sensores pueden o no tener identificador. (Listo)
 -Agregar: Cambiar de lugar al operador NOT de operadores lógicos para que no se permita anidar condiciones con NOT. (listo)
--Deberíamos poner cada no-terminal entre "<>" para que quede más prolijo? (puesto provisoriamente)
--Importante: Añadir el valor a comparar en cada condicion de los actuadores.
+-Deberíamos poner cada no-terminal entre "<>" para que quede más prolijo? (puesto provisoriamente, discutir en grupo)
+-Importante: Añadir el valor a comparar en cada condicion de los actuadores. (listo)
 
 ------------------------------------------------------------------------------------------------------------------------------
 Preguntas:
