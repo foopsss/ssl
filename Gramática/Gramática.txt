@@ -101,7 +101,6 @@ Lista de reglas:
 
 ------------------------------------------BLOQUES Y ACCIONES---------------------------------------------
 
-
 //Acciones posibles en el programa
 <ACCION> -> <CICLO>         | <CICLO> <ACCION>
 <ACCION> -> <CONDICIONAL>   | <CONDICIONAL> <ACCION>
@@ -118,9 +117,7 @@ Lista de reglas:
 //identificador
 <IDENTIFICADOR> -> _'identificador' | λ
 
-
 ----------------------------------ASIGNACIONES (ESCRITURA DE ACTUADORES)----------------------------------
-
 
 //asignación de actuadores (escritura), van dentro del cuerpo de una acción, se les asigna valores (actuador.campo = valor)
 <ASIGNACION> -> foco<IDENTIFICADOR> <ATRIBUTOS_ESC_FOCO>
@@ -138,10 +135,8 @@ Lista de reglas:
 <ATRIBUTOS_ESC_ALTAVOZ>   -> .volumen = <PERCENT> | .mute = <BOOL_ACTUADOR> | .mensaje = <TEXTO> | .email_notif = <EMAIL>
 <ATRIBUTOS_ESC_ALARMA>    -> .estado = <BOOL_ACTUADOR>  | .activada = <BOOL_ACTUADOR>
 
-
 ----------------------------CONDICIONES Y OPERADORES (VAN DENTRO DEL CONDICIONAL)---------------------------
 -----------------------------SE INCLUYEN ACTUADORES Y SENSORES (SOLO DE LECTURA)----------------------------
-
 
 //operadores comparadores:
 <OPCOMPARADOR> -> '==' | '!=' | '>' | '<' | '>=' | '<='
@@ -181,22 +176,21 @@ Lista de reglas:
 <ATRIBUTOS_LEC_ALTAVOZ>   -> .volumen <OPCOMPARADOR> <PERCENT> | .mute <OPCOMPARADOR> <BOOL_ACTUADOR> | .mensaje <OPCOMPARADOR> <TEXTO>| .email_notif <OPCOMPARADOR> <EMAIL>
 <ATRIBUTOS_LEC_ALARMA>    -> .estado <OPCOMPARADOR> <BOOL_ACTUADOR> | .activada <OPCOMPARADOR> <BOOL_ACTUADOR>
 
-
 ---------------------ESTRUCTURAS CON VALORES PARA TIPOS DE DATOS (TOKENS COMPUESTOS)------------------------
 
 //Estructuras con su unidad que usan los distintos sensores y/o actuadores:
 <TEXTO> -> "cadena"
+<BOOL_ACTUADOR> -> 'ON' | 'OFF'                         //para actuadores
+<BOOL_DISPOSITIVO> -> 'TRUE' | 'FALSE'                  //para sensores
 <TEMP> -> numreal '°C'
 <PERCENT> -> numint '%'
 <TIME> -> numint ':' numint                             //para el reloj
 <TIEMPO> -> numint 'h' | numint 'm' | numint 's'        //para el EVERY
+<ILUMINANCIA> -> numint'lux'
 <DATE> -> numint / numint / numint
 <EMAIL> -> nombre_usuario '@' #dominio'.'extension
 <DISCRETO> -> 'FRIO' | 'CALOR' | 'VENT' 
 <NOMBRE_COLORES> -> 'blanco' | 'rojo' | 'azul'
-<BOOL_ACTUADOR> -> 'ON' | 'OFF'                         //para actuadores
-<BOOL_DISPOSITIVO> -> 'TRUE' | 'FALSE'                  //para sensores
-<ILUMINANCIA> -> numint'lux'
 
 ==============================================================================================================================
 Anotaciones:
@@ -209,12 +203,10 @@ Anotaciones:
 ------------------------------------------------------------------------------------------------------------------------------
 Preguntas:
 
--Está bien la manera en que definimos un 'identificador' en cada actuador?
--Está bien la manera en que ponemos variables enteras sin acotar? como en la hora, solo usamos variables enteras, se debe acotar para este trabajo (gramática) o en el lexer vemos eso?
--Como podemos representar las variables de tipo entero, string, y para strings restringidos como los 'identificadores'?
--Los no terminales pueden derivar en variables de tipo string o tipo integer? por ejemplo para el caso del email.
+-Está bien la manera en que representamos los tokens compuestos como DATE o TIME?
+-Como podemos restringir las variables de tokens compuestos, como el año en DATE, o se omite dicha restricción en la gramática? 
 -Pueden algunos no-terminales derivar en lambda? como el caso del NOT.
--Para los comentarios dentro del código, debemos manejarlo en la gramática, o eso es recién en el lexer o parser?.
+-Para los comentarios dentro del código, debemos manejarlo en la gramática, o eso es luego, al programar?.
 -Es necesario que cada token debe estar entre comillas o entre algún símbolo para diferenciarlo del resto? incluido los espacios en blanco? 
--Por más que en las indicaciones lo diga, podemos tomar a los ciclos como acciones? es decir, para que un bucle pueda ir dentro de un condicional, pudiendo tener en el interior del condicional un bucle o bucles.
+-Por más que en las indicaciones lo diga (pág 8, consigna TPI), podemos tomar a los ciclos como acciones? para anidarlos dentro de otros ciclos o condicionales.
 -Qué pasa si hacemos una gramática ambigua?
