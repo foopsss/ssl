@@ -2,7 +2,19 @@ Gramática: SmartHome
 
 ==============================================================================================================================
 Lista de Tokens:
-
+'.estado'
+'.brillo'
+'.color'
+'.temp_obj'
+'.hora'
+'.modo'
+'.fecha'
+'.posicion'
+'.volumen'
+'.mute'
+'.mensaje'
+'.email_notif'
+'.activada'
 ' '
 '.'
 '"'
@@ -34,13 +46,13 @@ Lista de Tokens:
 'azul'
 'ON'
 'OFF'
-WHEN
-DO
-IF
-THEN
-ELSE
-END
-EVERY
+'WHEN'
+'DO'
+'IF'
+'THEN'
+'ELSE'
+'END'
+'EVERY'
 
 ------------------------------------------------------------------------------------------------------------------------
 Lista de Terminales (con su tipo de dato):
@@ -107,15 +119,15 @@ Lista de reglas:
 <ACCION> -> <ASIGNACION>    | <ASIGNACION> <ACCION>
 
 //ciclos WHEN y EVERY
-<CICLO> -> WHEN <CONDICION> DO <ACCION> END
-<CICLO> -> EVERY <TIEMPO> DO <ACCION> END
+<CICLO> -> 'WHEN' <CONDICION> 'DO' <ACCION> 'END'
+<CICLO> -> 'EVERY' <TIEMPO> 'DO' <ACCION> 'END'
 
 //estructura IF.
-<CONDICIONAL> -> IF <CONDICION> THEN <ACCION> END
-<CONDICIONAL> -> IF <CONDICION> THEN <ACCION> ELSE <ACCION> END
+<CONDICIONAL> -> 'IF' <CONDICION> 'THEN' <ACCION> 'END'
+<CONDICIONAL> -> 'IF' <CONDICION> 'THEN' <ACCION> 'ELSE' <ACCION> 'END'
 
 //identificador
-<IDENTIFICADOR> -> _'identificador' | λ
+<IDENTIFICADOR> -> '_''identificador' | λ
 
 ----------------------------------ASIGNACIONES (ESCRITURA DE ACTUADORES)----------------------------------
 
@@ -128,12 +140,12 @@ Lista de reglas:
 <ASIGNACION> -> alarma<IDENTIFICADOR> <ATRIBUTOS_ESC_ALARMA>
 
 //Atributos con estructura de escritura para cada actuador
-<ATRIBUTOS_ESC_FOCO>      -> .estado = <BOOL_ACTUADOR>  | .brillo = <PERCENT> | .color = <NOMBRE_COLORES>
-<ATRIBUTOS_ESC_AIRE>      -> .estado = <BOOL_ACTUADOR>  | .modo = <DISCRETO>  | .temp_obj = <TEMP> 
-<ATRIBUTOS_ESC_PERSIANA>  -> .posicion = <PERCENT>
-<ATRIBUTOS_ESC_CERRADURA> -> .estado = <BOOL_ACTUADOR>
-<ATRIBUTOS_ESC_ALTAVOZ>   -> .volumen = <PERCENT> | .mute = <BOOL_ACTUADOR> | .mensaje = <TEXTO> | .email_notif = <EMAIL>
-<ATRIBUTOS_ESC_ALARMA>    -> .estado = <BOOL_ACTUADOR>  | .activada = <BOOL_ACTUADOR>
+<ATRIBUTOS_ESC_FOCO>      -> '.estado' = <BOOL_ACTUADOR>  | '.brillo' = <PERCENT> | '.color' = <NOMBRE_COLORES>
+<ATRIBUTOS_ESC_AIRE>      -> '.estado' = <BOOL_ACTUADOR>  | '.modo' = <DISCRETO>  | '.temp_obj' = <TEMP> 
+<ATRIBUTOS_ESC_PERSIANA>  -> '.posicion' = <PERCENT>
+<ATRIBUTOS_ESC_CERRADURA> -> '.estado' = <BOOL_ACTUADOR>
+<ATRIBUTOS_ESC_ALTAVOZ>   -> '.volumen' = <PERCENT> | '.mute' = <BOOL_ACTUADOR> | '.mensaje' = <TEXTO> | '.email_notif' = <EMAIL>
+<ATRIBUTOS_ESC_ALARMA>    -> '.estado' = <BOOL_ACTUADOR>  | '.activada' = <BOOL_ACTUADOR>
 
 ----------------------------CONDICIONES Y OPERADORES (VAN DENTRO DEL CONDICIONAL)---------------------------
 -----------------------------SE INCLUYEN ACTUADORES Y SENSORES (SOLO DE LECTURA)----------------------------
@@ -168,13 +180,13 @@ Lista de reglas:
 <CONDICION> -> OPNOT alarma<IDENTIFICADOR> <ATRIBUTOS_LEC_ALARMA> <CONTCONDICION>
 
 //Atributos para cada actuador
-<ATRIBUTOS_LEC_FOCO>      -> .estado <OPCOMPARADOR> <BOOL_ACTUADOR> | .brillo <OPCOMPARADOR> <PERCENT> | .color <OPCOMPARADOR> <NOMBRE_COLORES>
-<ATRIBUTOS_LEC_AIRE>      -> .estado <OPCOMPARADOR> <BOOL_ACTUADOR> | .modo <OPCOMPARADOR> DISCRETO    | .temp_obj <OPCOMPARADOR> <TEMP> | .temp_act <OPCOMPARADOR> <TEMP> 
-<ATRIBUTOS_LEC_PERSIANA>  -> .posicion <OPCOMPARADOR> <PERCENT>
-<ATRIBUTOS_LEC_CERRADURA> -> .estado <OPCOMPARADOR> <BOOL_ACTUADOR>
-<ATRIBUTOS_LEC_RELOJ>     -> .hora <OPCOMPARADOR> <TIME> | .fecha <OPCOMPARADOR> <DATE>
-<ATRIBUTOS_LEC_ALTAVOZ>   -> .volumen <OPCOMPARADOR> <PERCENT> | .mute <OPCOMPARADOR> <BOOL_ACTUADOR>  | .mensaje <OPCOMPARADOR> <TEXTO> | .email_notif <OPCOMPARADOR> <EMAIL>
-<ATRIBUTOS_LEC_ALARMA>    -> .estado <OPCOMPARADOR> <BOOL_ACTUADOR> | .activada <OPCOMPARADOR> <BOOL_ACTUADOR>
+<ATRIBUTOS_LEC_FOCO>      -> '.estado' <OPCOMPARADOR> <BOOL_ACTUADOR> | '.brillo' <OPCOMPARADOR> <PERCENT> | '.color' <OPCOMPARADOR> <NOMBRE_COLORES>
+<ATRIBUTOS_LEC_AIRE>      -> '.estado' <OPCOMPARADOR> <BOOL_ACTUADOR> | '.modo' <OPCOMPARADOR> DISCRETO    | '.temp_obj' <OPCOMPARADOR> <TEMP> | .temp_act <OPCOMPARADOR> <TEMP> 
+<ATRIBUTOS_LEC_PERSIANA>  -> '.posicion' <OPCOMPARADOR> <PERCENT>
+<ATRIBUTOS_LEC_CERRADURA> -> '.estado' <OPCOMPARADOR> <BOOL_ACTUADOR>
+<ATRIBUTOS_LEC_RELOJ>     -> '.hora' <OPCOMPARADOR> <TIME> | '.fecha' <OPCOMPARADOR> <DATE>
+<ATRIBUTOS_LEC_ALTAVOZ>   -> '.volumen' <OPCOMPARADOR> <PERCENT> | '.mute' <OPCOMPARADOR> <BOOL_ACTUADOR>  | '.mensaje' <OPCOMPARADOR> <TEXTO> | .email_notif <OPCOMPARADOR> <EMAIL>
+<ATRIBUTOS_LEC_ALARMA>    -> '.estado' <OPCOMPARADOR> <BOOL_ACTUADOR> | '.activada' <OPCOMPARADOR> <BOOL_ACTUADOR>
 
 ---------------------ESTRUCTURAS CON VALORES PARA TIPOS DE DATOS (TOKENS COMPUESTOS)------------------------
 
