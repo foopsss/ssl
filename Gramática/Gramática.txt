@@ -215,8 +215,8 @@ Anotaciones:
 ------------------------------------------------------------------------------------------------------------------------------
 Preguntas:
 
--Como podemos restringir las variables de tokens compuestos, como el año en DATE, o se omite dicha restricción en la gramática? 
--Pueden algunos no-terminales derivar en lambda? como el caso del NOT.
 -Es necesario que cada token debe estar entre comillas o entre algún símbolo para diferenciarlo del resto? incluido los espacios en blanco? 
+-Pueden algunos no-terminales derivar en lambda? como el caso del NOT.
 -Por más que en las indicaciones lo diga (pág 8, consigna TPI), podemos tomar a los ciclos como acciones? para anidarlos dentro de otros ciclos o condicionales.
--Qué pasa si hacemos una gramática ambigua?
+-Como podemos restringir las variables de tokens compuestos, como el año en DATE, o se omite dicha restricción en la gramática? 
+-Qué pasa si hacemos una gramática ambigua? o se lo obvia?
