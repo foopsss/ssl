@@ -199,7 +199,7 @@ Lista de reglas:
 <TIME> -> numint ':' numint                             //para el reloj
 <TIEMPO> -> numint 'h' | numint 'm' | numint 's'        //para el EVERY
 <ILUMINANCIA> -> numint'lux'
-<DATE> -> numint / numint / numint
+<DATE> -> numint '/' numint '/' numint
 <EMAIL> -> nombre_usuario '@' #dominio'.'extension
 <DISCRETO> -> 'FRIO' | 'CALOR' | 'VENT' 
 <NOMBRE_COLORES> -> 'blanco' | 'rojo' | 'azul'
@@ -217,6 +217,25 @@ Preguntas:
 
 -Es necesario que cada token debe estar entre comillas o entre algún símbolo para diferenciarlo del resto? incluido los espacios en blanco? 
 -Pueden algunos no-terminales derivar en lambda? como el caso del NOT.
--Por más que en las indicaciones lo diga (pág 8, consigna TPI), podemos tomar a los ciclos como acciones? para anidarlos dentro de otros ciclos o condicionales.
+-Por más que en las indicaciones lo diga (pág 8, consigna TPI), podemos tomar a los ciclos como acciones? para anidarlos dentro de otros ciclos o condicionales. (está bien)
 -Como podemos restringir las variables de tokens compuestos, como el año en DATE, o se omite dicha restricción en la gramática? 
 -Qué pasa si hacemos una gramática ambigua? o se lo obvia?
+-Los espacios los consideramos como tokens?
+
+------------------------------------------------------------------------------------------------------------------------------
+HACER:
+
+-No terminales a minusculas, terminales a mayusculas.
+-Evitar que las producciones deriven en lambda, se puede pero conviene duplicar las producciones.
+-Evitar producciones no generativas.
+-Corregir sensor de movimiento, por ejemplo, dado que no se pueden usar todos los operadores comparadores. Tener en cuenta el tipo de operador logico por el tipo de dato que se va a comparar.
+-Quitar espacios innecesarios, o agregarlos en las otras producciones.
+-Separar los operadores de comparacion, con los operadores de comparacion booleanos -> ==, =!
+
+------------------------------------------------------------------------------------------------------------------------------
+Anotaciones nuevas:
+
+-Varios tipos de datos se podrían borrar, es decir los tokens compuestos.
+-La restriccion de las variables de numreal, etc, se hace en el lexer recien.
+-Los tokens van a ser reconocidos por el analizador léxico.
+-Se puede controlar que por ejemplo, si una regla está mal, por ejemplo 1000% de temperatura, que salga id %, que salga lo que está mal por id.
