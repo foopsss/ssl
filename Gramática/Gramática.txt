@@ -207,6 +207,7 @@ Preguntas:
 -Como podemos restringir las variables de tokens compuestos, como el año en DATE, o se omite dicha restricción en la gramática? 
 -Pueden algunos no-terminales derivar en lambda? como el caso del NOT.
 -Para los comentarios dentro del código, debemos manejarlo en la gramática, o eso es luego, al programar?.
+-El tipo de dato "real" puede ser una variable o debe ser un token compuesto, ej: real= entero.entero?
 -Es necesario que cada token debe estar entre comillas o entre algún símbolo para diferenciarlo del resto? incluido los espacios en blanco? 
 -Por más que en las indicaciones lo diga (pág 8, consigna TPI), podemos tomar a los ciclos como acciones? para anidarlos dentro de otros ciclos o condicionales.
 -Qué pasa si hacemos una gramática ambigua?
