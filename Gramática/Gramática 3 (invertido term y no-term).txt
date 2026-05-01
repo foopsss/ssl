@@ -143,114 +143,114 @@ Lista de reglas:
 //condiciones, valores de solo lectura para sensores y actuadores (para sensores solo se los referencia, para actuadores se accede al campo)
 //tienen 8 variaciones cada uno dado que pueden aparecer o no: opnot, identificador y contcondicion
 //condicion sensores
-<condicion> -> <opnot> SENSOR_TEMP<identificador> <opcomparador> <temp> <contcondicion>
-<condicion> -> <opnot> SENSOR_TEMP<identificador> <opcomparador> <temp>
-<condicion> -> <opnot> SENSOR_TEMP<opcomparador> <temp> <contcondicion>
-<condicion> -> <opnot> SENSOR_TEMP<opcomparador> <temp>
-<condicion> -> SENSOR_TEMP<identificador> <opcomparador> <temp> <contcondicion>
-<condicion> -> SENSOR_TEMP<identificador> <opcomparador> <temp>
-<condicion> -> SENSOR_TEMP<opcomparador> <temp> <contcondicion>
-<condicion> -> SENSOR_TEMP<opcomparador> <temp>
+<condicion> -> <opnot> 'SENSOR_TEMP'<identificador> <opcomparador> <temp> <contcondicion>
+<condicion> -> <opnot> 'SENSOR_TEMP'<identificador> <opcomparador> <temp>
+<condicion> -> <opnot> 'SENSOR_TEMP'<opcomparador> <temp> <contcondicion>
+<condicion> -> <opnot> 'SENSOR_TEMP'<opcomparador> <temp>
+<condicion> -> 'SENSOR_TEMP'<identificador> <opcomparador> <temp> <contcondicion>
+<condicion> -> 'SENSOR_TEMP'<identificador> <opcomparador> <temp>
+<condicion> -> 'SENSOR_TEMP'<opcomparador> <temp> <contcondicion>
+<condicion> -> 'SENSOR_TEMP'<opcomparador> <temp>
 
-<condicion> -> <opnot> SENSOR_HUMEDAD<identificador> <opcomparador> <percent> <contcondicion>
-<condicion> -> <opnot> SENSOR_HUMEDAD<identificador> <opcomparador> <percent>
-<condicion> -> <opnot> SENSOR_HUMEDAD<opcomparador> <percent> <contcondicion>
-<condicion> -> <opnot> SENSOR_HUMEDAD<opcomparador> <percent>
-<condicion> -> SENSOR_HUMEDAD<identificador> <opcomparador> <percent> <contcondicion>
-<condicion> -> SENSOR_HUMEDAD<identificador> <opcomparador> <percent>
-<condicion> -> SENSOR_HUMEDAD<opcomparador> <percent> <contcondicion>
-<condicion> -> SENSOR_HUMEDAD<opcomparador> <percent>
+<condicion> -> <opnot> 'SENSOR_HUMEDAD'<identificador> <opcomparador> <percent> <contcondicion>
+<condicion> -> <opnot> 'SENSOR_HUMEDAD'<identificador> <opcomparador> <percent>
+<condicion> -> <opnot> 'SENSOR_HUMEDAD'<opcomparador> <percent> <contcondicion>
+<condicion> -> <opnot> 'SENSOR_HUMEDAD'<opcomparador> <percent>
+<condicion> -> 'SENSOR_HUMEDAD'<identificador> <opcomparador> <percent> <contcondicion>
+<condicion> -> 'SENSOR_HUMEDAD'<identificador> <opcomparador> <percent>
+<condicion> -> 'SENSOR_HUMEDAD'<opcomparador> <percent> <contcondicion>
+<condicion> -> 'SENSOR_HUMEDAD'<opcomparador> <percent>
 
-<condicion> -> <opnot> SENSOR_LUZ<identificador> <opcomparador> <iluminancia> <contcondicion>
-<condicion> -> <opnot> SENSOR_LUZ<identificador> <opcomparador> <iluminancia>
-<condicion> -> <opnot> SENSOR_LUZ<opcomparador> <iluminancia> <contcondicion>
-<condicion> -> <opnot> SENSOR_LUZ<opcomparador> <iluminancia>
-<condicion> -> SENSOR_LUZ<identificador> <opcomparador> <iluminancia> <contcondicion>
-<condicion> -> SENSOR_LUZ<identificador> <opcomparador> <iluminancia>
-<condicion> -> SENSOR_LUZ<opcomparador> <iluminancia> <contcondicion>
-<condicion> -> SENSOR_LUZ<opcomparador> <iluminancia>
+<condicion> -> <opnot> 'SENSOR_LUZ'<identificador> <opcomparador> <iluminancia> <contcondicion>
+<condicion> -> <opnot> 'SENSOR_LUZ'<identificador> <opcomparador> <iluminancia>
+<condicion> -> <opnot> 'SENSOR_LUZ'<opcomparador> <iluminancia> <contcondicion>
+<condicion> -> <opnot> 'SENSOR_LUZ'<opcomparador> <iluminancia>
+<condicion> -> 'SENSOR_LUZ'<identificador> <opcomparador> <iluminancia> <contcondicion>
+<condicion> -> 'SENSOR_LUZ'<identificador> <opcomparador> <iluminancia>
+<condicion> -> 'SENSOR_LUZ'<opcomparador> <iluminancia> <contcondicion>
+<condicion> -> 'SENSOR_LUZ'<opcomparador> <iluminancia>
 
-<condicion> -> <opnot> SENSOR_MOVIMIENTO<identificador> <opcomparador_bool> <bool_dispositivo> <contcondicion>
-<condicion> -> <opnot> SENSOR_MOVIMIENTO<identificador> <opcomparador_bool> <bool_dispositivo>
-<condicion> -> <opnot> SENSOR_MOVIMIENTO<opcomparador_bool> <bool_dispositivo> <contcondicion>
-<condicion> -> <opnot> SENSOR_MOVIMIENTO<opcomparador_bool> <bool_dispositivo>
-<condicion> -> SENSOR_MOVIMIENTO<identificador> <opcomparador_bool> <bool_dispositivo> <contcondicion>
-<condicion> -> SENSOR_MOVIMIENTO<identificador> <opcomparador_bool> <bool_dispositivo>
-<condicion> -> SENSOR_MOVIMIENTO<opcomparador_bool> <bool_dispositivo> <contcondicion>
-<condicion> -> SENSOR_MOVIMIENTO<opcomparador_bool> <bool_dispositivo>
+<condicion> -> <opnot> 'SENSOR_MOVIMIENTO'<identificador> <opcomparador_bool> <bool_dispositivo> <contcondicion>
+<condicion> -> <opnot> 'SENSOR_MOVIMIENTO'<identificador> <opcomparador_bool> <bool_dispositivo>
+<condicion> -> <opnot> 'SENSOR_MOVIMIENTO'<opcomparador_bool> <bool_dispositivo> <contcondicion>
+<condicion> -> <opnot> 'SENSOR_MOVIMIENTO'<opcomparador_bool> <bool_dispositivo>
+<condicion> -> 'SENSOR_MOVIMIENTO'<identificador> <opcomparador_bool> <bool_dispositivo> <contcondicion>
+<condicion> -> 'SENSOR_MOVIMIENTO'<identificador> <opcomparador_bool> <bool_dispositivo>
+<condicion> -> 'SENSOR_MOVIMIENTO'<opcomparador_bool> <bool_dispositivo> <contcondicion>
+<condicion> -> 'SENSOR_MOVIMIENTO'<opcomparador_bool> <bool_dispositivo>
 
-<condicion> -> <opnot> SENSOR_HUMO<identificador> <opcomparador_bool> <bool_dispositivo> <contcondicion>
-<condicion> -> <opnot> SENSOR_HUMO<identificador> <opcomparador_bool> <bool_dispositivo>
-<condicion> -> <opnot> SENSOR_HUMO<opcomparador_bool> <bool_dispositivo> <contcondicion>
-<condicion> -> <opnot> SENSOR_HUMO<opcomparador_bool> <bool_dispositivo>
-<condicion> -> SENSOR_HUMO<identificador> <opcomparador_bool> <bool_dispositivo> <contcondicion>
-<condicion> -> SENSOR_HUMO<identificador> <opcomparador_bool> <bool_dispositivo>
-<condicion> -> SENSOR_HUMO<opcomparador_bool> <bool_dispositivo> <contcondicion>
-<condicion> -> SENSOR_HUMO<opcomparador_bool> <bool_dispositivo>
+<condicion> -> <opnot> 'SENSOR_HUMO'<identificador> <opcomparador_bool> <bool_dispositivo> <contcondicion>
+<condicion> -> <opnot> 'SENSOR_HUMO'<identificador> <opcomparador_bool> <bool_dispositivo>
+<condicion> -> <opnot> 'SENSOR_HUMO'<opcomparador_bool> <bool_dispositivo> <contcondicion>
+<condicion> -> <opnot> 'SENSOR_HUMO'<opcomparador_bool> <bool_dispositivo>
+<condicion> -> 'SENSOR_HUMO'<identificador> <opcomparador_bool> <bool_dispositivo> <contcondicion>
+<condicion> -> 'SENSOR_HUMO'<identificador> <opcomparador_bool> <bool_dispositivo>
+<condicion> -> 'SENSOR_HUMO'<opcomparador_bool> <bool_dispositivo> <contcondicion>
+<condicion> -> 'SENSOR_HUMO'<opcomparador_bool> <bool_dispositivo>
 
 //condicion actuadores
-<condicion> -> <opnot> FOCO<identificador> <atributos_lec_foco> <contcondicion>
-<condicion> -> <opnot> FOCO<identificador> <atributos_lec_foco>
-<condicion> -> <opnot> FOCO<atributos_lec_foco> <contcondicion>
-<condicion> -> <opnot> FOCO<atributos_lec_foco>
-<condicion> -> FOCO<identificador> <atributos_lec_foco> <contcondicion>
-<condicion> -> FOCO<identificador> <atributos_lec_foco>
-<condicion> -> FOCO<atributos_lec_foco> <contcondicion>
-<condicion> -> FOCO<atributos_lec_foco>
+<condicion> -> <opnot> 'FOCO'<identificador> <atributos_lec_foco> <contcondicion>
+<condicion> -> <opnot> 'FOCO'<identificador> <atributos_lec_foco>
+<condicion> -> <opnot> 'FOCO'<atributos_lec_foco> <contcondicion>
+<condicion> -> <opnot> 'FOCO'<atributos_lec_foco>
+<condicion> -> 'FOCO'<identificador> <atributos_lec_foco> <contcondicion>
+<condicion> -> 'FOCO'<identificador> <atributos_lec_foco>
+<condicion> -> 'FOCO'<atributos_lec_foco> <contcondicion>
+<condicion> -> 'FOCO'<atributos_lec_foco>
 
-<condicion> -> <opnot> AIRE<identificador> <atributos_lec_aire> <contcondicion>
-<condicion> -> <opnot> AIRE<identificador> <atributos_lec_aire>
-<condicion> -> <opnot> AIRE<atributos_lec_aire> <contcondicion>
-<condicion> -> <opnot> AIRE<atributos_lec_aire>
-<condicion> -> AIRE<identificador> <atributos_lec_aire> <contcondicion>
-<condicion> -> AIRE<identificador> <atributos_lec_aire>
-<condicion> -> AIRE<atributos_lec_aire> <contcondicion>
-<condicion> -> AIRE<atributos_lec_aire>
+<condicion> -> <opnot> 'AIRE'<identificador> <atributos_lec_aire> <contcondicion>
+<condicion> -> <opnot> 'AIRE'<identificador> <atributos_lec_aire>
+<condicion> -> <opnot> 'AIRE'<atributos_lec_aire> <contcondicion>
+<condicion> -> <opnot> 'AIRE'<atributos_lec_aire>
+<condicion> -> 'AIRE'<identificador> <atributos_lec_aire> <contcondicion>
+<condicion> -> 'AIRE'<identificador> <atributos_lec_aire>
+<condicion> -> 'AIRE'<atributos_lec_aire> <contcondicion>
+<condicion> -> 'AIRE'<atributos_lec_aire>
 
-<condicion> -> <opnot> PERSIANA<identificador> <atributos_lec_persiana> <contcondicion>
-<condicion> -> <opnot> PERSIANA<identificador> <atributos_lec_persiana>
-<condicion> -> <opnot> PERSIANA<atributos_lec_persiana> <contcondicion>
-<condicion> -> <opnot> PERSIANA<atributos_lec_persiana>
-<condicion> -> PERSIANA<identificador> <atributos_lec_persiana> <contcondicion>
-<condicion> -> PERSIANA<identificador> <atributos_lec_persiana>
-<condicion> -> PERSIANA<atributos_lec_persiana> <contcondicion>
-<condicion> -> PERSIANA<atributos_lec_persiana>
+<condicion> -> <opnot> 'PERSIANA'<identificador> <atributos_lec_persiana> <contcondicion>
+<condicion> -> <opnot> 'PERSIANA'<identificador> <atributos_lec_persiana>
+<condicion> -> <opnot> 'PERSIANA'<atributos_lec_persiana> <contcondicion>
+<condicion> -> <opnot> 'PERSIANA'<atributos_lec_persiana>
+<condicion> -> 'PERSIANA'<identificador> <atributos_lec_persiana> <contcondicion>
+<condicion> -> 'PERSIANA'<identificador> <atributos_lec_persiana>
+<condicion> -> 'PERSIANA'<atributos_lec_persiana> <contcondicion>
+<condicion> -> 'PERSIANA'<atributos_lec_persiana>
 
-<condicion> -> <opnot> CERRADURA<identificador> <atributos_lec_cerradura> <contcondicion>
-<condicion> -> <opnot> CERRADURA<identificador> <atributos_lec_cerradura>
-<condicion> -> <opnot> CERRADURA<atributos_lec_cerradura> <contcondicion>
-<condicion> -> <opnot> CERRADURA<atributos_lec_cerradura>
-<condicion> -> CERRADURA<identificador> <atributos_lec_cerradura> <contcondicion>
-<condicion> -> CERRADURA<identificador> <atributos_lec_cerradura>
-<condicion> -> CERRADURA<atributos_lec_cerradura> <contcondicion>
-<condicion> -> CERRADURA<atributos_lec_cerradura>
+<condicion> -> <opnot> 'CERRADURA'<identificador> <atributos_lec_cerradura> <contcondicion>
+<condicion> -> <opnot> 'CERRADURA'<identificador> <atributos_lec_cerradura>
+<condicion> -> <opnot> 'CERRADURA'<atributos_lec_cerradura> <contcondicion>
+<condicion> -> <opnot> 'CERRADURA'<atributos_lec_cerradura>
+<condicion> -> 'CERRADURA'<identificador> <atributos_lec_cerradura> <contcondicion>
+<condicion> -> 'CERRADURA'<identificador> <atributos_lec_cerradura>
+<condicion> -> 'CERRADURA'<atributos_lec_cerradura> <contcondicion>
+<condicion> -> 'CERRADURA'<atributos_lec_cerradura>
 
-<condicion> -> <opnot> RELOJ<identificador> <atributos_lec_reloj> <contcondicion>
-<condicion> -> <opnot> RELOJ<identificador> <atributos_lec_reloj>
-<condicion> -> <opnot> RELOJ<atributos_lec_reloj>
-<condicion> -> <opnot> RELOJ<atributos_lec_reloj> <contcondicion>
-<condicion> -> RELOJ<identificador> <atributos_lec_reloj> <contcondicion>
-<condicion> -> RELOJ<identificador> <atributos_lec_reloj>
-<condicion> -> RELOJ<atributos_lec_reloj> <contcondicion>
-<condicion> -> RELOJ<atributos_lec_reloj>
+<condicion> -> <opnot> 'RELOJ'<identificador> <atributos_lec_reloj> <contcondicion>
+<condicion> -> <opnot> 'RELOJ'<identificador> <atributos_lec_reloj>
+<condicion> -> <opnot> 'RELOJ'<atributos_lec_reloj>
+<condicion> -> <opnot> 'RELOJ'<atributos_lec_reloj> <contcondicion>
+<condicion> -> 'RELOJ'<identificador> <atributos_lec_reloj> <contcondicion>
+<condicion> -> 'RELOJ'<identificador> <atributos_lec_reloj>
+<condicion> -> 'RELOJ'<atributos_lec_reloj> <contcondicion>
+<condicion> -> 'RELOJ'<atributos_lec_reloj>
 
-<condicion> -> <opnot> ALTAVOZ<identificador> <atributos_lec_altavoz> <contcondicion>
-<condicion> -> <opnot> ALTAVOZ<identificador> <atributos_lec_altavoz>
-<condicion> -> <opnot> ALTAVOZ<atributos_lec_altavoz> <contcondicion>
-<condicion> -> <opnot> ALTAVOZ<atributos_lec_altavoz>
-<condicion> -> ALTAVOZ<identificador> <atributos_lec_altavoz> <contcondicion>
-<condicion> -> ALTAVOZ<identificador> <atributos_lec_altavoz>
-<condicion> -> ALTAVOZ<atributos_lec_altavoz> <contcondicion>
-<condicion> -> ALTAVOZ<atributos_lec_altavoz>
+<condicion> -> <opnot> 'ALTAVOZ'<identificador> <atributos_lec_altavoz> <contcondicion>
+<condicion> -> <opnot> 'ALTAVOZ'<identificador> <atributos_lec_altavoz>
+<condicion> -> <opnot> 'ALTAVOZ'<atributos_lec_altavoz> <contcondicion>
+<condicion> -> <opnot> 'ALTAVOZ'<atributos_lec_altavoz>
+<condicion> -> 'ALTAVOZ'<identificador> <atributos_lec_altavoz> <contcondicion>
+<condicion> -> 'ALTAVOZ'<identificador> <atributos_lec_altavoz>
+<condicion> -> 'ALTAVOZ'<atributos_lec_altavoz> <contcondicion>
+<condicion> -> 'ALTAVOZ'<atributos_lec_altavoz>
 
-<condicion> -> <opnot> ALARMA<identificador> <atributos_lec_alarma> <contcondicion>
-<condicion> -> <opnot> ALARMA<identificador> <atributos_lec_alarma>
-<condicion> -> <opnot> ALARMA<atributos_lec_alarma> <contcondicion>
-<condicion> -> <opnot> ALARMA<atributos_lec_alarma>
-<condicion> -> ALARMA<identificador> <atributos_lec_alarma> <contcondicion>
-<condicion> -> ALARMA<identificador> <atributos_lec_alarma>
-<condicion> -> ALARMA<atributos_lec_alarma> <contcondicion>
-<condicion> -> ALARMA<atributos_lec_alarma>
+<condicion> -> <opnot> 'ALARMA'<identificador> <atributos_lec_alarma> <contcondicion>
+<condicion> -> <opnot> 'ALARMA'<identificador> <atributos_lec_alarma>
+<condicion> -> <opnot> 'ALARMA'<atributos_lec_alarma> <contcondicion>
+<condicion> -> <opnot> 'ALARMA'<atributos_lec_alarma>
+<condicion> -> 'ALARMA'<identificador> <atributos_lec_alarma> <contcondicion>
+<condicion> -> 'ALARMA'<identificador> <atributos_lec_alarma>
+<condicion> -> 'ALARMA'<atributos_lec_alarma> <contcondicion>
+<condicion> -> 'ALARMA'<atributos_lec_alarma>
 
 //Atributos para cada actuador
 <atributos_lec_foco>      -> '.ESTADO' <opcomparador_bool> <bool_actuador> | '.BRILLO' <opcomparador> <percent> | '.COLOR' <opcomparador> <nombre_colores>
