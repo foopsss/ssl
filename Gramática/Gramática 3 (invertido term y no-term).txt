@@ -141,6 +141,7 @@ Lista de reglas:
 <contcondicion> -> <oplogico> <condicion>
 
 //condiciones, valores de solo lectura para sensores y actuadores (para sensores solo se los referencia, para actuadores se accede al campo)
+//tienen 8 variaciones cada uno dado que pueden aparecer o no: opnot, identificador y contcondicion
 //condicion sensores
 <condicion> -> <opnot> SENSOR_TEMP<identificador> <opcomparador> <temp> <contcondicion>
 <condicion> -> <opnot> SENSOR_TEMP<identificador> <opcomparador> <temp>

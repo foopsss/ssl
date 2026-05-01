@@ -6,6 +6,7 @@ Lista de Tokens:
 '.brillo'
 '.color'
 '.temp_obj'
+'.temp_act'
 '.hora'
 '.modo'
 '.fecha'
