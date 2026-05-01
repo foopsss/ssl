@@ -257,7 +257,7 @@ Lista de reglas:
 <atributos_lec_aire>      -> '.ESTADO' <opcomparador_bool> <bool_actuador> | '.MODO' <opcomparador> <discreto>  | '.TEMP_OBJ' <opcomparador> <temp> | '.TEMP_ACT' <opcomparador> <temp> 
 <atributos_lec_persiana>  -> '.POSICION' <opcomparador> <percent>
 <atributos_lec_cerradura> -> '.ESTADO' <opcomparador_bool> <bool_actuador>
-<atributos_lec_reloj>     -> '.HORA' <opcomparador> <TIME> | '.FECHA' <opcomparador> <date>
+<atributos_lec_reloj>     -> '.HORA' <opcomparador> <HORA> | '.FECHA' <opcomparador> <date>
 <atributos_lec_altavoz>   -> '.VOLUMEN' <opcomparador> <percent> | '.MUTE' <opcomparador_bool> <bool_actuador>  | '.MENSAJE' <opcomparador> <texto> | '.EMAIL_NOTIF' <opcomparador> <mail>
 <atributos_lec_alarma>    -> '.ESTADO' <opcomparador_bool> <bool_actuador> | '.ACTIVADA' <opcomparador_BOOL> <bool_actuador>
 
@@ -308,7 +308,7 @@ Analizador lexico:
 <BOOL_DISPOSITIVO> -> 'TRUE' | 'FALSE'                  //para sensores
 <TEMP> -> numreal '°C'
 <PERCENT> -> numint '%'
-<TIME> -> numint ':' numint                             //para el reloj
+<HORA> -> numint ':' numint                             //para el reloj
 <TIEMPO> -> numint 'h' | numint 'm' | numint 's'        //para el EVERY
 <ILUMINANCIA> -> numint'lux'
 <DATE> -> numint '/' numint '/' numint
@@ -414,7 +414,7 @@ oplogico
 opnot
 temp
 percent
-time
+hora
 tiempo
 date
 email
