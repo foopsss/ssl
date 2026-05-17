@@ -482,5 +482,9 @@ Al igual que con los sensores e identificadores para actuadores y para sensores.
 como "palabras reservadas"?
 
 -Qué cosas deben ser ID y qué cosas deben ser Tokens con reglas (como las mencionadas anteriormente)?
+
+-Se pueden hacer reglas genéricas para atributos? es decir: .PALABRA ya es un atributo?
+
+-Hace falta hacer reglas para los actuadores o se los trata como ID? es decir para aire_, foco_, etc.
 '''
 
