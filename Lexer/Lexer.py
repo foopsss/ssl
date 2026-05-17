@@ -237,9 +237,7 @@ def selecOpcion():
 
 
 def dibujarMenu():
-    limpiarPantalla()
-    recuadrosMenu()
-    dibujoCarpeta()
+    limpiarPantalla();recuadrosMenu();dibujoCarpeta()
     gotoxy(27,18)
     console.print(f"[bold italic u grey70]Analizador léxico (Lexer)[/bold italic u grey70]")
     gotoxy(29,21)
@@ -251,6 +249,55 @@ def dibujarMenu():
     gotoxy(xMaxPantalla-32,yMaxPantalla-2)
     console.print(f"[bold italic dim white]BinaryBuilders. UTN FRRe. 2026[/bold italic dim white]")
     gotoxy(1,yMaxPantalla+1)
+
+
+#def leerArchivosEnDirectorio():
+#    global datos
+#    global nombreArch
+#    global lecturaDeArch
+#    ruta_script = os.path.dirname(os.path.abspath(__file__))
+#    todos_los_archivos = os.listdir(ruta_script)
+#    lista_txt = [archivo for archivo in todos_los_archivos if archivo.endswith('.txt')]
+#    
+#    limpiarPantalla()
+#                
+#    if not lista_txt:
+#        limpiarPantalla()
+#        print("No se encontraron archivos .txt en el directorio del ejecutable.")
+#        print("Cierre el programa, coloque archivos .txt e inicie de nuevo...")
+#        msvcrt.getch()
+#        #limpiarPantalla()
+#        sys.exit()
+#        return None
+#
+#    else:
+#        dibujoCarpeta(); recuadrosMenu()
+#        while True:
+#            gotoxy(29, 18)
+#            console.print(f"[bold italic dim white]Seleccione un archivo...[/bold italic dim white]")
+#            gotoxy(xMaxPantalla-32, yMaxPantalla-2)
+#            console.print(f"[bold italic dim white]BinaryBuilders. UTN FRRe. 2026[/bold italic dim white]")
+#            
+#            x = 25; y = 21
+#            for i in range(len(lista_txt)):
+#                gotoxy(x, y+i)
+#                print(f"\033[32m{f'{i+1} - {lista_txt[i]}'.center(30)}\033[0m")
+#
+#            op = int(selecOpcion())-1
+#            if op in range(len(lista_txt)):
+#   
+#                nombreArch = lista_txt[op]
+#                if os.path.exists(nombreArch):
+#                    with open(nombreArch, "r", encoding="utf-8") as f:
+#                        datos = f.read()
+#                        limpiarPantalla();recuadrosMenu();dibujoCarpeta()
+#                        gotoxy(29, 19)
+#                        console.print(f"[bold italic dim white]Archivo leido con éxito[/bold italic dim white]")
+#                        gotoxy(17, 20)
+#                        console.print(f"[bold italic dim white]Presione una tecla para iniciar análisis léxico...[/bold italic dim white]")
+#                        msvcrt.getch()
+#                        lecturaDeArch=True
+#                        return False
 
 def leerArchivosEnDirectorio():
     global datos
@@ -267,9 +314,7 @@ def leerArchivosEnDirectorio():
         print("No se encontraron archivos .txt en el directorio del ejecutable.")
         print("Cierre el programa, coloque archivos .txt e inicie de nuevo...")
         msvcrt.getch()
-        #limpiarPantalla()
         sys.exit()
-        return None
 
     else:
         dibujoCarpeta(); recuadrosMenu()
@@ -284,23 +329,24 @@ def leerArchivosEnDirectorio():
                 gotoxy(x, y+i)
                 print(f"\033[32m{f'{i+1} - {lista_txt[i]}'.center(30)}\033[0m")
 
-            op = int(selecOpcion())-1
+            op = int(selecOpcion()) - 1
             if op in range(len(lista_txt)):
-    
-                nombreArch = lista_txt[op]
+                # Combinamos la ruta de la carpeta con el nombre del archivo suelto
+                nombreArch = os.path.join(ruta_script, lista_txt[op])
+                
                 if os.path.exists(nombreArch):
                     with open(nombreArch, "r", encoding="utf-8") as f:
                         datos = f.read()
-                        limpiarPantalla()
-                        recuadrosMenu()
-                        dibujoCarpeta()
+                        limpiarPantalla(); recuadrosMenu(); dibujoCarpeta()
                         gotoxy(29, 19)
                         console.print(f"[bold italic dim white]Archivo leido con éxito[/bold italic dim white]")
                         gotoxy(17, 20)
                         console.print(f"[bold italic dim white]Presione una tecla para iniciar análisis léxico...[/bold italic dim white]")
                         msvcrt.getch()
-                        lecturaDeArch=True
-                        return False
+                        lecturaDeArch = True
+                        return True # <-- Cambiado a True para avisar que terminó bien
+
+
                     
 def escribirProgramaManualmente():
     global datos
@@ -358,8 +404,6 @@ iniciarLexer()
 
 -Leer la consigna para ver qué se pide que haga el lexer...
 
-
-
 -Agregar tokens BOOLEANOS (TRUE,FALSE,ON,OFF, quitarlos de palabras clave
 y diferenciarlos), PUNTO (.) y operadores lógicos AND,OR,NOT, posiblemente
 agregar también identificadores que empiezan con '_'. Al igual que con todas
@@ -372,8 +416,6 @@ las demás reglas que están en palabras reservadas (las que tienen anotaciones)
 -(posiblemente haya que hacer esto) Para los tokens compuestos, 
 En las expresiones regulares, para las partes que tienen "opciones"
 poner las opciones más largas primero (para que el lexer no se confunda).
-
-
 
 -Estos tokens se deben tener:
 
@@ -441,3 +483,4 @@ como "palabras reservadas"?
 
 -Qué cosas deben ser ID y qué cosas deben ser Tokens con reglas (como las mencionadas anteriormente)?
 '''
+
