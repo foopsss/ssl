@@ -344,7 +344,7 @@ def leerArchivosEnDirectorio():
                         console.print(f"[bold italic dim white]Presione una tecla para iniciar análisis léxico...[/bold italic dim white]")
                         msvcrt.getch()
                         lecturaDeArch = True
-                        return True # <-- Cambiado a True para avisar que terminó bien
+                        return True
 
 
                     
