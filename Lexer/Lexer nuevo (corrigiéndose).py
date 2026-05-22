@@ -476,6 +476,8 @@ iniciarLexer()
 
 -Hacer que analice el ejemplo del TPI.
 
+-(detalle menor) mejorar la técnica de centrado al mostrar opciones de archivos .txt
+
 #-------------------------PREGUNTAS------------------------#
 
 -Preguntar si está bien la desición tomada para el atributo .estado
