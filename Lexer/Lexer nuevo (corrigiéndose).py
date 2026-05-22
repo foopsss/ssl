@@ -571,6 +571,14 @@ Puntuación
 
 #Aclaración para atributo de cerradura (no lo definimos)
 #No colocamos atributo de cerradura en esta instancia, ya que tiene solo ".estado" y ese atributo es compartido por 4 actuadores más.
+
+#Notamos que hay varias cosas mal escritas por ejemplo:
+- foco_patio.color = blue //debería ser "azul" en vez de "blue"
+- altavoz_comedor.email = bomberos@smart-home.com.ar //debería ser atributo ".email_notif" en vez de ".email"
+y tomamos como que está mal escrito por parte del usuario que esscribió el programa, dado
+que en la consigna esos datos están escritos de otra forma, el lexer en este caso
+tomará como que son tokens de tipo "ID", pero en el analizador léxico se detendría el parsing.
+
 '''
 
 
