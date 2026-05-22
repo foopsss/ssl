@@ -86,7 +86,7 @@ def t_ATRIBUTOS_RELOJ(t):
     return t
 
 def t_ATRIBUTOS_ALTAVOZ(t):
-    r'(.VOLUMEN|.MUTE|.MENSAJE|.EMAIL_NOTIF)'
+    r'(.VOLUMEN|.MUTE|.MENSAJE|.EMAIL_NOTIF)' 
     return t
 
 def t_ATRIBUTOS_ALARMA(t):
@@ -164,7 +164,10 @@ def t_ACTUADOR_ALARMA(t):
 
 #<TEXTO> -> "cadena"
 def t_TEXTO(t):
-    r'".*?"'
+    #r'"[^"\n]*"' queda esta regla por si la que está actualmente da problemas
+    #la nueva regla lo que hace es que acepta estas comillas dobles extrañas 
+    #también “” que están en el ejemplo del TPI.
+    r'[\"“][^\"\n“”]*[\"”]'
     return t
 
 #<BOOL_DISPOSITIVO> -> 'TRUE' | 'FALSE' 
@@ -428,7 +431,7 @@ def iniciarLexer():
 
     lexer.input(datos)
     if lecturaDeArch: #lectura de arch sirve solo para indicar qué archivo se está analizando actualmente al seleccionar analisis mediante .txt, sin que tire error si se escribe el programa manualmente
-        print("Analisis de archivo: ",nombreArch); print()
+        print("Analisis léxico del archivo: ",nombreArch); print()
     
     #Tokenizar el programa (hacer analisis lexico a toda la cadena del programa y encontrar tokens)
     while True:
@@ -497,6 +500,14 @@ asocia el tipo "ID".
 también está en el ejemplo del TPI
 IF sensor_temp_int > 26°C THEN
 
+-También pasa que en esta línea no debe ir color blue, solo azul, lo va a detectar como ID a blue,
+pero supongo que está hecho al propósito.
+foco_patio.color = blue
+
+-Lo mismo pasa acá, el atributo es .email_notif, no debería ser: ".email" 
+pero también supongo que está mal al propósito.
+altavoz_comedor.email = bomberos@smart-home.com.ar
+
 
 #---------TODOS LOS TOKENS SOLICITADOS EN EL TPI-----------#
 
@@ -553,15 +564,13 @@ Puntuación
 #Aclaración de la regla (función) para el atributo de estado "t_ATRIBUTO_ESTADO". El mismo compartido entre: foco, aire, cerradura, alarma.
 #Por ello lo colocamos como una sola regla, dado que, si incluimos la cadena ".ESTADO" en las
 #demás funciones (reglas para reconocer cada token) el lexer va a decir que es del tipo de token
-#de la función que primero esté definida que reconozca ese token, es decir, siempre dirá que es: "atributo_foco"
+#de la función que primero esté definida que reconozca ese token, es decir, siempre dirá que es: "atributo_foco".
 
 #Aclaracion para atributos de aire (t_ATRIBUTOS_AIRE)
-#también irían atributos de temperatura, pero por ahora con la regla de "temperatura" es suficiente para cubrir ambos atributos
+#también irían atributos de temperatura, pero por ahora con la regla de "temperatura" es suficiente para cubrir ambos atributos.
 
 #Aclaración para atributo de cerradura (no lo definimos)
-#No colocamos atributo de cerradura en esta instancia, ya que tiene solo ".estado" y ese atributo es compartido por 4 actuadores más
-
-
+#No colocamos atributo de cerradura en esta instancia, ya que tiene solo ".estado" y ese atributo es compartido por 4 actuadores más.
 '''
 
 
