@@ -8,6 +8,7 @@ import ply.lex as lex
 #=================================================================================
 #=====================================LEXER=======================================
 #=================================================================================
+
 tokens = [
     'ATRIBUTOS_FOCO',
     'ATRIBUTOS_AIRE',
@@ -347,14 +348,12 @@ def dibujoCarpeta():
     gotoxy(25,15)
     print('########################======')
 
-
 def selecOpcion():
     num = {'1','2','3','4','5','8','9','0'}
     while True:
         tecla = msvcrt.getch().decode('utf-8')    
         if tecla in num:
             return tecla
-
 
 def dibujarMenu():
     limpiarPantalla();recuadrosMenu();dibujoCarpeta()
@@ -369,7 +368,6 @@ def dibujarMenu():
     gotoxy(xMaxPantalla-32,yMaxPantalla-2)
     console.print(f"[bold italic dim white]BinaryBuilders. UTN FRRe. 2026[/bold italic dim white]")
     gotoxy(1,yMaxPantalla+1)
-
 
 def leerArchivosEnDirectorio():
     global datos
@@ -450,7 +448,6 @@ def iniciarLexer():
     #mostrar_cursor()
     msvcrt.getch()
     
-
 #=================================================================================
 #=============================COMIENZO DEL PROGRAMA===============================
 #=================================================================================
@@ -458,7 +455,6 @@ def iniciarLexer():
 lexer = lex.lex(reflags=re.IGNORECASE)   #Construir el lexer
 xMaxPantalla = 80; yMaxPantalla = 30; console = Console() #Solo para mostrar títulos con estilos
 ocultar_cursor(); dibujarMenu()
-
 
 if selecOpcion() == '1':
     leerArchivosEnDirectorio()
