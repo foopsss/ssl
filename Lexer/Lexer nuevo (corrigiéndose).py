@@ -577,7 +577,7 @@ Puntuación
 - altavoz_comedor.email = bomberos@smart-home.com.ar //debería ser atributo ".email_notif" en vez de ".email"
 y tomamos como que está mal escrito por parte del usuario que esscribió el programa, dado
 que en la consigna esos datos están escritos de otra forma, el lexer en este caso
-tomará como que son tokens de tipo "ID", pero en el analizador léxico se detendría el parsing.
+tomará como que son tokens de tipo "ID", pero en el analizador sintáctico se detendría el parsing.
 
 '''
 
