@@ -478,7 +478,7 @@ iniciarLexer()
 
 -Preguntar si está bien la desición tomada para el atributo .estado
 
--Para este punto del TPI no es necesario diferenciar operadores comparadores
+-(pregunta para el parser) Para este punto del TPI no es necesario diferenciar operadores comparadores
 generales y booleanos? (mismo caso que para las distintas temperatura)
 
 #-------------------PARA DISCUTIR EN GRUPO-----------------#
