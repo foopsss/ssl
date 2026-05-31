@@ -419,10 +419,23 @@ def leerArchivosEnDirectorio():
 def escribirProgramaManualmente():
     global datos
     global lecturaDeArch
+
+    lines = []
+    str_input = ""
+
     limpiarPantalla()
     mostrar_cursor()
-    console.print(f"[bold italic dim white]Escriba el programa manualmente a continuación:[/bold italic dim white]")
-    datos = input()
+    console.print(f"[bold italic dim white]Escriba el programa manualmente a continuación.[/bold italic dim white]")
+    console.print(f"[bold italic dim white]Cuando no quiera introducir más líneas, escriba 'FIN' y presione Enter.[/bold italic dim white]")
+
+    while str_input != "FIN":
+        str_input = input()
+        lines.append(str_input)
+
+    # Se unen todas las líneas en una sola cadena,
+    # excluyendo la última línea, "FIN", que finaliza
+    # la captación de strings.
+    datos = "\n".join(lines[:-1])
     lecturaDeArch=False
 
 def iniciarLexer():
@@ -478,7 +491,7 @@ iniciarLexer()
 
 -Preguntar si está bien la desición tomada para el atributo .estado
 
--(pregunta para el parser) Para este punto del TPI no es necesario diferenciar operadores comparadores
+-Para este punto del TPI no es necesario diferenciar operadores comparadores
 generales y booleanos? (mismo caso que para las distintas temperatura)
 
 #-------------------PARA DISCUTIR EN GRUPO-----------------#
