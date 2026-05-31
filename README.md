@@ -1,5 +1,7 @@
-<div style="text-align: center;">
-  <img src="resources/BinaryBuilders.png" alt="Logo del grupo Binary Builders" style="display: block; margin: 0 auto;">
+<div align="center">
+
+![Logo del grupo Binary Builders](resources/BinaryBuilders.png)
+
 </div>
 
 # ssl - BinaryBuilders
