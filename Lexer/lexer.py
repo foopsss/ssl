@@ -129,46 +129,43 @@ def t_SENSOR_HUMO(t):
 
 #foco_
 def t_ACTUADOR_FOCO(t):
-    r'FOCO_'
+    r'FOCO'
     return t
 #aire_
 def t_ACTUADOR_AIRE(t):
-    r'AIRE_'
+    r'AIRE'
     return t
 
 #persiana_
 def t_ACTUADOR_PERSIANA(t):
-    r'PERSIANA_'
+    r'PERSIANA'
     return t
 
 #cerradura_
 def t_ACTUADOR_CERRADURA(t):
-    r'CERRADURA_'
+    r'CERRADURA'
     return t
 
 #reloj_
 def t_ACTUADOR_RELOJ(t):
-    r'RELOJ_'
+    r'RELOJ'
     return t
 
 #altavoz_
 def t_ACTUADOR_ALTAVOZ(t):
-    r'ALTAVOZ_'
+    r'ALTAVOZ'
     return t
 
 #alarma_
 def t_ACTUADOR_ALARMA(t):
-    r'ALARMA_'
+    r'ALARMA'
     return t
 
 #Tokens Compuestos
 
 #<TEXTO> -> "cadena"
 def t_TEXTO(t):
-    #r'"[^"\n]*"' queda esta regla por si la que está actualmente da problemas
-    #la nueva regla lo que hace es que acepta estas comillas dobles extrañas 
-    #también “” que están en el ejemplo del TPI.
-    r'[\"“][^\"\n“”]*[\"”]'
+    r'[\"“\'][^\"\n“”\']*[\"”\']'
     return t
 
 #<BOOL_DISPOSITIVO> -> 'TRUE' | 'FALSE' 
@@ -263,7 +260,7 @@ t_ignore_COMMENT = r'\/\/.*' #Ignorar comentarios (desde un numeral hasta cualqu
 #Regla para manejar palabras reservadas e identificadores (palabras que son tokens pero no son pal. reservadas ni tienen reglas).
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
-    t.type = reservado.get(t.value,'ID')
+    t.type = reservado.get(t.value.upper(),'ID')
     return t
 
 #Regla para trackear num. de linea:
