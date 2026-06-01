@@ -75,7 +75,7 @@ def t_ATRIBUTOS_FOCO(t):
     return t
 
 def t_ATRIBUTOS_AIRE(t):
-    r'(.MODO|.TEMP_ACT|.TEMP_OBJ)'
+    r'(.MODO|.TEMP_ACT|.TEMP_OBJETIVO|.TEMP_OBJ)'
     return t
 
 def t_ATRIBUTOS_PERSIANA(t):
@@ -87,7 +87,7 @@ def t_ATRIBUTOS_RELOJ(t):
     return t
 
 def t_ATRIBUTOS_ALTAVOZ(t):
-    r'(.VOLUMEN|.MUTE|.MENSAJE|.EMAIL_NOTIF)' 
+    r'(.VOLUMEN|.MUTE|.MENSAJE|.EMAIL_NOTIF|.EMAIL)' 
     return t
 
 def t_ATRIBUTOS_ALARMA(t):
@@ -223,7 +223,7 @@ def t_DISCRETO(t):
 
 #<NOMBRE_COLORES -> 'blanco' | 'rojo' | 'azul'
 def t_NOMBRE(t):
-    r'(BLANCO|ROJO|AZUL)'
+    r'(BLANCO|ROJO|AZUL|BLUE)'
     return t
 
 #Operadores comparadores
