@@ -371,7 +371,7 @@ def especificarRutaArchivo():
     global datos
     
     limpiarPantalla()
-    entrada = input("Ingrese la ruta del archivo .txt: ").strip()
+    entrada = input("Ingrese la ruta o arrastre el archivo .txt: ").strip()
     ruta = entrada.lstrip('& ').strip('"\'')
     
     if not (os.path.exists(ruta) and ruta.lower().endswith('.txt')):
