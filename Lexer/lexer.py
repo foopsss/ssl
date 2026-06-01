@@ -259,7 +259,7 @@ t_ignore_COMMENT = r'\/\/.*' #Ignorar comentarios (desde un numeral hasta cualqu
 
 #Regla para manejar palabras reservadas e identificadores (palabras que son tokens pero no son pal. reservadas ni tienen reglas).
 def t_ID(t):
-    r'[a-zA-Z_][a-zA-Z0-9_]*'
+    r'[a-zA-Z][a-zA-Z0-9_]*'
     t.type = reservado.get(t.value.upper(),'ID')
     return t
 
