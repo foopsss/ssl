@@ -463,47 +463,6 @@ if datos:
 
 
 '''
-#------------------ANOTACIONES PARA HACER------------------#
-
--Para los caracteres ilegales hay que mostrar en qué linea y columna se los encontró.
-
--Hacer que analice el ejemplo del TPI.
-
--(detalle menor) mejorar la técnica de centrado al mostrar opciones de archivos .txt
-
-#-------------------------PREGUNTAS------------------------#
-
--Preguntar si está bien la desición tomada para el atributo .estado
-
--Para este punto del TPI no es necesario diferenciar operadores comparadores
-generales y booleanos? (mismo caso que para las distintas temperatura)
-
-#-------------------PARA DISCUTIR EN GRUPO-----------------#
-
-les parece arreglar o diferenciar lo siguiente 
-(Agustin: para mí no pero estaría bueno decirle al profe a ver que piensa)
-
--Algo curioso es que cuando se analiza esta línea, se toma al atributo .temp_obj, y la parte restante
-de la cadena hasta antes de la asignación, lo toma como un ID 'etivo', eso me parece que debe estar
-bien para controlar errores en el parser, ya el lexer arrojará un ID donde en realidad no tenía que ir.
-eso está en el ejemplo del tpi:
-aire_acondicionado.temp_objetivo = 22°C
-
--En esta parte _int se lo detecta como "ID" ya que en teoría, es un identificador. Se lo detecta así
-porque no hay ninguna regla con una expresión regular que detecte esa palabra, por descarte se le
-asocia el tipo "ID".
-también está en el ejemplo del TPI
-IF sensor_temp_int > 26°C THEN
-
--También pasa que en esta línea no debe ir color blue, solo azul, lo va a detectar como ID a blue,
-pero supongo que está hecho al propósito.
-foco_patio.color = blue
-
--Lo mismo pasa acá, el atributo es .email_notif, no debería ser: ".email" 
-pero también supongo que está mal al propósito.
-altavoz_comedor.email = bomberos@smart-home.com.ar
-
-
 #---------TODOS LOS TOKENS SOLICITADOS EN EL TPI-----------#
 
 //No se deben distinguir entre mayúsculas y minúsculas
@@ -554,7 +513,6 @@ Asignación
 Puntuación
 
 #=================ACLARACIONES DEL CÓDIGO==================#
-#==========(Después esto iría en la documentación)=========#
 
 #Aclaración de la regla (función) para el atributo de estado "t_ATRIBUTO_ESTADO". El mismo compartido entre: foco, aire, cerradura, alarma.
 #Por ello lo colocamos como una sola regla, dado que, si incluimos la cadena ".ESTADO" en las
@@ -570,59 +528,6 @@ Puntuación
 #Notamos que hay varias cosas mal escritas por ejemplo:
 - foco_patio.color = blue //debería ser "azul" en vez de "blue"
 - altavoz_comedor.email = bomberos@smart-home.com.ar //debería ser atributo ".email_notif" en vez de ".email"
-y tomamos como que está mal escrito por parte del usuario que esscribió el programa, dado
-que en la consigna esos datos están escritos de otra forma, el lexer en este caso
-tomará como que son tokens de tipo "ID", pero en el analizador sintáctico se detendría el parsing.
+- aire_acondicionado.temp_objetivo = 22°C //debería ser "temp_obj"
 
 '''
-
-
-#anterior función para leer archivos .txt desde directorio del lexer.
-
-#leerArchivosEnDirectorio()
-#def leerArchivosEnDirectorio():
-#    global datos
-#    global nombreArch
-#    global lecturaDeArch
-#    ruta_script = os.path.dirname(os.path.abspath(__file__))
-#    todos_los_archivos = os.listdir(ruta_script)
-#    lista_txt = [archivo for archivo in todos_los_archivos if archivo.endswith('.txt')]
-#    
-#    limpiarPantalla()
-#                
-#    if not lista_txt:
-#        limpiarPantalla()
-#        print("No se encontraron archivos .txt en el directorio del ejecutable.")
-#        print("Cierre el programa, coloque archivos .txt e inicie de nuevo...")
-#        msvcrt.getch()
-#        sys.exit()
-#
-#    else:
-#        dibujoCarpeta(); recuadrosMenu()
-#        while True:
-#            gotoxy(29, 18)
-#            console.print(f"[bold italic dim white]Seleccione un archivo...[/bold italic dim white]")
-#            gotoxy(xMaxPantalla-32, yMaxPantalla-2)
-#            console.print(f"[bold italic dim white]BinaryBuilders. UTN FRRe. 2026[/bold italic dim white]")
-#            
-#            x = 25; y = 21
-#            for i in range(len(lista_txt)):
-#                gotoxy(x, y+i)
-#                print(f"\033[32m{f'{i+1} - {lista_txt[i]}'.center(30)}\033[0m")
-#
-#            op = int(selecOpcion()) - 1
-#            if op in range(len(lista_txt)):
-#                # Combinamos la ruta de la carpeta con el nombre del archivo suelto
-#                nombreArch = os.path.join(ruta_script, lista_txt[op])
-#                
-#                if os.path.exists(nombreArch):
-#                    with open(nombreArch, "r", encoding="utf-8") as f:
-#                        datos = f.read()
-#                        limpiarPantalla(); recuadrosMenu(); dibujoCarpeta()
-#                        gotoxy(29, 19)
-#                        console.print(f"[bold italic dim white]Archivo leido con éxito[/bold italic dim white]")
-#                        gotoxy(17, 20)
-#                        console.print(f"[bold italic dim white]Presione una tecla para iniciar análisis léxico...[/bold italic dim white]")
-#                        msvcrt.getch()
-#                        lecturaDeArch = True
-#                        return True
