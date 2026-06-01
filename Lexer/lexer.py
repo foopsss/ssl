@@ -358,64 +358,51 @@ def dibujarMenu():
     console.print(f"[bold italic u grey70]Analizador léxico (Lexer)[/bold italic u grey70]")
     gotoxy(29,21)
     console.print(f"[bold italic dim white]Seleccione una opción...[/bold italic dim white]")
-    gotoxy(17,23)
-    print("1- Seleccionar archivo (del directorio actual)")
+    gotoxy(24,23)
+    print("1- Especificar ruta de archivo.")
     gotoxy(23,24)
-    print("2- Escribir programa manualmente")
+    print("2- Escribir programa manualmente.")
     gotoxy(xMaxPantalla-32,yMaxPantalla-2)
     console.print(f"[bold italic dim white]BinaryBuilders. UTN FRRe. 2026[/bold italic dim white]")
     gotoxy(1,yMaxPantalla+1)
 
-def leerArchivosEnDirectorio():
+
+def especificarRutaArchivo():
     global datos
-    global nombreArch
-    global lecturaDeArch
-    ruta_script = os.path.dirname(os.path.abspath(__file__))
-    todos_los_archivos = os.listdir(ruta_script)
-    lista_txt = [archivo for archivo in todos_los_archivos if archivo.endswith('.txt')]
     
     limpiarPantalla()
-                
-    if not lista_txt:
+    entrada = input("Ingrese la ruta del archivo .txt: ").strip()
+    ruta = entrada.lstrip('& ').strip('"\'')
+    
+    if not (os.path.exists(ruta) and ruta.lower().endswith('.txt')):
         limpiarPantalla()
-        print("No se encontraron archivos .txt en el directorio del ejecutable.")
-        print("Cierre el programa, coloque archivos .txt e inicie de nuevo...")
+        print("Error: La ruta no existe o el archivo no es un .txt")
+        print("Presione una tecla para salir")
         msvcrt.getch()
         sys.exit()
+        return False
 
-    else:
-        dibujoCarpeta(); recuadrosMenu()
-        while True:
-            gotoxy(29, 18)
-            console.print(f"[bold italic dim white]Seleccione un archivo...[/bold italic dim white]")
-            gotoxy(xMaxPantalla-32, yMaxPantalla-2)
-            console.print(f"[bold italic dim white]BinaryBuilders. UTN FRRe. 2026[/bold italic dim white]")
-            
-            x = 25; y = 21
-            for i in range(len(lista_txt)):
-                gotoxy(x, y+i)
-                print(f"\033[32m{f'{i+1} - {lista_txt[i]}'.center(30)}\033[0m")
+    try:
+        with open(ruta, "r", encoding="utf-8") as f:
+            contenido = f.read()
+    except Exception:
+        contenido = None
 
-            op = int(selecOpcion()) - 1
-            if op in range(len(lista_txt)):
-                # Combinamos la ruta de la carpeta con el nombre del archivo suelto
-                nombreArch = os.path.join(ruta_script, lista_txt[op])
-                
-                if os.path.exists(nombreArch):
-                    with open(nombreArch, "r", encoding="utf-8") as f:
-                        datos = f.read()
-                        limpiarPantalla(); recuadrosMenu(); dibujoCarpeta()
-                        gotoxy(29, 19)
-                        console.print(f"[bold italic dim white]Archivo leido con éxito[/bold italic dim white]")
-                        gotoxy(17, 20)
-                        console.print(f"[bold italic dim white]Presione una tecla para iniciar análisis léxico...[/bold italic dim white]")
-                        msvcrt.getch()
-                        lecturaDeArch = True
-                        return True
-         
+    match contenido:
+        case None:
+            limpiarPantalla()
+            print("Error: No se pudo leer el archivo.")
+            print("Presione una tecla para salir")
+            msvcrt.getch()
+            sys.exit()
+            return False
+        case _:
+            datos = contenido
+            return True
+
+
 def escribirProgramaManualmente():
     global datos
-    global lecturaDeArch
 
     lines = []
     str_input = ""
@@ -433,14 +420,11 @@ def escribirProgramaManualmente():
     # excluyendo la última línea, "FIN", que finaliza
     # la captación de strings.
     datos = "\n".join(lines[:-1])
-    lecturaDeArch=False
 
 def iniciarLexer():
 
     lexer.input(datos)
-    if lecturaDeArch: #lectura de arch sirve solo para indicar qué archivo se está analizando actualmente al seleccionar analisis mediante .txt, sin que tire error si se escribe el programa manualmente
-        print("Analisis léxico del archivo: ",nombreArch); print()
-    
+
     #Tokenizar el programa (hacer analisis lexico a toda la cadena del programa y encontrar tokens)
     while True:
         tok = lexer.token()
@@ -466,13 +450,16 @@ lexer = lex.lex(reflags=re.IGNORECASE)   #Construir el lexer
 xMaxPantalla = 80; yMaxPantalla = 30; console = Console() #Solo para mostrar títulos con estilos
 ocultar_cursor(); dibujarMenu()
 
+
 if selecOpcion() == '1':
-    leerArchivosEnDirectorio()
+    especificarRutaArchivo()
 else:
     escribirProgramaManualmente()
+
 limpiarPantalla()
 
-iniciarLexer()
+if datos:
+    iniciarLexer()
 
 
 '''
@@ -590,7 +577,9 @@ tomará como que son tokens de tipo "ID", pero en el analizador sintáctico se d
 '''
 
 
-#Está por las dudas esta función
+#anterior función para leer archivos .txt desde directorio del lexer.
+
+#leerArchivosEnDirectorio()
 #def leerArchivosEnDirectorio():
 #    global datos
 #    global nombreArch
@@ -606,9 +595,7 @@ tomará como que son tokens de tipo "ID", pero en el analizador sintáctico se d
 #        print("No se encontraron archivos .txt en el directorio del ejecutable.")
 #        print("Cierre el programa, coloque archivos .txt e inicie de nuevo...")
 #        msvcrt.getch()
-#        #limpiarPantalla()
 #        sys.exit()
-#        return None
 #
 #    else:
 #        dibujoCarpeta(); recuadrosMenu()
@@ -623,18 +610,19 @@ tomará como que son tokens de tipo "ID", pero en el analizador sintáctico se d
 #                gotoxy(x, y+i)
 #                print(f"\033[32m{f'{i+1} - {lista_txt[i]}'.center(30)}\033[0m")
 #
-#            op = int(selecOpcion())-1
+#            op = int(selecOpcion()) - 1
 #            if op in range(len(lista_txt)):
-#   
-#                nombreArch = lista_txt[op]
+#                # Combinamos la ruta de la carpeta con el nombre del archivo suelto
+#                nombreArch = os.path.join(ruta_script, lista_txt[op])
+#                
 #                if os.path.exists(nombreArch):
 #                    with open(nombreArch, "r", encoding="utf-8") as f:
 #                        datos = f.read()
-#                        limpiarPantalla();recuadrosMenu();dibujoCarpeta()
+#                        limpiarPantalla(); recuadrosMenu(); dibujoCarpeta()
 #                        gotoxy(29, 19)
 #                        console.print(f"[bold italic dim white]Archivo leido con éxito[/bold italic dim white]")
 #                        gotoxy(17, 20)
 #                        console.print(f"[bold italic dim white]Presione una tecla para iniciar análisis léxico...[/bold italic dim white]")
 #                        msvcrt.getch()
-#                        lecturaDeArch=True
-#                        return False
+#                        lecturaDeArch = True
+#                        return True
