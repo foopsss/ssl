@@ -364,6 +364,9 @@ def dibujarMenu():
     gotoxy(23,24)
     print("2- Escribir programa manualmente.")
     gotoxy(xMaxPantalla-32,yMaxPantalla-2)
+    gotoxy(35,25)
+    print("3- Salir.")
+    gotoxy(xMaxPantalla-32,yMaxPantalla-2)
     console.print(f"[bold italic dim white]BinaryBuilders. UTN FRRe. 2026[/bold italic dim white]")
     gotoxy(1,yMaxPantalla+1)
 
@@ -439,7 +442,7 @@ def iniciarLexer():
     
     print()
     console.print(f"[bold italic dim white]Terminado.[/bold italic dim white]")
-    console.print(f"[bold italic dim white]Presione una tecla para cerrar el programa...[/bold italic dim white]")
+    console.print(f"[bold italic dim white]Presione una tecla para volver al menú...[/bold italic dim white]")
     #mostrar_cursor()
     msvcrt.getch()
     
@@ -447,20 +450,26 @@ def iniciarLexer():
 #=============================COMIENZO DEL PROGRAMA===============================
 #=================================================================================
 
-lexer = lex.lex(reflags=re.IGNORECASE)   #Construir el lexer
-xMaxPantalla = 80; yMaxPantalla = 30; console = Console() #Solo para mostrar títulos con estilos
-ocultar_cursor(); dibujarMenu()
+option = 0 #solo para que no se rompa antes del while
+while (option != 3):
 
+    lexer = lex.lex(reflags=re.IGNORECASE)   #Construir el lexer
+    xMaxPantalla = 80; yMaxPantalla = 30; console = Console() #Solo para mostrar títulos con estilos
+    ocultar_cursor(); dibujarMenu()
 
-if selecOpcion() == '1':
-    especificarRutaArchivo()
-else:
-    escribirProgramaManualmente()
+    option = selecOpcion()
+    if option == '1':
+        especificarRutaArchivo()
+    elif option == '2':
+        escribirProgramaManualmente()
+    elif option == '3':
+        limpiarPantalla()
+        sys.exit()
 
-limpiarPantalla()
+    limpiarPantalla()
 
-if datos:
-    iniciarLexer()
+    if datos:
+        iniciarLexer()
 
 
 '''
