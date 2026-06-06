@@ -94,6 +94,7 @@ def t_ATRIBUTOS_ALARMA(t):
     r'.ACTIVADA'
     return t
 
+
 def t_ATRIBUTO_ESTADO(t):
     r'.ESTADO'
     return t
@@ -165,7 +166,7 @@ def t_ACTUADOR_ALARMA(t):
 
 #<TEXTO> -> "cadena"
 def t_TEXTO(t):
-    r'[\"“\'][^\"\n“”\']*[\"”\']'
+    r'[\"“\'][^\"\n“”\']*[\"”\']'  
     return t
 
 #<BOOL_DISPOSITIVO> -> 'TRUE' | 'FALSE' 
@@ -223,7 +224,7 @@ def t_DISCRETO(t):
 
 #<NOMBRE_COLORES -> 'blanco' | 'rojo' | 'azul'
 def t_NOMBRE(t):
-    r'(BLANCO|ROJO|AZUL|BLUE)'
+    r'(BLANCO|ROJO|AZUL|BLUE|RED|WHITE)'
     return t
 
 #Operadores comparadores
