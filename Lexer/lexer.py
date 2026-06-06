@@ -460,16 +460,18 @@ while (option != 3):
     option = selecOpcion()
     if option == '1':
         especificarRutaArchivo()
+        limpiarPantalla()
+        if datos:
+            iniciarLexer()
     elif option == '2':
         escribirProgramaManualmente()
+        limpiarPantalla()
+        if datos:
+            iniciarLexer()
     elif option == '3':
         limpiarPantalla()
         sys.exit()
 
-    limpiarPantalla()
-
-    if datos:
-        iniciarLexer()
 
 
 '''
