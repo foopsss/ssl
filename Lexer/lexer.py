@@ -371,7 +371,7 @@ def especificarRutaArchivo():
     global datos
     
     limpiarPantalla()
-    entrada = input("Ingrese la ruta o arrastre el archivo .txt: ").strip()
+    entrada = input("Ingrese la ruta o arrastre el archivo .txt y presione ENTER: ").strip()
     ruta = entrada.lstrip('& ').strip('"\'')
     
     if not (os.path.exists(ruta) and ruta.lower().endswith('.txt')):
@@ -525,7 +525,7 @@ Puntuación
 #Aclaración para atributo de cerradura (no lo definimos)
 #No colocamos atributo de cerradura en esta instancia, ya que tiene solo ".estado" y ese atributo es compartido por 4 actuadores más.
 
-#Notamos que hay varias cosas mal escritas por ejemplo:
+#Notamos que hay varias cosas mal escritas en el ejemplo del TPI, como son el caso de:
 - foco_patio.color = blue //debería ser "azul" en vez de "blue"
 - altavoz_comedor.email = bomberos@smart-home.com.ar //debería ser atributo ".email_notif" en vez de ".email"
 - aire_acondicionado.temp_objetivo = 22°C //debería ser "temp_obj"
