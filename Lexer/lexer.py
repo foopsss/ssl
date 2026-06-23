@@ -426,7 +426,7 @@ def escribirProgramaManualmente():
     datos = "\n".join(lines[:-1])
 
 def iniciarLexer():
-
+    global datos
     lexer.input(datos)
 
     #Tokenizar el programa (hacer analisis lexico a toda la cadena del programa y encontrar tokens)
@@ -462,12 +462,12 @@ while (option != 3):
         especificarRutaArchivo()
         limpiarPantalla()
         if datos:
-            iniciarLexer()
+            iniciarLexer(datos)
     elif option == '2':
         escribirProgramaManualmente()
         limpiarPantalla()
         if datos:
-            iniciarLexer()
+            iniciarLexer(datos)
     elif option == '3':
         limpiarPantalla()
         sys.exit()
