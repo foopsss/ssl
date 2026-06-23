@@ -46,8 +46,8 @@ def p_identificador(p):
 
 
 def p_asignaciones(p):
-    '''asignacion : FOCO identificador atributos_esc_foco
-                  | FOCO atributos_esc_foco
+    '''asignacion : ACTUADOR_FOCO identificador atributos_esc_foco
+                  | ACTUADOR_FOCO atributos_esc_foco
                   | AIRE identificador atributos_esc_aire
                   | AIRE atributos_esc_aire
                   | PERSIANA identificador atributos_esc_persiana
@@ -70,6 +70,13 @@ def p_atributos_escritura_foco(p):
     p[0] = p[1] + p[2] + p[3]
 
 def p_atributos_escritura_aire(p):
+    '''atributos_esc_aire : ATRIBUTO_ESTADO ASIGNACION BOOL_ACTUADOR
+                          | ATRIBUTOS_AIRE_MODO ASIGNACION DISCRETO
+                          | 
+                          |
+                          |
+    
+    '''
 def p_atributos_escritura_persiana(p):
 def p_atributos_escritura_cerradura(p):
 def p_atributos_escritura_altavoz(p):

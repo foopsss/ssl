@@ -86,7 +86,8 @@ def t_ACTUADOR_ALARMA(t): r'ALARMA'; return t
 def t_TEXTO(t): r'[\"“\'][^\"\n“”\']*[\"”\']'; return t
 def t_BOOL_DISPOSITIVO(t): r'(TRUE|FALSE)'; return t
 def t_BOOL_ACTUADOR(t): r'(ON|OFF)'; return t
-def t_VALOR_TEMPERATURA(t): r'(-10|-[1-9]|[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|50)°C'; return t
+def t_VALOR_TEMP_OBJ(t): r'(1[6-9]|2[0-9]|30)°C'; return t
+def t_VALOR_TEMP_ACT(t): r'(-10|-[1-9]|[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|50)°C'; return t
 def t_PERCENT(t): r'(([0-9]|[1-9][0-9])|100)%'; return t
 def t_TIEMPO(t): r'([0-9]\s?H|[1-9][0-9]\s?H|[0-9]\s?M|[1-9][0-9]\s?M|[0-9]\s?S|[1-9][0-9]\s?S)'; return t
 def t_ILUMINANCIA(t): r'([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|1000)LUX'; return t
@@ -96,6 +97,7 @@ def t_EMAIL(t): r'[A-Z0-9\.\+\-]+@[A-Z0-9\.\+\-]+\.[A-Z]{2,4}'; return t
 def t_DISCRETO(t): r'(FRIO|CALOR|VENT)'; return t
 def t_NOMBRE(t): r'(BLANCO|ROJO|AZUL|BLUE|RED|WHITE)'; return t
 def t_OP_COMPARADOR(t): r'(==|!=|>|<|>=|<=)'; return t
+def t_OP_COMPARADOR_BOOL(t): r'(==|!=)'; return t
 def t_OP_LOGICO(t): r'(AND|OR)'; return t
 def t_OP_NEGACION(t): r'NOT'; return t
 
