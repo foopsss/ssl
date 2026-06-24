@@ -469,3 +469,4 @@ def p_atributos_lectura_alarma(p):
 
 #Cosas para hacer:
 #-Controlar que en las reglas se enuncie los tokens especificados en el lexer
+tuki
