@@ -33,7 +33,9 @@ tokens = [
     'ACTUADOR_ALARMA',
     'TEXTO', 'BOOL_DISPOSITIVO',
     'BOOL_ACTUADOR',
-    'VALOR_TEMPERATURA',
+    'VALOR_TEMP_OBJ',
+    'VALOR_TEMP_ACT',
+    'OP_COMPARADOR_BOOL',
     'PERCENT',
     'TIEMPO',
     'ILUMINANCIA',
@@ -161,7 +163,7 @@ def p_acciones(p):
 #CICLOS WHEN Y EVERT
 def p_ciclos(p):
     '''ciclo : WHEN condicion DO accion END
-             | EVERY tiempo DO accion END'''
+             | EVERY TIEMPO DO accion END'''
     if p[1] == 'WHEN':
         p[0] = ('CICLO_WHEN', p[2], p[4])
     else:
@@ -752,6 +754,33 @@ def p_error(p):
     
     # Esto corta el parseo inmediatamente de forma limpia
     raise SyntaxError("Error de análisis sintáctico.")
+
+#====================================================================#
+#=============================== MAIN ===============================#
+#====================================================================#
+
+
+
+#parser = yacc.yacc()
+parser = yacc.yacc(debug=False, write_tables=False)
+
+archivo_prueba = "Ejemplos/PROGRAMA_SMARTHOME_TPI.txt"
+    
+try:
+    with open(archivo_prueba, "r", encoding="utf-8") as archivo:
+        datos = archivo.read()
+        datos = datos.upper()
+        
+    resultado = parser.parse(datos)
+    print("AST:")
+    print(resultado)
+        
+except FileNotFoundError:
+    print(f"Error: No se encontro {archivo_prueba}")
+except Exception as e:
+    print(f"Error: {e}")
+
+
 
 
 #Cosas para hacer:
