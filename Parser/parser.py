@@ -183,6 +183,11 @@ def p_identificador(p):
     '''identificador : GUION_BAJO ID'''
     p[0] = p[1] + p[2]
 
+#TIEMPO (para ciclos EVERY)
+def p_tiempo(p):
+    '''tiempo : TIEMPO'''
+    p[0] = p[1]
+
 #ASIGNACIONES (ESCRITURA DE ACTUADORES)
 def p_asignaciones(p):
     '''asignacion : ACTUADOR_FOCO identificador atributos_esc_foco
@@ -783,7 +788,9 @@ except Exception as e:
 
 
 
+# Crear instancia del parser
+parser = yacc.yacc(debug=False, write_tables=False)
+
 #Cosas para hacer:
 #1-Agregar traductor a HTML
 #2-Agregar Main para probar si deriva el ejemplo ejecutando el parser 
-#3-posiblemente agregar esto: parser = yacc.yacc(debug=False, write_tables=False)
