@@ -29,7 +29,8 @@ tokens = [
     'ACTUADOR_ALARMA',
     'TEXTO', 'BOOL_DISPOSITIVO',
     'BOOL_ACTUADOR',
-    'VALOR_TEMPERATURA',
+    'VALOR_TEMP_OBJ',
+    'VALOR_TEMP_ACT',
     'PERCENT',
     'TIEMPO',
     'ILUMINANCIA',
@@ -39,6 +40,7 @@ tokens = [
     'DISCRETO',
     'NOMBRE',
     'OP_COMPARADOR',
+    'OP_COMPARADOR_BOOL',
     'OP_LOGICO',
     'OP_NEGACION',
     'ASIGNACION',
@@ -138,22 +140,37 @@ def t_error(t):
 
 lexer = lex.lex() #esto es lo único que queda para el parser, lo que sigue se quita o se comenta.
 
-datos = "WHEN sensor_luz < 250lux DO"
-datosOriginal = datos               #Para mostrar palabra original en pantalla
-datosUpper = datos.upper()     #Cadena total transformada en mayúsculas
+# Variables globales para el lexer
+datos = ""
+datosOriginal = ""
+datosUpper = ""
 
-lexer.input(datosUpper)
+def cargar_datos(texto):
+    """Carga el texto para analizar y prepara las variables del lexer"""
+    global datos, datosOriginal, datosUpper
+    datos = texto
+    datosOriginal = texto
+    datosUpper = texto.upper()
+    lexer.input(datosUpper)
 
-while True:
-    tok = lexer.token()
-    if not tok: 
-        break
-    inicio = tok.lexpos
-    fin = inicio + len(tok.value)
-#(!!)
-    print(f"Token encontrado: {datosOriginal[inicio:fin]:<15} de tipo: {tok.type}")
-#(!)
-#   print(f"Token encontrado: {tok.value:<10} de tipo: {tok.type}")
+def obtener_tokens():
+    """Retorna lista de tokens encontrados en el texto cargado"""
+    tokens_encontrados = []
+    while True:
+        tok = lexer.token()
+        if not tok: 
+            break
+        inicio = tok.lexpos
+        fin = inicio + len(tok.value)
+        # Obtener el texto original (sin convertir a mayúsculas)
+        texto_original = datosOriginal[inicio:fin]
+        tokens_encontrados.append({
+            'valor': texto_original,
+            'tipo': tok.type,
+            'linea': tok.lineno,
+            'columna': find_column(datosOriginal, tok)
+        })
+    return tokens_encontrados
 
 #Descomentar lo que está en #(!) y comentar lo que está en #(!!) para volver al original
 #Comentar lo que está en #(!) y descomentar lo que está en #(!!) para volver al modificado
