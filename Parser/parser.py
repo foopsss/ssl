@@ -6,12 +6,12 @@ tokens= lexer_rev.tokens
 
 #Reglas principales que manejan la estructura del programa (smart-home)
 
-#Bloques y acciones
 def p_programa(p):
     '''sigma : accion'''
     print("Análisis sintáctico terminado exitosamente") #al terminar imprime
     p[0] = p[1]
 
+#BLOQUES Y ACCIONES
 def p_acciones(p):
     '''accion : ciclo accion 
               | ciclo
@@ -22,8 +22,9 @@ def p_acciones(p):
     if len(p) == 3:
         p[0] = [p[1]] + p[2] 
     else:
-        p[0] = [p[1]]      
+        p[0] = [p[1]]
 
+#CICLOS WHEN Y EVERT
 def p_ciclos(p):
     '''ciclo : WHEN condicion DO accion END
              | EVERY tiempo DO accion END'''
@@ -32,6 +33,7 @@ def p_ciclos(p):
     else:
         p[0] = ('CICLO_EVERY', p[2], p[4])
 
+#CONDICIONAL IF
 def p_condicional(p):
     '''condicional : IF condicion THEN accion END
                    | IF condicion THEN accion ELSE accion END'''
@@ -40,11 +42,12 @@ def p_condicional(p):
     else:
         p[0] = ('CONDICIONAL_ALTERNATIVO', p[2], p[4], p[6])
 
+#IDENTIFICADOR
 def p_identificador(p):
     '''identificador : GUION_BAJO ID'''
     p[0] = p[1] + p[2]
 
-
+#ASIGNACIONES (ESCRITURA DE ACTUADORES)
 def p_asignaciones(p):
     '''asignacion : ACTUADOR_FOCO identificador atributos_esc_foco
                   | ACTUADOR_FOCO atributos_esc_foco
@@ -63,6 +66,7 @@ def p_asignaciones(p):
     else:
         p[0] = ('ASIGNACION', p[1], None, p[2])
 
+#ATRIBUTOS CON ESTRUCTURA DE ESCRITURA PARA CADA ACTUADOR 
 def p_atributos_escritura_foco(p):
     '''atributos_esc_foco : ATRIBUTO_ESTADO ASIGNACION BOOL_ACTUADOR
                           | ATRIBUTOS_FOCO_BRILLO ASIGNACION PERCENT
@@ -72,15 +76,28 @@ def p_atributos_escritura_foco(p):
 def p_atributos_escritura_aire(p):
     '''atributos_esc_aire : ATRIBUTO_ESTADO ASIGNACION BOOL_ACTUADOR
                           | ATRIBUTOS_AIRE_MODO ASIGNACION DISCRETO
-                          | 
-                          |
-                          |
-    
-    '''
+                          | ATRIBUTOS_AIRE_TEMP_OBJ ASIGNACION VALOR_TEMP_OBJ'''
+    p[0] = p[1] + p[2] + p[3]
+
 def p_atributos_escritura_persiana(p):
+    '''atributos_esc_persiana : ATRIBUTOS_PERSIANA ASIGNACION PERCENT'''
+    p[0] = p[1] + p[2] + p[3]
+
 def p_atributos_escritura_cerradura(p):
+    '''atributos_esc_cerradura : ATRIBUTO_ESTADO ASIGNACION BOOL_ACTUADOR'''
+    p[0] = p[1] + p[2] + p[3]
+
 def p_atributos_escritura_altavoz(p):
+    '''atributos_esc_altavoz : ATRIBUTOS_ALTAVOZ_VOLUMEN ASIGNACION PERCENT
+                             | ATRIBUTOS_ALTAVOZ_MUTE ASIGNACION BOOL_ACTUADOR
+                             | ATRIBUTOS_ALTAVOZ_MENSAJE ASIGNACION TEXTO
+                             | ATRIBUTOS_ALTAVOZ_EMAIL ASIGNACION EMAIL'''
+    p[0] = p[1] + p[2] + p[3]
+
 def p_atributos_escritura_alarma(p):
+    '''atributos_esc_alarma : ATRIBUTO_ESTADO ASIGNACION BOOL_ACTUADOR
+                            | ATRIBUTOS_ALARMA ASIGNACION BOOL_ACTUADOR'''
+    p[0] = p[1] + p[2] + p[3]
 
 
 
