@@ -4,7 +4,6 @@ from ply import lex, yacc
 #===============================LEXER================================#
 #====================================================================#
 
-
 tokens = [
     'ATRIBUTOS_FOCO_BRILLO',
     'ATRIBUTOS_FOCO_COLOR',
@@ -126,9 +125,8 @@ def find_column(input_data, token):
     return (token.lexpos - line_start) + 1
 
 def t_error(t):
-    #columna = find_column(t.lexer.lexdata, t)    
-    #caracterOriginal = datosOriginal[t.lexpos]
-    #print(f"Carácter ilegal '{caracterOriginal}' en la Línea {t.lexer.lineno}, Columna {columna}")
+    columna = find_column(t.lexer.lexdata, t)    
+    print(f"Carácter ilegal '{t.value[0]}' en la Línea {t.lexer.lineno}, Columna {columna}")
     t.lexer.skip(1)
 
 lexer = lex.lex()
@@ -138,7 +136,6 @@ lexer = lex.lex()
 #====================================================================#
 #===============================PARSER===============================#
 #====================================================================#
-
 
 
 
@@ -741,39 +738,23 @@ def p_atributos_lectura_alarma(p):
     p[0] = p[1] + p[2] + p[3]
 
 
+#Regla para manejar errores
+def p_error(p):
+    if p:
+        # p es el token donde falló la estructura de la gramática
+        line_start = p.lexer.lexdata.rfind('\n', 0, p.lexpos) + 1
+        columna = (p.lexpos - line_start) + 1
+        
+        print(f"Error de sintaxis: No se esperaba el token {p.value} en la Línea {p.lineno}, Columna {columna}.")
+    else:
+        # p es None si se llegó al final del archivo sin cerrar un bloque (ej. faltó un END)
+        print("Error de sintaxis: Fin de archivo inesperado.")
+    
+    # Esto corta el parseo inmediatamente de forma limpia
+    raise SyntaxError("Error de análisis sintáctico.")
 
-
-
-
-#anotaciones:
-
-#(1)
-#todos los no terminales van en minúsculas.
-#todos los terminales en mayúsculas
-
-#(2)
-#p[n] se lee así:
-#p[0] actual
-#[p[1]] tupla convertida en lista
-# + [p2] se concatena con la siguiente lista que vendrá (cuando se obtenga el resultado de la recursión por derecha)
-
-#(3)
-#recordar que p[0] cuenta como un elemento en la regla también, es decir
-#en p[0] + p[1] + p[2] hay 3 elementos.
-
-#(4)
-#para el caso de esta regla:
-#def p_identificador(p):
-#    '''identificador : GUION_BAJO ID'''
-#    p[0] = f"{p[1]}{p[2]}"
-#dado que se se derivan directamente en caracteres, se los concatena así: p[0] = f"{p[1]}{p[2]}"
-
-#(5)
-#todas las acciones compuestas llevan etiquetas (bucles, condiciones, asignaciones, etc.)
-
-#(6)
-#cuando se tiene la misma etiqueta, se tiene que guardar en p[0] una lista con la misma longitud para ambos "caminos" en la condición (if y else)
 
 #Cosas para hacer:
-#-Controlar que en las reglas se enuncie los tokens especificados en el lexer
-tuki
+#1-Agregar traductor a HTML
+#2-Agregar Main para probar si deriva el ejemplo ejecutando el parser 
+#3-posiblemente agregar esto: parser = yacc.yacc(debug=False, write_tables=False)

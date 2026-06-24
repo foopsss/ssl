@@ -120,32 +120,44 @@ def find_column(input_data, token):
     line_start = input_data.rfind('\n', 0, token.lexpos) + 1
     return (token.lexpos - line_start) + 1
 
+#(!!)
 def t_error(t):
-    #columna = find_column(t.lexer.lexdata, t)    
-    #caracterOriginal = datosOriginal[t.lexpos]
-    #print(f"Carácter ilegal '{caracterOriginal}' en la Línea {t.lexer.lineno}, Columna {columna}")
+    columna = find_column(t.lexer.lexdata, t)    
+    caracterOriginal = datosOriginal[t.lexpos]
+    print(f"Carácter ilegal '{caracterOriginal}' en la Línea {t.lexer.lineno}, Columna {columna}")
     t.lexer.skip(1)
+
+#(!)
+#def t_error(t):
+#    columna = find_column(t.lexer.lexdata, t)    
+#    print(f"Carácter ilegal '{t.value[0]}' en la Línea {t.lexer.lineno}, Columna {columna}")
+#    t.lexer.skip(1)
 
 
 #==================================== MAIN ====================================#
 
 lexer = lex.lex() #esto es lo único que queda para el parser, lo que sigue se quita o se comenta.
 
-#datos = "WHEN sensor_luz < 250lux DO"
-#datosOriginal = datos               #Para mostrar palabra original en pantalla
-#datosMayusculas = datos.upper()     #Cadena total transformada en mayúsculas
+datos = "WHEN sensor_luz < 250lux DO"
+datosOriginal = datos               #Para mostrar palabra original en pantalla
+datosUpper = datos.upper()     #Cadena total transformada en mayúsculas
 
-#lexer.input(datosMayusculas)
+lexer.input(datosUpper)
 
-#while True:
-#    tok = lexer.token()
-#    if not tok: 
-#        break
-#    inicio = tok.lexpos
-#    fin = inicio + len(tok.value)
-#    print(f"Token encontrado: {datosOriginal[inicio:fin]:<15} de tipo: {tok.type}")
+while True:
+    tok = lexer.token()
+    if not tok: 
+        break
+    inicio = tok.lexpos
+    fin = inicio + len(tok.value)
+#(!!)
+    print(f"Token encontrado: {datosOriginal[inicio:fin]:<15} de tipo: {tok.type}")
+#(!)
+#   print(f"Token encontrado: {tok.value:<10} de tipo: {tok.type}")
 
-
+#Descomentar lo que está en #(!) y comentar lo que está en #(!!) para volver al original
+#Comentar lo que está en #(!) y descomentar lo que está en #(!!) para volver al modificado
+#Dicha modificación es para ver los tokens encontrados como estaban antes de pasarse a mayúsculas.
 
 
 
