@@ -99,6 +99,68 @@ def p_atributos_escritura_alarma(p):
                             | ATRIBUTOS_ALARMA ASIGNACION BOOL_ACTUADOR'''
     p[0] = p[1] + p[2] + p[3]
 
+#CONDICIONES (LECTURA DE SENSORES)
+def p_contcondicion(p):
+    '''contcondicion : OP_LOGICO condicion'''
+
+def p_condicion_temperatura(p):
+    '''condicion : OP_NEGACION VALOR_TEMP_OBJ identificador OP_COMPARADOR VALOR_TEMP_ACT
+                 | OP_NEGACION VALOR_TEMP_OBJ identificador OP_COMPARADOR VALOR_TEMP_ACT contcondicion
+                 | OP_NEGACION VALOR_TEMP_OBJ OP_COMPARADOR VALOR_TEMP_ACT contcondicion
+                 | VALOR_TEMP_OBJ identificador OP_COMPARADOR VALOR_TEMP_ACT contcondicion
+                 | VALOR_TEMP_OBJ identificador OP_COMPARADOR VALOR_TEMP_ACT
+                 | VALOR_TEMP_OBJ OP_COMPARADOR VALOR_TEMP_ACT contcondicion
+                 | VALOR_TEMP_OBJ OP_COMPARADOR VALOR_TEMP_ACT'''
+
+def p_condicion_humedad(p):
+    ''' condicion : OP_NEGACION SENSOR_HUMEDAD identifacor OP_COMPARADOR percent
+                  | OP_NEGACION SENSOR_HUMEDAD OP_COMPARADOR percent contcondicion
+                  | OP_NEGACION SENSOR_HUMEDAD OP_COMPARADOR percent
+                  | SENSOR_HUMEDAD identificador OP_COMPARADOR percent contcondicion
+                  | SENSOR_HUMEDAD identificador OP_COMPARADOR percent
+                  | SENSOR_HUMEDAD OP_COMPARADOR percent contcondicion
+                  | SENSOR_HUMEDAD OP_COMPARADOR percent'''
+
+def p_condicion_luz(p):
+    ''' condicion : OP_NEGACION SENSOR_LUZ identificador OP_COMPARADOR iluminancia contcondicion
+                  | OP_NEGACION SENSOR_LUZ OP_COMPARADOR iluminancia contcondicion
+                  | OP_NEGACION SENSOR_LUZ OP_COMPARADOR iluminancia
+                  | SENSOR_LUZ identificador OP_COMPARADOR iluminancia contcondicion
+                  | SENSOR_LUZ identificador OP_COMPARADOR iluminancia
+                  | SENSOR_LUZ OP_COMPARADOR iluminancia contcondicion
+                  | SENSOR_LUZ OP_COMPARADOR iluminancia'''
+
+def p_condicion_movimiento(p):
+    ''' condicion : OP_NEGACION SENSOR_MOVIMIENTO identificador OP_COMPARADOR_BOOL bool_dispositivo contcondicion
+                  | OP_NEGACION SENSOR_MOVIMIENTO identificador OP_COMPARADOR_BOOL bool_dispositivo
+                  | OP_NEGACION SENSOR_MOVIMIENTO OP_COMPARADOR_BOOL bool_dispositivo contcondicion
+                  | OP_NEGACION SENSOR_MOVIMIENTO OP_COMPARADOR_BOOL bool_dispositivo
+                  | SENSOR_MOVIMIENTO identificador OP_COMPARADOR_BOOL bool_dispositivo contcondicion
+                  | SENSOR_MOVIMIENTO identificador OP_COMPARADOR_BOOL bool_dispositivo
+                  | SENSOR_MOVIMIENTO OP_COMPARADOR_BOOL bool_dispositivo contcondicion
+                  | SENSOR_MOVIMIENTO OP_COMPARADOR_BOOL bool_dispositivo'''
+
+def p_condicion_humo(p):
+    '''condicion : OP_NEGACION SENSOR_HUMO identificador OP_COMPARADOR_BOOL bool_dispositivo contcondicion
+                 | OP_NEGACION SENSOR_HUMO identificador OP_COMPARADOR_BOOL bool_dispositivo
+                 | OP_NEGACION SENSOR_HUMO OP_COMPARADOR_BOOL bool_dispositivo contcondicion
+                 | OP_NEGACION SENSOR_HUMO OP_COMPARADOR_BOOL bool_dispositivo
+                 | SENSOR_HUMO identificador OP_COMPARADOR_BOOL bool_dispositivo contcondicion
+                 | SENSOR_HUMO identificador OP_COMPARADOR_BOOL bool_dispositivo
+                 | SENSOR_HUMO OP_COMPARADOR_BOOL bool_dispositivo contcondicion
+                 | SENSOR_HUMO OP_COMPARADOR_BOOL bool_dispositivo'''
+
+def p_condicion_foco(p):
+    '''condicion : OP_NEGACION ACTUADOR_FOCO identificador atributos_lec_foco contcondicion
+                 | OP_NEGACION ACTUADOR_FOCO identificador atributos_lec_foco
+                 | OP_NEGACION ACTUADOR_FOCO atributos_lec_foco contcondicion
+                 | OP_NEGACION ACTUADOR_FOCO atributos_lec_foco
+                 | ACTUADOR_FOCO identificador atributos_lec_foco contcondicion
+                 | ACTUADOR_FOCO identificador atributos_lec_foco
+                 | ACTUADOR_FOCO atributos_lec_foco contcondicion
+                 | ACTUADOR_FOCO atributos_lec_foco'''
+
+
 
 #CONDICIONES INCLUYEN ACTUADORES Y SENSORES (SOLO DE LECTURA)
 def p_condicion_actuador_aire(p):
@@ -109,8 +171,7 @@ def p_condicion_actuador_aire(p):
                  | ACTUADOR_AIRE identificador atributos_lec_aire contcondicion
                  | ACTUADOR_AIRE identificador atributos_lec_aire
                  | ACTUADOR_AIRE atributos_lec_aire contcondicion
-                 | ACTUADOR_AIRE atributos_lec_aire
-                 '''
+                 | ACTUADOR_AIRE atributos_lec_aire'''
     if p[1] != 'AIRE':
         negacion = p[1]
         actuador = p[2]        
