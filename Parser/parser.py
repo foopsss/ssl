@@ -337,22 +337,39 @@ def p_atributos_lectura_foco(p):
                           | ATRIBUTOS_FOCO_COLOR OP_COMPARADOR NOMBRE'''
     p[0] = p[1] + p[2] + p[3]
 
-
 def p_atributos_lectura_aire(p):
     '''atributos_lec_aire : ATRIBUTO_ESTADO OP_COMPARADOR_BOOL BOOL_ACTUADOR
                           | ATRIBUTOS_AIRE_MODO OP_COMPARADOR_BOOL DISCRETO 
                           | ATRIBUTOS_AIRE_TEMP_OBJ OP_COMPARADOR VALOR_TEMP_OBJ
-                          | ATRIBUTOS_AIRE_TEMP_ACT OP_COMPARADOR VALOR_TEMP_ACT
-    
-    '''
-
+                          | ATRIBUTOS_AIRE_TEMP_ACT OP_COMPARADOR VALOR_TEMP_ACT'''
+    p[0] = p[1] + p[2] + p[3]
 
 def p_atributos_lectura_persiana(p):
-def p_atributos_lectura_cerradura(p):
-def p_atributos_lectura_reloj(p):
-def p_atributos_lectura_altavoz(p):
-def p_atributos_lectura_alarma(p):
+    '''atributos_lec_persiana : ATRIBUTOS_PERSIANA OP_COMPARADOR PERCENT'''
+    p[0] = p[1] + p[2] + p[3]
 
+def p_atributos_lectura_cerradura(p):
+    '''atributos_lec_cerradura : ATRIBUTO_ESTADO OP_COMPARADOR_BOOL BOOL_ACTUADOR'''
+    p[0] = p[1] + p[2] + p[3]
+
+def p_atributos_lectura_reloj(p):
+    '''atributos_lec_reloj : ATRIBUTOS_RELOJ_HORA OP_COMPARADOR HORA
+                           | ATRIBUTOS_RELOJ_FECHA OP_COMPARADOR DATE'''
+    p[0] = p[1] + p[2] + p[3]
+
+def p_atributos_lectura_altavoz(p):
+    '''atributos_lec_altavoz : ATRIBUTOS_ALTAVOZ_VOLUMEN OP_COMPARADOR PERCENT
+                             | ATRIBUTOS_ALTAVOZ_MUTE OP_COMPARADOR_BOOL BOOL_ACTUADOR
+                             | ATRIBUTOS_ALTAVOZ_MENSAJE OP_COMPARADOR TEXTO
+                             | ATRIBUTOS_ALTAVOZ_EMAIL OP_COMPARADOR EMAIL'''
+    p[0] = p[1] + p[2] + p[3]
+
+
+def p_atributos_lectura_alarma(p):
+    '''atributos_lec_alarma : ATRIBUTO_ESTADO OP_COMPARADOR_BOOL BOOL_ACTUADOR
+                            | ATRIBUTOS_ALARMA OP_COMPARADOR_BOOL BOOL_ACTUADOR
+    '''
+    p[0] = p[1] + p[2] + p[3]
 
 
 
