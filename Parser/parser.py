@@ -104,26 +104,27 @@ def p_contcondicion(p):
     '''contcondicion : OP_LOGICO condicion'''
 
 def p_condicion_temperatura(p):
-    '''condicion : OP_NEGACION VALOR_TEMP_OBJ identificador OP_COMPARADOR VALOR_TEMP_ACT
-                 | OP_NEGACION VALOR_TEMP_OBJ identificador OP_COMPARADOR VALOR_TEMP_ACT contcondicion
-                 | OP_NEGACION VALOR_TEMP_OBJ OP_COMPARADOR VALOR_TEMP_ACT contcondicion
-                 | VALOR_TEMP_OBJ identificador OP_COMPARADOR VALOR_TEMP_ACT contcondicion
-                 | VALOR_TEMP_OBJ identificador OP_COMPARADOR VALOR_TEMP_ACT
-                 | VALOR_TEMP_OBJ OP_COMPARADOR VALOR_TEMP_ACT contcondicion
-                 | VALOR_TEMP_OBJ OP_COMPARADOR VALOR_TEMP_ACT'''
+    '''condicion : OP_NEGACION SENSOR_TEMPERATURA identificador OP_COMPARADOR VALOR_TEMP_ACT contcondicion
+                 | OP_NEGACION SENSOR_TEMPERATURA identificador OP_COMPARADOR VALOR_TEMP_ACT
+                 | OP_NEGACION SENSOR_TEMPERATURA OP_COMPARADOR VALOR_TEMP_ACT contcondicion
+                 | SENSOR_TEMPERATURA identificador OP_COMPARADOR VALOR_TEMP_ACT contcondicion
+                 | SENSOR_TEMPERATURA identificador OP_COMPARADOR VALOR_TEMP_ACT
+                 | SENSOR_TEMPERATURA OP_COMPARADOR VALOR_TEMP_ACT contcondicion
+                 | SENSOR_TEMPERATURA OP_COMPARADOR VALOR_TEMP_ACT'''
 
 def p_condicion_humedad(p):
-    ''' condicion : OP_NEGACION SENSOR_HUMEDAD identifacor OP_COMPARADOR percent
-                  | OP_NEGACION SENSOR_HUMEDAD OP_COMPARADOR percent contcondicion
-                  | OP_NEGACION SENSOR_HUMEDAD OP_COMPARADOR percent
-                  | SENSOR_HUMEDAD identificador OP_COMPARADOR percent contcondicion
-                  | SENSOR_HUMEDAD identificador OP_COMPARADOR percent
-                  | SENSOR_HUMEDAD OP_COMPARADOR percent contcondicion
-                  | SENSOR_HUMEDAD OP_COMPARADOR percent'''
+    ''' condicion : OP_NEGACION SENSOR_HUMEDAD identificador OP_COMPARADOR PERCENT contcondicion
+                  | OP_NEGACION SENSOR_HUMEDAD OP_COMPARADOR PERCENT contcondicion
+                  | OP_NEGACION SENSOR_HUMEDAD OP_COMPARADOR PERCENT
+                  | SENSOR_HUMEDAD identificador OP_COMPARADOR PERCENT contcondicion
+                  | SENSOR_HUMEDAD identificador OP_COMPARADOR PERCENT
+                  | SENSOR_HUMEDAD OP_COMPARADOR PERCENT contcondicion
+                  | SENSOR_HUMEDAD OP_COMPARADOR PERCENT'''
 
 def p_condicion_luz(p):
     ''' condicion : OP_NEGACION SENSOR_LUZ identificador OP_COMPARADOR iluminancia contcondicion
                   | OP_NEGACION SENSOR_LUZ OP_COMPARADOR iluminancia contcondicion
+                  | OP_NEGACION SENSOR_LUZ OP_COMPARADOR iluminancia
                   | OP_NEGACION SENSOR_LUZ OP_COMPARADOR iluminancia
                   | SENSOR_LUZ identificador OP_COMPARADOR iluminancia contcondicion
                   | SENSOR_LUZ identificador OP_COMPARADOR iluminancia
