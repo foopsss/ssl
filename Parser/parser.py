@@ -100,10 +100,258 @@ def p_atributos_escritura_alarma(p):
     p[0] = p[1] + p[2] + p[3]
 
 
+#CONDICIONES INCLUYEN ACTUADORES Y SENSORES (SOLO DE LECTURA)
+def p_condicion_actuador_aire(p):
+    '''condicion : OP_NEGACION ACTUADOR_AIRE identificador atributos_lec_aire contcondicion
+                 | OP_NEGACION ACTUADOR_AIRE identificador atributos_lec_aire
+                 | OP_NEGACION ACTUADOR_AIRE atributos_lec_aire contcondicion
+                 | OP_NEGACION ACTUADOR_AIRE atributos_lec_aire
+                 | ACTUADOR_AIRE identificador atributos_lec_aire contcondicion
+                 | ACTUADOR_AIRE identificador atributos_lec_aire
+                 | ACTUADOR_AIRE atributos_lec_aire contcondicion
+                 | ACTUADOR_AIRE atributos_lec_aire
+                 '''
+    if p[1] != 'AIRE':
+        negacion = p[1]
+        actuador = p[2]        
+        if len(p) == 6:
+            p[0] = ('CONDICION_AIRE', negacion, actuador, p[3], p[4], p[5])
+        elif len(p) == 5:
+            if p[3].startswith('_'):
+                p[0] = ('CONDICION_AIRE', negacion, actuador, p[3], p[4], None)
+            else:                    
+                p[0] = ('CONDICION_AIRE', negacion, actuador, None, p[3], p[4])
+        else:             
+            p[0] = ('CONDICION_AIRE', negacion, actuador, None, p[3], None)
+    else:
+        negacion = None
+        actuador = p[1]
+
+        if len(p) == 5:
+            p[0] = ('CONDICION_AIRE', negacion, actuador, p[2], p[3], p[4])
+        elif len(p) == 4:
+            if p[2].startswith('_'):
+                p[0] = ('CONDICION_AIRE', negacion, actuador, p[2], p[3], None)
+            else:                    
+                p[0] = ('CONDICION_AIRE', negacion, actuador, None, p[2], p[3])
+        else: 
+            p[0] = ('CONDICION_AIRE', negacion, actuador, None, p[2], None)
+    
+
+def p_condicion_actuador_persiana(p):
+    '''condicion : OP_NEGACION ACTUADOR_PERSIANA identificador atributos_lec_persiana contcondicion
+                 | OP_NEGACION ACTUADOR_PERSIANA identificador atributos_lec_persiana
+                 | OP_NEGACION ACTUADOR_PERSIANA atributos_lec_persiana contcondicion
+                 | OP_NEGACION ACTUADOR_PERSIANA atributos_lec_persiana
+                 | ACTUADOR_PERSIANA identificador atributos_lec_persiana contcondicion
+                 | ACTUADOR_PERSIANA identificador atributos_lec_persiana 
+                 | ACTUADOR_PERSIANA atributos_lec_persiana contcondicion
+                 | ACTUADOR_PERSIANA atributos_lec_persiana'''
+    
+    if p[1] != 'PERSIANA':
+        negacion = p[1]
+        actuador = p[2]
+        
+        if len(p) == 6:
+            p[0] = ('CONDICION_PERSIANA', negacion, actuador, p[3], p[4], p[5])
+        elif len(p) == 5:
+            if p[3].startswith('_'):
+                p[0] = ('CONDICION_PERSIANA', negacion, actuador, p[3], p[4], None)
+            else:
+                p[0] = ('CONDICION_PERSIANA', negacion, actuador, None, p[3], p[4])
+        else:
+            p[0] = ('CONDICION_PERSIANA', negacion, actuador, None, p[3], None)
+
+    else:
+        negacion = None
+        actuador = p[1]
+        
+        if len(p) == 5:
+            p[0] = ('CONDICION_PERSIANA', negacion, actuador, p[2], p[3], p[4])
+        elif len(p) == 4:
+            if p[2].startswith('_'):
+                p[0] = ('CONDICION_PERSIANA', negacion, actuador, p[2], p[3], None)
+            else:
+                p[0] = ('CONDICION_PERSIANA', negacion, actuador, None, p[2], p[3])
+        else:
+            p[0] = ('CONDICION_PERSIANA', negacion, actuador, None, p[2], None)
+
+    
+def p_condicion_actuador_cerradura(p):
+    '''condicion : OP_NEGACION ACTUADOR_CERRADURA identificador atributos_lec_cerradura contcondicion
+                 | OP_NEGACION ACTUADOR_CERRADURA identificador atributos_lec_cerradura
+                 | OP_NEGACION ACTUADOR_CERRADURA atributos_lec_cerradura contcondicion
+                 | OP_NEGACION ACTUADOR_CERRADURA atributos_lec_cerradura
+                 | ACTUADOR_CERRADURA identificador atributos_lec_cerradura contcondicion
+                 | ACTUADOR_CERRADURA identificador atributos_lec_cerradura
+                 | ACTUADOR_CERRADURA atributos_lec_cerradura contcondicion
+                 | ACTUADOR_CERRADURA atributos_lec_cerradura'''
+    
+    if p[1] != 'CERRADURA':
+        negacion = p[1]
+        actuador = p[2]
+        
+        if len(p) == 6:
+            p[0] = ('CONDICION_CERRADURA', negacion, actuador, p[3], p[4], p[5])
+        elif len(p) == 5:
+            if p[3].startswith('_'):
+                p[0] = ('CONDICION_CERRADURA', negacion, actuador, p[3], p[4], None)
+            else:
+                p[0] = ('CONDICION_CERRADURA', negacion, actuador, None, p[3], p[4])
+        else:
+            p[0] = ('CONDICION_CERRADURA', negacion, actuador, None, p[3], None)
+
+    else:
+        negacion = None
+        actuador = p[1]
+        
+        if len(p) == 5:
+            p[0] = ('CONDICION_CERRADURA', negacion, actuador, p[2], p[3], p[4])
+        elif len(p) == 4:
+            if p[2].startswith('_'):
+                p[0] = ('CONDICION_CERRADURA', negacion, actuador, p[2], p[3], None)
+            else:
+                p[0] = ('CONDICION_CERRADURA', negacion, actuador, None, p[2], p[3])
+        else:
+            p[0] = ('CONDICION_CERRADURA', negacion, actuador, None, p[2], None)
 
 
+def p_condicion_actuador_reloj(p):
+    '''condicion : OP_NEGACION ACTUADOR_RELOJ identificador atributos_lec_reloj contcondicion
+                 | OP_NEGACION ACTUADOR_RELOJ identificador atributos_lec_reloj
+                 | OP_NEGACION ACTUADOR_RELOJ atributos_lec_reloj contcondicion
+                 | OP_NEGACION ACTUADOR_RELOJ atributos_lec_reloj
+                 | ACTUADOR_RELOJ identificador atributos_lec_reloj contcondicion
+                 | ACTUADOR_RELOJ identificador atributos_lec_reloj
+                 | ACTUADOR_RELOJ atributos_lec_reloj contcondicion
+                 | ACTUADOR_RELOJ atributos_lec_reloj'''
+    
+    if p[1] != 'RELOJ':
+        negacion = p[1]
+        actuador = p[2]
+        
+        if len(p) == 6:
+            p[0] = ('CONDICION_RELOJ', negacion, actuador, p[3], p[4], p[5])
+        elif len(p) == 5:
+            if p[3].startswith('_'):
+                p[0] = ('CONDICION_RELOJ', negacion, actuador, p[3], p[4], None)
+            else:
+                p[0] = ('CONDICION_RELOJ', negacion, actuador, None, p[3], p[4])
+        else:
+            p[0] = ('CONDICION_RELOJ', negacion, actuador, None, p[3], None)
+
+    else:
+        negacion = None
+        actuador = p[1]
+        
+        if len(p) == 5:
+            p[0] = ('CONDICION_RELOJ', negacion, actuador, p[2], p[3], p[4])
+        elif len(p) == 4:
+            if p[2].startswith('_'):
+                p[0] = ('CONDICION_RELOJ', negacion, actuador, p[2], p[3], None)
+            else:
+                p[0] = ('CONDICION_RELOJ', negacion, actuador, None, p[2], p[3])
+        else:
+            p[0] = ('CONDICION_RELOJ', negacion, actuador, None, p[2], None)
+
+def p_condicion_actuador_altavoz(p):
+    '''condicion : OP_NEGACION ACTUADOR_ALTAVOZ identificador atributos_lec_altavoz contcondicion
+                 | OP_NEGACION ACTUADOR_ALTAVOZ identificador atributos_lec_altavoz
+                 | OP_NEGACION ACTUADOR_ALTAVOZ atributos_lec_altavoz contcondicion
+                 | OP_NEGACION ACTUADOR_ALTAVOZ atributos_lec_altavoz
+                 | ACTUADOR_ALTAVOZ identificador atributos_lec_altavoz contcondicion
+                 | ACTUADOR_ALTAVOZ identificador atributos_lec_altavoz
+                 | ACTUADOR_ALTAVOZ atributos_lec_altavoz contcondicion
+                 | ACTUADOR_ALTAVOZ atributos_lec_altavoz'''
+    
+    if p[1] != 'ALTAVOZ':
+        negacion = p[1]
+        actuador = p[2]
+        
+        if len(p) == 6:
+            p[0] = ('CONDICION_ALTAVOZ', negacion, actuador, p[3], p[4], p[5])
+        elif len(p) == 5:
+            if p[3].startswith('_'):
+                p[0] = ('CONDICION_ALTAVOZ', negacion, actuador, p[3], p[4], None)
+            else:
+                p[0] = ('CONDICION_ALTAVOZ', negacion, actuador, None, p[3], p[4])
+        else:
+            p[0] = ('CONDICION_ALTAVOZ', negacion, actuador, None, p[3], None)
+
+    else:
+        negacion = None
+        actuador = p[1]
+        
+        if len(p) == 5:
+            p[0] = ('CONDICION_ALTAVOZ', negacion, actuador, p[2], p[3], p[4])
+        elif len(p) == 4:
+            if p[2].startswith('_'):
+                p[0] = ('CONDICION_ALTAVOZ', negacion, actuador, p[2], p[3], None)
+            else:
+                p[0] = ('CONDICION_ALTAVOZ', negacion, actuador, None, p[2], p[3])
+        else:
+            p[0] = ('CONDICION_ALTAVOZ', negacion, actuador, None, p[2], None)
 
 
+def p_condicion_actuador_alarma(p):
+    '''condicion : OP_NEGACION ACTUADOR_ALARMA identificador atributos_lec_alarma contcondicion
+                 | OP_NEGACION ACTUADOR_ALARMA identificador atributos_lec_alarma
+                 | OP_NEGACION ACTUADOR_ALARMA atributos_lec_alarma contcondicion
+                 | OP_NEGACION ACTUADOR_ALARMA atributos_lec_alarma
+                 | ACTUADOR_ALARMA identificador atributos_lec_alarma contcondicion
+                 | ACTUADOR_ALARMA identificador atributos_lec_alarma
+                 | ACTUADOR_ALARMA atributos_lec_alarma contcondicion
+                 | ACTUADOR_ALARMA atributos_lec_alarma'''
+    
+    if p[1] != 'ALARMA':
+        negacion = p[1]
+        actuador = p[2]
+        
+        if len(p) == 6:
+            p[0] = ('CONDICION_ALARMA', negacion, actuador, p[3], p[4], p[5])
+        elif len(p) == 5:
+            if p[3].startswith('_'):
+                p[0] = ('CONDICION_ALARMA', negacion, actuador, p[3], p[4], None)
+            else:
+                p[0] = ('CONDICION_ALARMA', negacion, actuador, None, p[3], p[4])
+        else:
+            p[0] = ('CONDICION_ALARMA', negacion, actuador, None, p[3], None)
+
+    else:
+        negacion = None
+        actuador = p[1]
+        
+        if len(p) == 5:
+            p[0] = ('CONDICION_ALARMA', negacion, actuador, p[2], p[3], p[4])
+        elif len(p) == 4:
+            if p[2].startswith('_'):
+                p[0] = ('CONDICION_ALARMA', negacion, actuador, p[2], p[3], None)
+            else:
+                p[0] = ('CONDICION_ALARMA', negacion, actuador, None, p[2], p[3])
+        else:
+            p[0] = ('CONDICION_ALARMA', negacion, actuador, None, p[2], None)
+
+def p_atributos_lectura_foco(p):
+    '''atributos_lec_foco : ATRIBUTO_ESTADO OP_COMPARADOR_BOOL BOOL_ACTUADOR
+                          | ATRIBUTOS_FOCO_BRILLO OP_COMPARADOR PERCENT
+                          | ATRIBUTOS_FOCO_COLOR OP_COMPARADOR NOMBRE'''
+    p[0] = p[1] + p[2] + p[3]
+
+
+def p_atributos_lectura_aire(p):
+    '''atributos_lec_aire : ATRIBUTO_ESTADO OP_COMPARADOR_BOOL BOOL_ACTUADOR
+                          | ATRIBUTOS_AIRE_MODO OP_COMPARADOR_BOOL DISCRETO 
+                          | ATRIBUTOS_AIRE_TEMP_OBJ OP_COMPARADOR VALOR_TEMP_OBJ
+                          | ATRIBUTOS_AIRE_TEMP_ACT OP_COMPARADOR VALOR_TEMP_ACT
+    
+    '''
+
+
+def p_atributos_lectura_persiana(p):
+def p_atributos_lectura_cerradura(p):
+def p_atributos_lectura_reloj(p):
+def p_atributos_lectura_altavoz(p):
+def p_atributos_lectura_alarma(p):
 
 
 
