@@ -3,7 +3,6 @@ from ply import lex, yacc
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import os
-import sys
 from datetime import datetime
 
 #====================================================================#
@@ -1463,5 +1462,9 @@ root = tk.Tk()
 app = InterfazAnalizador(root)
 root.mainloop()
 
-#Anotaciones
-#Pensar cómo hacer para agregar o dejar unificadas las reglas del lexer para valor_temp_act y valor_temp_obj 
+#Preguntar: los valores de valor_temp_obj y valor_temp_act al estar separados tienen un problema, que el rango
+#de temp_obj está contenido en el de temp_act, lo cual causa un conflicto en el matching de los tokens, ya que
+#siempre tratará de hacer matching con la regla que primero esté definida, y puede causar error, ya que esa
+#primer regla de temperatura definida puede no contener el rango para cubrir el valor del token detectado,
+#preguntar si igual hay que mantener separados ambos valores o unificarlos en uno solo de "valor_temp" que
+#cubra el rango mayor de valor_temp_act (-10 a 50)°C
