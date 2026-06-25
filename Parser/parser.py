@@ -780,9 +780,6 @@ except Exception as e:
 
 
 
-
-
-
 #Cosas para hacer:
 #1-Agregar traductor a HTML
 #2-Agregar Main para probar si deriva el ejemplo ejecutando el parser 
