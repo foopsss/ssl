@@ -1473,3 +1473,6 @@ class InterfazAnalizador:
 root = tk.Tk()
 app = InterfazAnalizador(root)
 root.mainloop()
+
+#Anotaciones
+#Pensar cómo hacer para agregar o dejar unificadas las reglas del lexer para valor_temp_act y valor_temp_obj 
