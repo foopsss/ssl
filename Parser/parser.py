@@ -758,7 +758,7 @@ parser = yacc.yacc(debug=False, write_tables=False)
 
 
 #====================================================================#
-#====================== INTERFAZ GRÁFICA y HTML =====================#
+#========================= INTERFAZ GRÁFICA =========================#
 #====================================================================#
 
 # Variables globales para el lexer
@@ -1168,6 +1168,11 @@ class InterfazAnalizador:
         except Exception as e:
             messagebox.showerror("Error", f"Error al generar HTML:\n{str(e)}")
     
+
+#====================================================================#
+#============================== HTML ================================#
+#====================================================================#
+
     def crear_html(self, codigo, tokens):
         """Crea el documento HTML"""
         fecha = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
