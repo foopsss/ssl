@@ -947,10 +947,6 @@ class InterfazAnalizador:
                                     command=self.tab_html.yview)
         scroll_html.pack(side=tk.RIGHT, fill=tk.Y)
         self.tab_html.configure(yscrollcommand=scroll_html.set)
-        
-        # ========== BARRA DE ESTADO ==========
-        self.barra_estado = ttk.Label(frame_principal, text="Listo", relief=tk.SUNKEN, anchor=tk.W)
-        self.barra_estado.grid(row=3, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=(5, 0))
     
     def cargar_ejemplos(self):
         """Carga los archivos de ejemplo en el combobox"""
@@ -983,7 +979,6 @@ class InterfazAnalizador:
             
             nombre_archivo = os.path.basename(ruta)
             self.label_archivo.config(text=f"✓ {nombre_archivo}", foreground="green")
-            self.barra_estado.config(text=f"Archivo cargado: {ruta}")
             
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo cargar el archivo:\n{str(e)}")
@@ -1017,8 +1012,6 @@ class InterfazAnalizador:
             
             # Cambiar a pestaña léxico
             self.notebook.select(self.tab_lexico)
-            
-            self.barra_estado.config(text=f"Análisis léxico completado: {len(self.tokens_encontrados)} tokens encontrados")
             
         except Exception as e:
             self.mostrar_error_lexico(str(e))
@@ -1098,7 +1091,6 @@ class InterfazAnalizador:
                 # Si el parser terminó de recorrer el archivo sin lanzar errores críticos en el medio,
                 # forzamos el éxito gráfico porque el HTML se completó.
                 self.mostrar_exito_sintactico()
-                self.barra_estado.config(text="✓ Análisis sintáctico exitoso")
 
             except SyntaxError as e:
                 self.mostrar_error_sintactico(str(e))
@@ -1173,9 +1165,7 @@ class InterfazAnalizador:
             
             # Habilitar botón de guardar
             self.btn_guardar.config(state=tk.NORMAL)
-            
-            self.barra_estado.config(text="HTML generado correctamente")
-            
+
         except Exception as e:
             messagebox.showerror("Error", f"Error al generar HTML:\n{str(e)}")
     
@@ -1452,7 +1442,6 @@ class InterfazAnalizador:
                     f.write(contenido)
                 
                 messagebox.showinfo("Éxito", f"HTML guardado en:\n{ruta}")
-                self.barra_estado.config(text=f"HTML guardado: {ruta}")
                 
             except Exception as e:
                 messagebox.showerror("Error", f"No se pudo guardar el archivo:\n{str(e)}")
