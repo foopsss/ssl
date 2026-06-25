@@ -47,9 +47,9 @@ tokens = [
     'OP_LOGICO',
     'OP_NEGACION',
     'ASIGNACION',
-    'PUNTO',
+#   'PUNTO',
     'GUION_BAJO',
-    'COMMENT',
+#   'COMMENT',
     'ID'
 ]
 
@@ -106,7 +106,7 @@ def t_OP_LOGICO(t): r'(AND|OR)'; return t
 def t_OP_NEGACION(t): r'NOT'; return t
 
 t_ASIGNACION = r'='
-t_PUNTO = r'\.'
+#t_PUNTO = r'\.'
 t_GUION_BAJO = r'_'
 t_ignore = ' \t'
 t_ignore_COMMENT = r'\/\/.*'
@@ -741,22 +741,21 @@ def p_atributos_lectura_alarma(p):
 #Regla para manejar errores
 def p_error(p):
     if p:
-        # p es el token donde falló la estructura de la gramática
+        # El error ocurrió en un token específico
         line_start = p.lexer.lexdata.rfind('\n', 0, p.lexpos) + 1
         columna = (p.lexpos - line_start) + 1
-        
-        print(f"Error de sintaxis: No se esperaba el token {p.value} en la Línea {p.lineno}, Columna {columna}.")
+        print(f"Error de sintaxis: Se detectó un error en la Línea {p.lineno}, Columna {columna}.")
     else:
-        # p es None si se llegó al final del archivo sin cerrar un bloque (ej. faltó un END)
-        print("Error de sintaxis: Fin de archivo inesperado.")
+        # Se llegó al final del archivo sin cerrar alguna estructura
+        print("Error de sintaxis: Fin de archivo inesperado. Algún bloque quedó abierto.")
     
     # Esto corta el parseo inmediatamente de forma limpia
     raise SyntaxError("Error de análisis sintáctico.")
 
+
 #====================================================================#
 #=============================== MAIN ===============================#
 #====================================================================#
-
 
 
 #parser = yacc.yacc()
