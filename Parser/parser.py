@@ -758,24 +758,8 @@ def p_error(p):
 parser = yacc.yacc(debug=False, write_tables=False)
 
 
-#archivo_prueba = "Ejemplos/PROGRAMA_SMARTHOME_TPI.txt"
-#    
-#try:
-#    with open(archivo_prueba, "r", encoding="utf-8") as archivo:
-#        datos = archivo.read()
-#        datos = datos.upper()
-#        
-#    resultado = parser.parse(datos)
-#    print("AST:")
-#    print(resultado)
-#        
-#except FileNotFoundError:
-#    print(f"Error: No se encontro {archivo_prueba}")
-#except Exception as e:
-#    print(f"Error: {e}")
-
 #====================================================================#
-#========================= INTERFAZ GRÁFICA =========================#
+#====================== INTERFAZ GRÁFICA y HTML =====================#
 #====================================================================#
 
 # Variables globales para el lexer
@@ -809,7 +793,6 @@ def obtener_tokens():
             'columna': find_column(datosOriginal, tok)
         })
     return tokens_encontrados
-
 
 class InterfazAnalizador:
     def __init__(self, root):
@@ -1086,7 +1069,6 @@ class InterfazAnalizador:
         self.tab_lexico.insert(tk.END, error + "\n", "error")
         self.tab_lexico.tag_config("error", foreground="#ff4444", font=("Consolas", 10, "bold"))
     
-
     def analizar_sintactico(self):
             """Realiza el análisis sintáctico del código"""
             self.limpiar_resultados()
