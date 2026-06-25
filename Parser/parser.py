@@ -1035,19 +1035,6 @@ class InterfazAnalizador:
         self.tab_lexico.tag_config("posicion", foreground="#00ff00")
         self.tab_lexico.tag_config("separador", foreground="#888888")
         
-        # Mostrar cada token
-        #for i, token in enumerate(self.tokens_encontrados, 1):
-        #    linea = f"{i:3d}. Token: '{token['valor']}'"
-        #    self.tab_lexico.insert(tk.END, linea, "token")
-        #    
-        #    tipo = f" | Tipo: {token['tipo']}"
-        #    self.tab_lexico.insert(tk.END, tipo, "tipo")
-        #    
-        #    pos = f" | Línea: {token['linea']}, Col: {token['columna']}"
-        #    self.tab_lexico.insert(tk.END, pos, "posicion")
-        #    
-        #    self.tab_lexico.insert(tk.END, "\n", "separador")
-
 
     def analizar_lexico(self):
         self.tab_lexico.delete(1.0, tk.END)
@@ -1230,7 +1217,6 @@ class InterfazAnalizador:
         html += "    <title>Traducción Domótica TPI</title>\n"
         html += "</head>\n<body>\n\n"
         
-        # 1. CONTENEDOR DE SENSORES (Borde 1px verde y padding de 20px)
         html += "    \n"
         html += "    <div style='border: 1px solid green; padding: 20px; margin-bottom: 20px;'>\n"
         html += "        <h3>Estado de Sensores:</h3>\n"
@@ -1262,7 +1248,6 @@ class InterfazAnalizador:
                         break
                     j += 1
                 
-                # Formato consigna: Nombre encerrado entre tags <strong>, junto con valor y unidad
                 html += f"        <p><strong>{nombre_sensor}</strong>: {valor_sensor} {unidad_sensor}</p>\n"
                 tiene_sensores = True
             i += 1
@@ -1271,7 +1256,6 @@ class InterfazAnalizador:
             html += "        <p>No se detectaron sensores.</p>\n"
         html += "    </div>\n\n"
         
-        # 2. CONTENEDOR DE ACTUADORES
         html += "    \n"
         
         i = 0
@@ -1387,3 +1371,8 @@ root.mainloop()
 #primer regla de temperatura definida puede no contener el rango para cubrir el valor del token detectado,
 #preguntar si igual hay que mantener separados ambos valores o unificarlos en uno solo de "valor_temp" que
 #cubra el rango mayor de valor_temp_act (-10 a 50)°C.
+
+#Preguntar qué cosas deberíamos quitar o dejar de la interfaz (dejamos análisis léxico por ej?)
+
+#No se nos ocurre como procesar el HTML a medida que hacemos el análisis sintáctico, entonces, nos puede tirar un tip
+#de como podríamos hacer, y también le mostramos como tenemos actualmente.
