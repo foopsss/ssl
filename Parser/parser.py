@@ -1376,3 +1376,7 @@ root.mainloop()
 
 #No se nos ocurre como procesar el HTML a medida que hacemos el análisis sintáctico, entonces, nos puede tirar un tip
 #de como podríamos hacer, y también le mostramos como tenemos actualmente.
+
+#Al poner 500°C toma como que está bien la temperatura ya que toma solo 0°C ya que ese valor se encuentra
+#dentro del rango de la temperatura, y el 50 de la izquierda, al 5 y al 0 los toma como caracteres ilegales
+#(es decir, se los ignora) permitiendo el análisis sintáctico de manera exitosa igualmente. Está bien así o no?
