@@ -33,8 +33,7 @@ tokens = [
     'ACTUADOR_ALARMA',
     'TEXTO', 'BOOL_DISPOSITIVO',
     'BOOL_ACTUADOR',
-    'VALOR_TEMP_OBJ',
-    'VALOR_TEMP_ACT',
+    'VALOR_TEMP',
     'OP_COMPARADOR_BOOL',
     'PERCENT',
     'TIEMPO',
@@ -92,8 +91,7 @@ def t_ACTUADOR_ALARMA(t): r'ALARMA'; return t
 def t_TEXTO(t): r'[\"“\'][^\"\n“”\']*[\"”\']'; return t
 def t_BOOL_DISPOSITIVO(t): r'(TRUE|FALSE)'; return t
 def t_BOOL_ACTUADOR(t): r'(ON|OFF)'; return t
-def t_VALOR_TEMP_OBJ(t): r'(1[6-9]|2[0-9]|30)°C'; return t
-def t_VALOR_TEMP_ACT(t): r'(-10|-[1-9]|[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|50)°C'; return t
+def t_VALOR_TEMP(t): r'(-10|-[1-9]|[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|50)°C'; return t
 def t_PERCENT(t): r'(([0-9]|[1-9][0-9])|100)%'; return t
 def t_TIEMPO(t): r'([0-9]\s?H|[1-9][0-9]\s?H|[0-9]\s?M|[1-9][0-9]\s?M|[0-9]\s?S|[1-9][0-9]\s?S)'; return t
 def t_ILUMINANCIA(t): r'([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|1000)LUX'; return t
@@ -212,7 +210,7 @@ def p_atributos_escritura_foco(p):
 def p_atributos_escritura_aire(p):
     '''atributos_esc_aire : ATRIBUTO_ESTADO ASIGNACION BOOL_ACTUADOR
                           | ATRIBUTOS_AIRE_MODO ASIGNACION DISCRETO
-                          | ATRIBUTOS_AIRE_TEMP_OBJ ASIGNACION VALOR_TEMP_OBJ'''
+                          | ATRIBUTOS_AIRE_TEMP_OBJ ASIGNACION VALOR_TEMP'''
     p[0] = p[1] + p[2] + p[3]
 
 def p_atributos_escritura_persiana(p):
@@ -240,14 +238,14 @@ def p_contcondicion(p):
     '''contcondicion : OP_LOGICO condicion'''
 
 def p_condicion_temperatura(p):
-    '''condicion : OP_NEGACION SENSOR_TEMPERATURA identificador OP_COMPARADOR VALOR_TEMP_ACT contcondicion
-                 | OP_NEGACION SENSOR_TEMPERATURA identificador OP_COMPARADOR VALOR_TEMP_ACT
-                 | OP_NEGACION SENSOR_TEMPERATURA OP_COMPARADOR VALOR_TEMP_ACT contcondicion
-                 | OP_NEGACION SENSOR_TEMPERATURA OP_COMPARADOR VALOR_TEMP_ACT
-                 | SENSOR_TEMPERATURA identificador OP_COMPARADOR VALOR_TEMP_ACT contcondicion
-                 | SENSOR_TEMPERATURA identificador OP_COMPARADOR VALOR_TEMP_ACT
-                 | SENSOR_TEMPERATURA OP_COMPARADOR VALOR_TEMP_ACT contcondicion
-                 | SENSOR_TEMPERATURA OP_COMPARADOR VALOR_TEMP_ACT'''
+    '''condicion : OP_NEGACION SENSOR_TEMPERATURA identificador OP_COMPARADOR VALOR_TEMP contcondicion
+                 | OP_NEGACION SENSOR_TEMPERATURA identificador OP_COMPARADOR VALOR_TEMP
+                 | OP_NEGACION SENSOR_TEMPERATURA OP_COMPARADOR VALOR_TEMP contcondicion
+                 | OP_NEGACION SENSOR_TEMPERATURA OP_COMPARADOR VALOR_TEMP
+                 | SENSOR_TEMPERATURA identificador OP_COMPARADOR VALOR_TEMP contcondicion
+                 | SENSOR_TEMPERATURA identificador OP_COMPARADOR VALOR_TEMP
+                 | SENSOR_TEMPERATURA OP_COMPARADOR VALOR_TEMP contcondicion
+                 | SENSOR_TEMPERATURA OP_COMPARADOR VALOR_TEMP'''
     
     if p[1] != 'SENSOR_TEMPERATURA':
         negacion = p[1]
@@ -708,8 +706,8 @@ def p_atributos_lectura_foco(p):
 def p_atributos_lectura_aire(p):
     '''atributos_lec_aire : ATRIBUTO_ESTADO OP_COMPARADOR_BOOL BOOL_ACTUADOR
                           | ATRIBUTOS_AIRE_MODO OP_COMPARADOR_BOOL DISCRETO 
-                          | ATRIBUTOS_AIRE_TEMP_OBJ OP_COMPARADOR VALOR_TEMP_OBJ
-                          | ATRIBUTOS_AIRE_TEMP_ACT OP_COMPARADOR VALOR_TEMP_ACT'''
+                          | ATRIBUTOS_AIRE_TEMP_OBJ OP_COMPARADOR VALOR_TEMP
+                          | ATRIBUTOS_AIRE_TEMP_ACT OP_COMPARADOR VALOR_TEMP'''
     p[0] = p[1] + p[2] + p[3]
 
 def p_atributos_lectura_persiana(p):
