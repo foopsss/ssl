@@ -1363,7 +1363,6 @@ class InterfazAnalizador:
             except Exception as e:
                 messagebox.showerror("Error", f"No se pudo guardar el archivo:\n{str(e)}")
 
-   
     
     def limpiar_resultados(self):
         """Limpia todos los paneles de resultados"""
@@ -1387,4 +1386,4 @@ root.mainloop()
 #siempre tratará de hacer matching con la regla que primero esté definida, y puede causar error, ya que esa
 #primer regla de temperatura definida puede no contener el rango para cubrir el valor del token detectado,
 #preguntar si igual hay que mantener separados ambos valores o unificarlos en uno solo de "valor_temp" que
-#cubra el rango mayor de valor_temp_act (-10 a 50)°C
+#cubra el rango mayor de valor_temp_act (-10 a 50)°C.
