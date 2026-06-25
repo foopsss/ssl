@@ -1036,6 +1036,58 @@ class InterfazAnalizador:
         self.tab_lexico.tag_config("separador", foreground="#888888")
         
         # Mostrar cada token
+        #for i, token in enumerate(self.tokens_encontrados, 1):
+        #    linea = f"{i:3d}. Token: '{token['valor']}'"
+        #    self.tab_lexico.insert(tk.END, linea, "token")
+        #    
+        #    tipo = f" | Tipo: {token['tipo']}"
+        #    self.tab_lexico.insert(tk.END, tipo, "tipo")
+        #    
+        #    pos = f" | Línea: {token['linea']}, Col: {token['columna']}"
+        #    self.tab_lexico.insert(tk.END, pos, "posicion")
+        #    
+        #    self.tab_lexico.insert(tk.END, "\n", "separador")
+
+
+    def analizar_lexico(self):
+        self.tab_lexico.delete(1.0, tk.END)
+        self.tokens_encontrados = []
+        
+        self.tab_lexico.tag_config("token", foreground="#00ff00", font=("Consolas", 10, "bold"))
+        self.tab_lexico.tag_config("tipo", foreground="#00bfff")
+        self.tab_lexico.tag_config("posicion", foreground="#ffaa00")
+        self.tab_lexico.tag_config("separador", foreground="#ffffff")
+        
+        texto = self.editor.get(1.0, tk.END)
+        if not texto.strip():
+            messagebox.showwarning("Advertencia", "No hay código para analizar")
+            return
+        datos = texto.upper()
+        lexer.lineno = 1
+        lexer.input(datos)
+        
+        while True:
+            try:
+                tok = lexer.token()
+                if not tok:
+                    break
+
+                line_start = datos.rfind('\n', 0, tok.lexpos) + 1
+                columna = (tok.lexpos - line_start) + 1
+                
+                self.tokens_encontrados.append({
+                    'valor': tok.value,
+                    'tipo': tok.type,
+                    'linea': tok.lineno,
+                    'columna': columna
+                })
+            except Exception:
+
+                try:
+                    lexer.skip(1)
+                except:
+                    break
+                    
         for i, token in enumerate(self.tokens_encontrados, 1):
             linea = f"{i:3d}. Token: '{token['valor']}'"
             self.tab_lexico.insert(tk.END, linea, "token")
@@ -1047,11 +1099,8 @@ class InterfazAnalizador:
             self.tab_lexico.insert(tk.END, pos, "posicion")
             
             self.tab_lexico.insert(tk.END, "\n", "separador")
-        
-        # Resumen
-        #self.tab_lexico.insert(tk.END, "\n" + "=" * 80 + "\n", "titulo")
+
         self.tab_lexico.insert(tk.END, f"Total: {len(self.tokens_encontrados)} tokens encontrados\n", "titulo")
-        #self.tab_lexico.insert(tk.END, "=" * 80 + "\n", "titulo")
     
     def mostrar_error_lexico(self, error):
         """Muestra errores del análisis léxico"""
@@ -1141,6 +1190,12 @@ class InterfazAnalizador:
         #self.tab_sintactico.insert(tk.END, "=" * 80 + "\n\n", "error")
         self.tab_sintactico.insert(tk.END, error + "\n", "detalle")
     
+
+
+#====================================================================#
+#============================== HTML ================================#
+#====================================================================#
+
     def generar_html(self):
         """Genera el HTML del programa"""
         texto = self.editor.get(1.0, tk.END).strip()
@@ -1154,7 +1209,7 @@ class InterfazAnalizador:
                 cargar_datos(texto)
                 self.tokens_encontrados = obtener_tokens()
             
-            # Generar HTML
+            # Generar HTML pasándole el texto y los tokens originales
             html = self.crear_html(texto, self.tokens_encontrados)
             
             # Mostrar en pestaña HTML
@@ -1168,259 +1223,112 @@ class InterfazAnalizador:
         except Exception as e:
             messagebox.showerror("Error", f"Error al generar HTML:\n{str(e)}")
     
-
-#====================================================================#
-#============================== HTML ================================#
-#====================================================================#
-
     def crear_html(self, codigo, tokens):
-        """Crea el documento HTML"""
-        fecha = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        """Crea el documento HTML según los requerimientos de la consigna"""
+        html = "<!DOCTYPE html>\n<html lang='es'>\n<head>\n"
+        html += "    <meta charset='UTF-8'>\n"
+        html += "    <title>Traducción Domótica TPI</title>\n"
+        html += "</head>\n<body>\n\n"
         
-        # Escapar HTML en el código
-        codigo_escapado = self.escapar_html(codigo)
+        # 1. CONTENEDOR DE SENSORES (Borde 1px verde y padding de 20px)
+        html += "    \n"
+        html += "    <div style='border: 1px solid green; padding: 20px; margin-bottom: 20px;'>\n"
+        html += "        <h3>Estado de Sensores:</h3>\n"
         
-        html = f"""<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Programa SmartHome - BinaryBuilders</title>
-    <style>
-        * {{
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }}
-        
-        body {{
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-            min-height: 100vh;
-        }}
-        
-        .container {{
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            overflow: hidden;
-        }}
-        
-        .header {{
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }}
-        
-        .header h1 {{
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }}
-        
-        .header p {{
-            font-size: 1.1em;
-            opacity: 0.9;
-        }}
-        
-        .info {{
-            background: #f8f9fa;
-            padding: 15px 30px;
-            border-bottom: 2px solid #e0e0e0;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-        }}
-        
-        .info-item {{
-            margin: 5px 15px 5px 0;
-        }}
-        
-        .info-label {{
-            font-weight: bold;
-            color: #555;
-        }}
-        
-        .content {{
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            padding: 30px;
-        }}
-        
-        @media (max-width: 968px) {{
-            .content {{
-                grid-template-columns: 1fr;
-            }}
-        }}
-        
-        .panel {{
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }}
-        
-        .panel h2 {{
-            color: #1e3c72;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #1e3c72;
-        }}
-        
-        .code-container {{
-            background: #1e1e1e;
-            color: #d4d4d4;
-            padding: 20px;
-            border-radius: 5px;
-            font-family: 'Consolas', 'Courier New', monospace;
-            font-size: 14px;
-            line-height: 1.6;
-            overflow-x: auto;
-            white-space: pre;
-        }}
-        
-        .tokens-container {{
-            max-height: 500px;
-            overflow-y: auto;
-        }}
-        
-        .token-item {{
-            background: white;
-            padding: 8px 12px;
-            margin: 5px 0;
-            border-radius: 4px;
-            border-left: 3px solid #667eea;
-            font-family: 'Consolas', monospace;
-            font-size: 13px;
-            display: flex;
-            justify-content: space-between;
-        }}
-        
-        .token-value {{
-            font-weight: bold;
-            color: #333;
-        }}
-        
-        .token-type {{
-            color: #667eea;
-            font-size: 11px;
-        }}
-        
-        .token-pos {{
-            color: #999;
-            font-size: 11px;
-        }}
-        
-        .stats {{
-            background: #e8f5e9;
-            padding: 15px;
-            border-radius: 5px;
-            margin-top: 15px;
-        }}
-        
-        .stats h3 {{
-            color: #2e7d32;
-            margin-bottom: 10px;
-        }}
-        
-        .stats-item {{
-            margin: 5px 0;
-            color: #555;
-        }}
-        
-        .footer {{
-            background: #1e3c72;
-            color: white;
-            text-align: center;
-            padding: 15px;
-            font-size: 0.9em;
-        }}
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🏠 Programa SmartHome</h1>
-            <p>Analizador Léxico y Sintáctico - BinaryBuilders</p>
-        </div>
-        
-        <div class="info">
-            <div class="info-item">
-                <span class="info-label">Fecha:</span> {fecha}
-            </div>
-            <div class="info-item">
-                <span class="info-label">Tokens:</span> {len(tokens)}
-            </div>
-            <div class="info-item">
-                <span class="info-label">Líneas:</span> {len(codigo.splitlines())}
-            </div>
-            <div class="info-item">
-                <span class="info-label">Estado:</span> ✓ Válido
-            </div>
-        </div>
-        
-        <div class="content">
-            <div class="panel">
-                <h2>📄 Código Fuente</h2>
-                <div class="code-container">{codigo_escapado}</div>
-            </div>
-            
-            <div class="panel">
-                <h2>🔍 Tokens Identificados</h2>
-                <div class="tokens-container">
-"""
-        
-        # Agregar cada token
-        for token in tokens:
-            html += f"""                    <div class="token-item">
-                        <span class="token-value">'{token['valor']}'</span>
-                        <span class="token-type">{token['tipo']}</span>
-                        <span class="token-pos">L{token['linea']}:C{token['columna']}</span>
-                    </div>
-"""
-        
-        html += """                </div>
-                
-                <div class="stats">
-                    <h3>📊 Estadísticas</h3>
-                    <div class="stats-item">Total de tokens: """ + str(len(tokens)) + """</div>
-"""
-        
-        # Contar tipos de tokens
-        tipos = {}
-        for token in tokens:
+        tiene_sensores = False
+        i = 0
+        while i < len(tokens):
+            token = tokens[i]
             tipo = token['tipo']
-            tipos[tipo] = tipos.get(tipo, 0) + 1
+            
+            if tipo.startswith('SENSOR_'):
+                nombre_sensor = token['valor']
+                valor_sensor = ""
+                unidad_sensor = ""
+                
+                # Buscamos el valor numérico y su unidad adelante
+                j = i + 1
+                while j < len(tokens) and j < i + 5:
+                    if tokens[j]['tipo'] in ['VALOR_TEMP_ACT', 'VALOR_TEMP_OBJ', 'VALOR_HUMEDAD', 'VALOR_LUZ', 'NUMERO']:
+                        valor_completo = tokens[j]['valor']
+                        if '°C' in valor_completo:
+                            valor_sensor = valor_completo.replace('°C', '')
+                            unidad_sensor = '°C'
+                        elif '%' in valor_completo:
+                            valor_sensor = valor_completo.replace('%', '')
+                            unidad_sensor = '%'
+                        else:
+                            valor_sensor = valor_completo
+                        break
+                    j += 1
+                
+                # Formato consigna: Nombre encerrado entre tags <strong>, junto con valor y unidad
+                html += f"        <p><strong>{nombre_sensor}</strong>: {valor_sensor} {unidad_sensor}</p>\n"
+                tiene_sensores = True
+            i += 1
+            
+        if not tiene_sensores:
+            html += "        <p>No se detectaron sensores.</p>\n"
+        html += "    </div>\n\n"
         
-        for tipo, cantidad in sorted(tipos.items()):
-            html += f"""                    <div class="stats-item">{tipo}: {cantidad}</div>
-"""
+        # 2. CONTENEDOR DE ACTUADORES
+        html += "    \n"
         
-        html += """                </div>
-            </div>
-        </div>
-        
-        <div class="footer">
-            BinaryBuilders - UTN FRRe - 2026 | Analizador Léxico y Sintáctico para SmartHome
-        </div>
-    </div>
-</body>
-</html>
-"""
-        
+        i = 0
+        while i < len(tokens):
+            token = tokens[i]
+            tipo = token['tipo']
+            
+            if tipo.startswith('ACTUADOR_'):
+                nombre_actuador = token['valor']
+                
+                # Cada actuador en un div con borde 1px gris y padding de 20px
+                html += "    <div style='border: 1px solid gray; padding: 20px; margin-bottom: 20px;'>\n"
+                # Nombre del actuador encerrado en tags <strong>
+                html += f"        <p>Actuador: <strong>{nombre_actuador}</strong></p>\n"
+                html += "        <ul>\n"
+                
+                j = i + 1
+                while j < len(tokens):
+                    if tokens[j]['tipo'].startswith('ACTUADOR_') or tokens[j]['tipo'].startswith('SENSOR_'):
+                        break
+                        
+                    tok_attr = tokens[j]
+                    
+                    # Si el ítem es un EMAIL se traduce como link 'a' con href 'mailto' y texto "Contactar a ..."
+                    if tok_attr['tipo'] == 'ATRIBUTOS_ALTAVOZ_EMAIL' or 'EMAIL' in tok_attr['tipo']:
+                        valor_email = tok_attr['valor']
+                        html += f"            <li>Email: <a href='mailto:{valor_email}'>Contactar a {valor_email}</a></li>\n"
+                        
+                    # Atributos comunes de actuadores como listas ul e ítems li
+                    elif tok_attr['tipo'].startswith('ATRIBUTOS_') or tok_attr['tipo'] == 'ATRIBUTO_ESTADO':
+                        nombre_attr = tok_attr['valor']
+                        valor_attr = ""
+                        
+                        if j + 1 < len(tokens):
+                            sig_tok = tokens[j+1]
+                            if sig_tok['tipo'] in ['NUMERO', 'CADENA', 'VALOR_TEMP_OBJ', 'VALOR_TEMP_ACT']:
+                                valor_attr = f": {sig_tok['valor']}"
+                        
+                        html += f"            <li>{nombre_attr}{valor_attr}</li>\n"
+                        
+                    j += 1
+                    
+                html += "        </ul>\n"
+                html += "    </div>\n\n"
+                i = j - 1
+            i += 1
+            
+        html += "</body>\n</html>"
         return html
     
     def escapar_html(self, texto):
         """Escapa caracteres especiales para HTML"""
         escapes = {
-            '&': '&',
-            '<': '<',
-            '>': '>',
-            '"': '"',
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
             "'": '&#39;'
         }
         for char, escape in escapes.items():
@@ -1432,11 +1340,17 @@ class InterfazAnalizador:
         if not self.tab_html.get(1.0, tk.END).strip():
             messagebox.showwarning("Advertencia", "No hay HTML para guardar")
             return
+            
+        nombre_sugerido = ""
+        if hasattr(self, 'archivo_actual') and self.archivo_actual:
+            import os
+            nombre_sugerido = os.path.splitext(os.path.basename(self.archivo_actual))[0]
         
         ruta = filedialog.asksaveasfilename(
             title="Guardar HTML",
+            initialfile=nombre_sugerido,
             defaultextension=".html",
-            filetypes=[("Archivos HTML", "*.html"), ("Todos los archivos", "*.*")]
+            filetypes=[("Archivos HTML", "*.html;*.htm"), ("Todos los archivos", "*.*")]
         )
         
         if ruta:
@@ -1445,10 +1359,11 @@ class InterfazAnalizador:
                 with open(ruta, 'w', encoding='utf-8') as f:
                     f.write(contenido)
                 
-                messagebox.showinfo("Éxito", f"HTML guardado en:\n{ruta}")
-                
+                messagebox.showinfo("Éxito", f"Archivo HTML guardado correctamente.")
             except Exception as e:
                 messagebox.showerror("Error", f"No se pudo guardar el archivo:\n{str(e)}")
+
+   
     
     def limpiar_resultados(self):
         """Limpia todos los paneles de resultados"""
