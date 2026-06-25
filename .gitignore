@@ -1,2 +1,10 @@
-# Regla para ignorar los archivos de caché de Python.
-*.pyc
+venv
+.github
+.devcontainer
+__pycache__
+dist
+build
+bin
+lib
+lib64
+pyvenv.cfg
