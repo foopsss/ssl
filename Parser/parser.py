@@ -1,9 +1,8 @@
 from ply import lex, yacc
-#librerías para interfaz gráfica:
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import os
-from datetime import datetime
+
 
 #====================================================================#
 #===============================LEXER================================#
