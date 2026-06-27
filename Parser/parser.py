@@ -197,7 +197,6 @@ def formato_actuador_html(nombre_actuador,identif_actuador,atributo,valor_atribu
         </div>
         """
 
-cabecera_html()
 
 #REGLAS DEL ANÁLISIS SINTÁCTICO
 def p_programa(p):
