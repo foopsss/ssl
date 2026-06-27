@@ -140,7 +140,7 @@ lexer = lex.lex()
 
 
 #====================================================================#
-#===============================PARSER===============================#
+#============================== PARSER ==============================#
 #=========== (Análisis Sintáctico y construcción del HTML) ==========#
 #====================================================================#
 
@@ -159,7 +159,7 @@ def formato_actuador_html(nombre_actuador,identif_actuador,atributo,valor_atribu
     if identif_actuador:
         html += f"""
         <div style="border: 1px solid gray; padding: 20px; margin-bottom: 15px;">
-            <h1 style="display: inline; font-size: 24px; margin: 0;">{nombre_actuador}{emoji}</h1> (de {identif_actuador})
+            <h1 style="display: inline; font-family: 'Franklin Gothic Medium'; font-size: 24px; margin: 0;">{nombre_actuador}{emoji}</h1> (de {identif_actuador})
             <ul>
                 <li>{atributo}: {valor_atributo}</li>
             </ul>
@@ -168,7 +168,7 @@ def formato_actuador_html(nombre_actuador,identif_actuador,atributo,valor_atribu
     else:
         html += f"""
         <div style="border: 1px solid gray; padding: 20px; margin-bottom: 15px;">
-            <h1>{nombre_actuador}{emoji}</h1>
+            <h1 style="display: inline; font-family: 'Franklin Gothic Medium'; font-size: 24px; margin: 0;">{nombre_actuador}{emoji}</h1>
             <ul>
                 <li>{atributo}: {valor_atributo}</li>
             </ul>
@@ -905,7 +905,7 @@ class InterfazAnalizador:
         self.notebook.grid(row=1, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
         
         self.tab_sintactico = tk.Text(self.notebook, wrap=tk.WORD, font=("Consolas", 9), bg=self.color_resultados, fg="#00ff00", insertbackground="white", height=10)
-        self.notebook.add(self.tab_sintactico, text="Sintáctico")
+        self.notebook.add(self.tab_sintactico, text="Análisis sintáctico")
         
         scroll_sin = ttk.Scrollbar(self.tab_sintactico, orient=tk.VERTICAL, command=self.tab_sintactico.yview)
         scroll_sin.pack(side=tk.RIGHT, fill=tk.Y)
@@ -955,7 +955,7 @@ class InterfazAnalizador:
             self.tab_sintactico.tag_config("error1", foreground="#ff4444", font=("Arial", 15, "bold"))
             self.tab_sintactico.insert(tk.END, "❌ ERROR DE SINTAXIS\n", "error1")
             self.tab_sintactico.tag_config("error2", foreground="#ff4444", font=("Arial", 12))
-            self.tab_sintactico.insert(tk.END, "        El HTML puede estar incompleto o contener errores.", "error2")
+            self.tab_sintactico.insert(tk.END, "        El HTML puede derivarse incompleto o contener errores.", "error2")
 
     def generar_html(self):
         global html
@@ -964,11 +964,14 @@ class InterfazAnalizador:
             messagebox.showwarning("Advertencia", "No hay código para analizar")
             return
 
-        #lexer.lineno = 1; lexer.input(texto.upper()) #para resetear posición del lexer
+        lexer.lineno = 1; lexer.input(texto.upper()) #para resetear posición del lexer
         
         self.notebook.select(self.tab_sintactico)
         self.tab_sintactico.delete(1.0, tk.END)
         self.root.update()
+        
+        html = ""
+        cabecera_html()
         
         parser.parse(texto.upper(), lexer=lexer)
         
@@ -994,6 +997,12 @@ root.mainloop()
 #cada vez que se apriete el boton, como solución para que se construya solo al apretar "abrir HTML" o "Exportar HTML",
 #al acceder a la función "análisis_sintáctico()" mediante el botón "análisis sintáctico" se reinicia la variable y se vuelve a poner
 #la cabecera, aunque estaría bueno que se coloque la cabecera desde sigma...
+
+#2-Agregar imágenes a los actuadores dependiendo del actuador, atributo y valor, por ejemplo foco.estado = ON (imágen_foco_prendido)
+#al html, y también agregar el ícono del grupo.
+
+#3-Agregar todo lo pedido en la consigna en cuanto al HTML (cosas para los sensores, etc), y agregar cantidad total de
+#sensores y actuadores en el HTML.
 
 #preguntas:
 #1-a qué se refiere con estado de sensores? si solo se usan para condiciones.
