@@ -147,12 +147,34 @@ lexer = lex.lex()
 html = ""  #variable global para ir concatenando etiquetas para el html
 def cabecera_html():
     global html
+    html = "" #cada vez que se usa esta función, es para reiniciar la construcción del html
     html = "<!DOCTYPE html>\n<html lang='es'>\n<head>\n"
-    html += " <meta charset='UTF-8'>\n"
-    html += "<title>Smart-Home - Estado de Actuadores y Sensores - Binarybuilders</title>\n"
-    html += """ <h1 style="color: #0056b3; font-family: 'Franklin Gothic Medium'; font-size: 42px; text-transform: uppercase; letter-spacing: 2px; border-bottom: 3px solid #0056b3; padding-bottom: 10px; margin-bottom: 20px;"> SMART-HOME - Sensores y Actuadores </h1>"""
-    html += """<h3 style="color: #000000; font-family: 'Century Gothic', 'Segoe UI', sans-serif; font-size: 18px; font-weight: 300; letter-spacing: 1px; margin-top: -10px; margin-bottom: 30px;"> Estado de todos los sensores y actuadores del hogar:</h3>"""
-    html += "</head>\n<body>\n"
+    html += "  <meta charset='UTF-8'>\n"
+    html += "  <title>Smart-Home - Estado de Actuadores y Sensores - Binarybuilders</title>\n"
+    html += "</head>\n"
+    html += "<body style='margin: 0; font-family: sans-serif; background-color: #f4f6f9;'>\n"
+    html += """
+    <div style="background-color: #0056b3; padding: 25px 40px; margin-bottom: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.15);">
+        <h1 style="color: #ffffff; font-family: 'Franklin Gothic Medium', sans-serif; font-size: 38px; text-transform: uppercase; letter-spacing: 2px; margin: 0; padding-bottom: 5px;">
+            SMART-HOME - Sensores y Actuadores
+        </h1>
+        <h3 style="color: #e0e0e0; font-family: 'Century Gothic', 'Segoe UI', sans-serif; font-size: 16px; font-weight: 300; letter-spacing: 1px; margin: 5px 0 0 0;">
+            Estado de todos los sensores y actuadores del hogar:
+        </h3>
+    </div>
+    """
+
+def final_html():
+    global html
+    html += """
+    <div style="background-color: #003d82; margin-top: 50px; padding: 25px 0; text-align: center;">
+        <p style="color: #ffffff; font-family: sans-serif; font-size: 14px; margin: 0; letter-spacing: 1px;">
+            Binarybuilders© 2026
+        </p>
+    </div>
+    """ 
+    html += "\n</body>\n</html>"
+    
 
 def formato_actuador_html(nombre_actuador,identif_actuador,atributo,valor_atributo,emoji):
     global html
@@ -943,7 +965,7 @@ class InterfazAnalizador:
             self.root.update()
             
             parser.parse(texto.upper(), lexer=lexer)
-            html = ""
+            
             cabecera_html() 
 
 
@@ -970,12 +992,12 @@ class InterfazAnalizador:
         self.tab_sintactico.delete(1.0, tk.END)
         self.root.update()
         
-        html = ""
+        
         cabecera_html()
         
         parser.parse(texto.upper(), lexer=lexer)
         
-        html += "\n</body>\n</html>"
+        final_html()
         
         with tempfile.NamedTemporaryFile("w", delete=False, suffix=".html", encoding="utf-8") as archivo_temporal:
             archivo_temporal.write(html)
