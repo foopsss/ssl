@@ -1,8 +1,6 @@
 from ply import lex, yacc
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
-import tempfile
-import webbrowser
 import os
 
 
@@ -141,45 +139,14 @@ lexer = lex.lex()
 
 #====================================================================#
 #===============================PARSER===============================#
-#=========== (Análisis Sintáctico y construcción del HTML) ==========#
 #====================================================================#
 
-html = ""  #variable global para ir concatenando etiquetas para el html
-def cabecera_html():
-    global html
-    html = "<!DOCTYPE html>\n<html lang='es'>\n<head>\n"
-    html += " <meta charset='UTF-8'>\n"
-    html += "<title>Smart-Home - Estado de Actuadores y Sensores - Binarybuilders</title>\n"
-    html += """ <h1 style="color: #0056b3; font-family: 'Franklin Gothic Medium'; font-size: 42px; text-transform: uppercase; letter-spacing: 2px; border-bottom: 3px solid #0056b3; padding-bottom: 10px; margin-bottom: 20px;"> SMART-HOME - Sensores y Actuadores </h1>"""
-    html += """<h3 style="color: #000000; font-family: 'Century Gothic', 'Segoe UI', sans-serif; font-size: 18px; font-weight: 300; letter-spacing: 1px; margin-top: -10px; margin-bottom: 30px;"> Estado de todos los sensores y actuadores del hogar:</h3>"""
-    html += "</head>\n<body>\n"
 
-def formato_actuador_html(nombre_actuador,identif_actuador,atributo,valor_atributo,emoji):
-    global html
-    if identif_actuador:
-        html += f"""
-        <div style="border: 1px solid gray; padding: 20px; margin-bottom: 15px;">
-            <h1 style="display: inline; font-size: 24px; margin: 0;">{nombre_actuador}{emoji}</h1> (de {identif_actuador})
-            <ul>
-                <li>{atributo}: {valor_atributo}</li>
-            </ul>
-        </div>
-        """         
-    else:
-        html += f"""
-        <div style="border: 1px solid gray; padding: 20px; margin-bottom: 15px;">
-            <h1>{nombre_actuador}{emoji}</h1>
-            <ul>
-                <li>{atributo}: {valor_atributo}</li>
-            </ul>
-        </div>
-        """
-
-cabecera_html()
 
 #REGLAS DEL ANÁLISIS SINTÁCTICO
 def p_programa(p):
     '''sigma : accion'''
+    print("Análisis sintáctico terminado exitosamente") #al terminar imprime
     p[0] = p[1]
 
 #BLOQUES Y ACCIONES
@@ -232,36 +199,10 @@ def p_asignaciones(p):
                   | ACTUADOR_ALTAVOZ atributos_esc_altavoz
                   | ACTUADOR_ALARMA identificador atributos_esc_alarma
                   | ACTUADOR_ALARMA atributos_esc_alarma'''
-    global html #var. globales van debajo de las reglas siempre sino se rompe todo
-    
-    if "FOCO" in p[1]: emoji = "💡"
-    elif "AIRE" in p[1]: emoji = "❄️"
-    elif "PERSIANA" in p[1]: emoji = "🪟"
-    elif "CERRADURA" in p[1]: emoji = "🔒"
-    elif "ALTAVOZ" in p[1]: emoji = "🔊"
-    elif "ALARMA" in p[1]: emoji = "🚨"
-
     if len(p) == 4:
         p[0] = ('ASIGNACION', p[1], p[2], p[3])
-        nombre_actuador = p[1]
-        identif_act = p[2].replace('_', '')
-        
-        partes_atributo = p[3].split('=')
-        atributo = partes_atributo[0].replace('.', '').strip()
-        valor_atributo = partes_atributo[1].strip()
-        
-        formato_actuador_html(nombre_actuador, identif_act, atributo, valor_atributo, emoji)
-
     else:
         p[0] = ('ASIGNACION', p[1], None, p[2])
-        nombre_actuador = p[1]
-        
-        partes_atributo = p[2].split('=')
-        atributo = partes_atributo[0].replace('.', '').strip()
-        valor_atributo = partes_atributo[1].strip()
-        
-        formato_actuador_html(nombre_actuador, None, atributo, valor_atributo, emoji)
-
 
 #ATRIBUTOS CON ESTRUCTURA DE ESCRITURA PARA CADA ACTUADOR 
 def p_atributos_escritura_foco(p):
@@ -808,73 +749,128 @@ def p_error(p):
         columna = (p.lexpos - line_start) + 1
         print(f"Error de sintaxis: Se detectó un error en la Línea {p.lineno}, Columna {columna}.")
     else:
-        print("Error de sintaxis: Fin de archivo inesperado.")
+        print("Error de sintaxis: Fin de archivo inesperado. Algún bloque quedó abierto.")
     
     raise SyntaxError("Error de análisis sintáctico.")
 
-
-parser = yacc.yacc(debug=False, write_tables=False) #Construir el parser
+parser = yacc.yacc(debug=False, write_tables=False)
 
 
 #====================================================================#
 #========================= INTERFAZ GRÁFICA =========================#
 #====================================================================#
 
+# Variables globales para el lexer
+datos = ""
+datosOriginal = ""
+datosUpper = ""
+
+def cargar_datos(texto):
+    """Carga el texto para analizar y prepara las variables del lexer"""
+    global datos, datosOriginal, datosUpper
+    datos = texto
+    datosOriginal = texto
+    datosUpper = texto.upper()
+    lexer.input(datosUpper)
+
+def obtener_tokens():
+    """Retorna lista de tokens encontrados en el texto cargado"""
+    tokens_encontrados = []
+    while True:
+        tok = lexer.token()
+        if not tok: 
+            break
+        inicio = tok.lexpos
+        fin = inicio + len(tok.value)
+        # Obtener el texto original (sin convertir a mayúsculas)
+        texto_original = datosOriginal[inicio:fin]
+        tokens_encontrados.append({
+            'valor': texto_original,
+            'tipo': tok.type,
+            'linea': tok.lineno,
+            'columna': find_column(datosOriginal, tok)
+        })
+    return tokens_encontrados
+
 class InterfazAnalizador:
     def __init__(self, root):
         self.root = root
         self.root.title("Analizador SmartHome - BinaryBuilders")
         self.root.geometry("1220x650")
+        
+        # Variables
         self.texto_actual = ""
+        self.tokens_encontrados = []
+        self.resultado_sintactico = None
+        
+        # Configurar estilo
         self.configurar_estilo()
+        
+        # Crear interfaz
         self.crear_widgets()
-
+        
+        # Cargar ejemplos en el combobox
+        self.cargar_ejemplos()
+    
     def configurar_estilo(self):
+        """Configura el estilo visual de la interfaz"""
         style = ttk.Style()
         style.theme_use('clam')
-        self.color_fondo = "#ffffff" 
+        
+        # Colores
+        self.color_fondo = "#f0f0f0"
         self.color_editor = "#ffffff"
         self.color_resultados = "#1e1e1e"
         self.color_exito = "#4caf50"
         self.color_error = "#f44336"
         self.color_advertencia = "#ff9800"
+        
         self.root.configure(bg=self.color_fondo)
-
-        #style.configure("TFrame", background=self.color_fondo)
-        #style.configure("TLabelframe", background=self.color_fondo)
-        #style.configure("TLabelframe.Label", background=self.color_fondo, foreground="white")
-
     
     def crear_widgets(self):
-        #frame principal (toda la ventana)
+        """Crea todos los widgets de la interfaz"""
+        # Frame principal
         frame_principal = ttk.Frame(self.root, padding="10")
         frame_principal.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
         
-        #frame grillas (divisores de la ventana)
+        # Configurar grid
         self.root.columnconfigure(0, weight=1)
         self.root.rowconfigure(0, weight=1)
         frame_principal.columnconfigure(1, weight=1)
-        frame_principal.rowconfigure(1, weight=1)
-        frame_principal.rowconfigure(2, weight=4)
-
-        #todos los widgets
-        frame_controles = ttk.LabelFrame(frame_principal, text="Indicar archivo de entrada", padding="10")
-        frame_controles.grid(row=0, column=0, columnspan=1, sticky=(tk.W, tk.E), pady=(0, 10))
+        frame_principal.rowconfigure(2, weight=1)
         
-        self.btn_buscar = ttk.Button(frame_controles, text="📂 Buscar Archivo", command=self.buscar_archivo)
+        # ========== PANEL SUPERIOR - CONTROLES ==========
+        frame_controles = ttk.LabelFrame(frame_principal, text="Controles", padding="10")
+        frame_controles.grid(row=0, column=0, columnspan=2, sticky=(tk.W, tk.E), pady=(0, 10))
+        
+        # Botón buscar archivo
+        self.btn_buscar = ttk.Button(frame_controles, text="📂 Buscar Archivo", 
+                                     command=self.buscar_archivo)
         self.btn_buscar.grid(row=0, column=0, padx=5, pady=5)
         
-        self.label_archivo = ttk.Label(frame_controles, text="Ningún archivo cargado", foreground="gray")
+        # Label para mostrar archivo cargado
+        self.label_archivo = ttk.Label(frame_controles, text="Ningún archivo cargado", 
+                                       foreground="gray")
         self.label_archivo.grid(row=0, column=1, padx=10, pady=5, sticky=tk.W)
         
+        # Combobox de ejemplos
+        ttk.Label(frame_controles, text="Ejemplos:").grid(row=0, column=2, padx=(20, 5), pady=5)
+        self.combo_ejemplos = ttk.Combobox(frame_controles, state="readonly", width=40)
+        self.combo_ejemplos.grid(row=0, column=3, padx=5, pady=5)
+        self.combo_ejemplos.bind('<<ComboboxSelected>>', self.cargar_ejemplo_seleccionado)
+        
+        # ========== PANEL IZQUIERDO - EDITOR ==========
         frame_editor = ttk.LabelFrame(frame_principal, text="Editor de Código", padding="5")
         frame_editor.grid(row=1, column=0, rowspan=2, sticky=(tk.W, tk.E, tk.N, tk.S), padx=(0, 5))
         frame_editor.columnconfigure(0, weight=1)
         frame_editor.rowconfigure(0, weight=1)
         
-        self.editor = tk.Text(frame_editor, wrap=tk.NONE, font=("Consolas", 10), bg=self.color_editor, fg="#000000", insertbackground="black")
+        # Editor de texto con scroll
+        self.editor = tk.Text(frame_editor, wrap=tk.NONE, font=("Consolas", 10),
+                             bg=self.color_editor, fg="#000000", insertbackground="black")
         self.editor.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
         
+        # Scrollbars
         scroll_y = ttk.Scrollbar(frame_editor, orient=tk.VERTICAL, command=self.editor.yview)
         scroll_y.grid(row=0, column=1, sticky=(tk.N, tk.S))
         self.editor.configure(yscrollcommand=scroll_y.set)
@@ -883,103 +879,482 @@ class InterfazAnalizador:
         scroll_x.grid(row=1, column=0, sticky=(tk.W, tk.E))
         self.editor.configure(xscrollcommand=scroll_x.set)
         
+        # ========== PANEL DERECHO - BOTONES DE ANÁLISIS ==========
         frame_botones = ttk.Frame(frame_principal)
         frame_botones.grid(row=1, column=1, sticky=(tk.N, tk.S), padx=(5, 0))
         
-        ttk.Label(frame_botones, text="Acciones", font=("Arial", 12, "bold")).pack(pady=(0, 10))
+        ttk.Label(frame_botones, text="Análisis", font=("Arial", 12, "bold")).pack(pady=(0, 10))
         
-        self.btn_sintactico = ttk.Button(frame_botones, text="📝 Análisis Sintáctico", command=self.estado_analisis_sintactico, width=20)
-        self.btn_sintactico.pack(pady=7, ipady=7)
+        self.btn_lexico = ttk.Button(frame_botones, text="🔍 Analizar Léxico", 
+                                     command=self.analizar_lexico, width=20)
+        self.btn_lexico.pack(pady=5)
         
-        self.btn_html = ttk.Button(frame_botones, text="🌐 Abrir HTML", command=self.generar_html, width=20)
-        self.btn_html.pack(pady=7, ipady=7)    
+        self.btn_sintactico = ttk.Button(frame_botones, text="📝 Analizar Sintaxis", 
+                                         command=self.analizar_sintactico, width=20)
+        self.btn_sintactico.pack(pady=5)
+        
+        self.btn_html = ttk.Button(frame_botones, text="🌐 Generar HTML", 
+                                   command=self.generar_html, width=20)
+        self.btn_html.pack(pady=5)
         
         ttk.Separator(frame_botones, orient=tk.HORIZONTAL).pack(fill=tk.X, pady=20)
         
+        self.btn_guardar = ttk.Button(frame_botones, text="💾 Guardar HTML", 
+                                      command=self.guardar_html, width=20, state=tk.DISABLED)
+        self.btn_guardar.pack(pady=5)
+        
+        self.btn_limpiar = ttk.Button(frame_botones, text="🗑️ Limpiar", 
+                                      command=self.limpiar_resultados, width=20)
+        self.btn_limpiar.pack(pady=5)
+        
+        # ========== PANEL INFERIOR - RESULTADOS ==========
         frame_resultados = ttk.LabelFrame(frame_principal, text="Resultados", padding="5")
         frame_resultados.grid(row=2, column=1, sticky=(tk.W, tk.E, tk.N, tk.S), padx=(5, 0), pady=(5, 0))
         frame_resultados.columnconfigure(0, weight=1)
-        frame_resultados.rowconfigure(1, weight=3)
+        frame_resultados.rowconfigure(1, weight=1)
         
+        # Notebook (pestañas)
         self.notebook = ttk.Notebook(frame_resultados)
         self.notebook.grid(row=1, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
         
-        self.tab_sintactico = tk.Text(self.notebook, wrap=tk.WORD, font=("Consolas", 9), bg=self.color_resultados, fg="#00ff00", insertbackground="white", height=10)
+        # Pestaña Léxico
+        self.tab_lexico = tk.Text(self.notebook, wrap=tk.WORD, font=("Consolas", 9),
+                                  bg=self.color_resultados, fg="#00ff00", insertbackground="white")
+        self.notebook.add(self.tab_lexico, text="Léxico")
+        
+        scroll_lex = ttk.Scrollbar(self.tab_lexico, orient=tk.VERTICAL, 
+                                   command=self.tab_lexico.yview)
+        scroll_lex.pack(side=tk.RIGHT, fill=tk.Y)
+        self.tab_lexico.configure(yscrollcommand=scroll_lex.set)
+        
+        # Pestaña Sintáctico
+        self.tab_sintactico = tk.Text(self.notebook, wrap=tk.WORD, font=("Consolas", 9),
+                                      bg=self.color_resultados, fg="#00ff00", insertbackground="white")
         self.notebook.add(self.tab_sintactico, text="Sintáctico")
         
-        scroll_sin = ttk.Scrollbar(self.tab_sintactico, orient=tk.VERTICAL, command=self.tab_sintactico.yview)
+        scroll_sin = ttk.Scrollbar(self.tab_sintactico, orient=tk.VERTICAL, 
+                                   command=self.tab_sintactico.yview)
         scroll_sin.pack(side=tk.RIGHT, fill=tk.Y)
         self.tab_sintactico.configure(yscrollcommand=scroll_sin.set)
         
+        # Pestaña HTML
+        self.tab_html = tk.Text(self.notebook, wrap=tk.NONE, font=("Consolas", 9))
+        self.notebook.add(self.tab_html, text="HTML")
+        
+        scroll_html = ttk.Scrollbar(self.tab_html, orient=tk.VERTICAL, 
+                                    command=self.tab_html.yview)
+        scroll_html.pack(side=tk.RIGHT, fill=tk.Y)
+        self.tab_html.configure(yscrollcommand=scroll_html.set)
+    
+    def cargar_ejemplos(self):
+        """Carga los archivos de ejemplo en el combobox"""
+        carpeta_ejemplos = os.path.join(os.path.dirname(__file__), "Ejemplos")
+        if os.path.exists(carpeta_ejemplos):
+            archivos = [f for f in os.listdir(carpeta_ejemplos) if f.endswith('.txt')]
+            self.combo_ejemplos['values'] = archivos
+            if archivos:
+                self.combo_ejemplos.current(0)
+    
     def buscar_archivo(self):
-        ruta = filedialog.askopenfilename(title="Seleccionar archivo de programa", filetypes=[("Archivos de texto", "*.txt"), ("Todos los archivos", "*.*")])
+        """Abre diálogo para buscar archivo .txt"""
+        ruta = filedialog.askopenfilename(
+            title="Seleccionar archivo de programa",
+            filetypes=[("Archivos de texto", "*.txt"), ("Todos los archivos", "*.*")]
+        )
+        
         if ruta:
             self.cargar_archivo(ruta)
     
     def cargar_archivo(self, ruta):
+        """Carga el contenido de un archivo en el editor"""
         try:
             with open(ruta, 'r', encoding='utf-8') as f:
                 contenido = f.read()
+            
             self.editor.delete(1.0, tk.END)
             self.editor.insert(1.0, contenido)
             self.texto_actual = contenido
+            
             nombre_archivo = os.path.basename(ruta)
-            self.label_archivo.config(text=f"✓ cargado: '{nombre_archivo}' ", foreground="green")
+            self.label_archivo.config(text=f"✓ {nombre_archivo}", foreground="green")
+            
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo cargar el archivo:\n{str(e)}")
     
-
-    def estado_analisis_sintactico(self):
-        global html
+    def cargar_ejemplo_seleccionado(self, event=None):
+        """Carga el ejemplo seleccionado del combobox"""
+        seleccion = self.combo_ejemplos.get()
+        if seleccion:
+            ruta = os.path.join(os.path.dirname(__file__), "Ejemplos", seleccion)
+            self.cargar_archivo(ruta)
+    
+    def analizar_lexico(self):
+        """Realiza el análisis léxico del código"""
+        self.limpiar_resultados()
+        
+        # Obtener texto del editor
         texto = self.editor.get(1.0, tk.END).strip()
         if not texto:
             messagebox.showwarning("Advertencia", "No hay código para analizar")
             return
+        
         try:
-            lexer.lineno = 1; lexer.input(texto.upper()) #para resetear posición del lexer
+            # Cargar datos en el lexer
+            cargar_datos(texto)
             
-            self.notebook.select(self.tab_sintactico)
-            self.tab_sintactico.delete(1.0, tk.END)
-            self.root.update()
+            # Obtener tokens
+            self.tokens_encontrados = obtener_tokens()
             
-            parser.parse(texto.upper(), lexer=lexer)
-            html = ""
-            cabecera_html() 
-
-
-            self.tab_sintactico.tag_config("exito1", foreground="#00ff00", font=("Arial", 15, "bold"))
-            self.tab_sintactico.insert(tk.END, "✅ ANÁLISIS SINTÁCTICO EXITOSO\n", "exito1")
-            self.tab_sintactico.tag_config("exito2", foreground="#008800", font=("Arial", 12))
-            self.tab_sintactico.insert(tk.END, "        El HTML se puede generar de forma correcta.", "exito2")
+            # Mostrar resultados
+            self.mostrar_resultados_lexico()
+            
+            # Cambiar a pestaña léxico
+            self.notebook.select(self.tab_lexico)
+            
         except Exception as e:
-            self.tab_sintactico.tag_config("error1", foreground="#ff4444", font=("Arial", 15, "bold"))
-            self.tab_sintactico.insert(tk.END, "❌ ERROR DE SINTAXIS\n", "error1")
-            self.tab_sintactico.tag_config("error2", foreground="#ff4444", font=("Arial", 12))
-            self.tab_sintactico.insert(tk.END, "        El HTML puede estar incompleto o contener errores.", "error2")
+            self.mostrar_error_lexico(str(e))
+    
+    def mostrar_resultados_lexico(self):
+        """Muestra los resultados del análisis léxico"""
+        self.tab_lexico.delete(1.0, tk.END)
+        
+        if not self.tokens_encontrados:
+            self.tab_lexico.insert(tk.END, "No se encontraron tokens.\n")
+            return
+        
+        # Encabezado
+        #self.tab_lexico.insert(tk.END, "=" * 80 + "\n", "titulo")
+        self.tab_lexico.insert(tk.END, "ANÁLISIS LÉXICO - TOKENS ENCONTRADOS\n", "titulo")
+        #self.tab_lexico.insert(tk.END, "=" * 80 + "\n\n", "titulo")
+        
+        # Configurar tags para colores
+        self.tab_lexico.tag_config("titulo", foreground="#00bfff", font=("Consolas", 10, "bold"))
+        self.tab_lexico.tag_config("token", foreground="#ffffff")
+        self.tab_lexico.tag_config("tipo", foreground="#ffff00")
+        self.tab_lexico.tag_config("posicion", foreground="#00ff00")
+        self.tab_lexico.tag_config("separador", foreground="#888888")
+        
+
+    def analizar_lexico(self):
+        self.tab_lexico.delete(1.0, tk.END)
+        self.tokens_encontrados = []
+        
+        self.tab_lexico.tag_config("token", foreground="#00ff00", font=("Consolas", 10, "bold"))
+        self.tab_lexico.tag_config("tipo", foreground="#00bfff")
+        self.tab_lexico.tag_config("posicion", foreground="#ffaa00")
+        self.tab_lexico.tag_config("separador", foreground="#ffffff")
+        
+        texto = self.editor.get(1.0, tk.END)
+        if not texto.strip():
+            messagebox.showwarning("Advertencia", "No hay código para analizar")
+            return
+        datos = texto.upper()
+        lexer.lineno = 1
+        lexer.input(datos)
+        
+        while True:
+            try:
+                tok = lexer.token()
+                if not tok:
+                    break
+
+                line_start = datos.rfind('\n', 0, tok.lexpos) + 1
+                columna = (tok.lexpos - line_start) + 1
+                
+                self.tokens_encontrados.append({
+                    'valor': tok.value,
+                    'tipo': tok.type,
+                    'linea': tok.lineno,
+                    'columna': columna
+                })
+            except Exception:
+
+                try:
+                    lexer.skip(1)
+                except:
+                    break
+                    
+        for i, token in enumerate(self.tokens_encontrados, 1):
+            linea = f"{i:3d}. Token: '{token['valor']}'"
+            self.tab_lexico.insert(tk.END, linea, "token")
+            
+            tipo = f" | Tipo: {token['tipo']}"
+            self.tab_lexico.insert(tk.END, tipo, "tipo")
+            
+            pos = f" | Línea: {token['linea']}, Col: {token['columna']}"
+            self.tab_lexico.insert(tk.END, pos, "posicion")
+            
+            self.tab_lexico.insert(tk.END, "\n", "separador")
+
+        self.tab_lexico.insert(tk.END, f"Total: {len(self.tokens_encontrados)} tokens encontrados\n", "titulo")
+    
+    def mostrar_error_lexico(self, error):
+        """Muestra errores del análisis léxico"""
+        self.tab_lexico.delete(1.0, tk.END)
+        self.tab_lexico.insert(tk.END, "ERROR EN ANÁLISIS LÉXICO\n", "error")
+        self.tab_lexico.insert(tk.END, "=" * 80 + "\n\n", "error")
+        self.tab_lexico.insert(tk.END, error + "\n", "error")
+        self.tab_lexico.tag_config("error", foreground="#ff4444", font=("Consolas", 10, "bold"))
+    
+    def analizar_sintactico(self):
+            """Realiza el análisis sintáctico del código"""
+            self.limpiar_resultados()
+
+            # Obtener texto del editor
+            texto = self.editor.get(1.0, tk.END).strip()
+            if not texto:
+                messagebox.showwarning("Advertencia", "No hay código para analizar")
+                return
+
+            try:
+                # Súper importante: Reiniciar el contador de líneas del lexer antes de parsear
+                lexer.lineno = 1
+                lexer.input(texto.upper())  # Nos aseguramos de que entre todo en mayúsculas
+
+                # Cambiar a pestaña sintáctico
+                self.notebook.select(self.tab_sintactico)
+
+                # Parsear
+                self.tab_sintactico.delete(1.0, tk.END)
+                self.tab_sintactico.insert(tk.END, "Iniciando análisis sintáctico...\n\n", "info")
+                self.root.update()
+
+                # Ejecutamos pasándole explícitamente el lexer reiniciado
+                parser.parse(texto.upper(), lexer=lexer)
+
+                # Si el parser terminó de recorrer el archivo sin lanzar errores críticos en el medio,
+                # forzamos el éxito gráfico porque el HTML se completó.
+                self.mostrar_exito_sintactico()
+
+            except SyntaxError as e:
+                self.mostrar_error_sintactico(str(e))
+            except Exception as e:
+                self.mostrar_error_sintactico(f"Error inesperado: {str(e)}")
+
+
+    def mostrar_exito_sintactico(self):
+        """Muestra mensaje de éxito del análisis sintáctico"""
+        self.tab_sintactico.delete(1.0, tk.END)
+        
+        self.tab_sintactico.tag_config("exito", foreground="#00ff00", font=("Consolas", 12, "bold"))
+        self.tab_sintactico.tag_config("info", foreground="#00bfff")
+        self.tab_sintactico.tag_config("detalle", foreground="#ffffff")
+        
+        self.tab_sintactico.insert(tk.END, "✓ ANÁLISIS SINTÁCTICO EXITOSO\n", "exito")
+        #self.tab_sintactico.insert(tk.END, "=" * 80 + "\n\n", "exito")
+        self.tab_sintactico.insert(tk.END, "El programa es sintácticamente correcto.\n\n", "info")
+        
+        if self.resultado_sintactico:
+            self.tab_sintactico.insert(tk.END, "Estructura del programa:\n", "info")
+            self.tab_sintactico.insert(tk.END, "-" * 80 + "\n", "detalle")
+            self.mostrar_estructura(self.resultado_sintactico, 0)
+    
+    def mostrar_estructura(self, estructura, nivel):
+        """Muestra la estructura del programa de forma recursiva"""
+        indent = "  " * nivel
+        
+        if isinstance(estructura, list):
+            for item in estructura:
+                self.mostrar_estructura(item, nivel)
+        
+        elif isinstance(estructura, tuple):
+            tipo = estructura[0]
+            self.tab_sintactico.insert(tk.END, f"{indent}• {tipo}\n", "detalle")
+            
+            for item in estructura[1:]:
+                if item is not None:
+                    self.mostrar_estructura(item, nivel + 1)
+    
+    def mostrar_error_sintactico(self, error):
+        """Muestra errores del análisis sintáctico"""
+        self.tab_sintactico.delete(1.0, tk.END)
+        
+        self.tab_sintactico.tag_config("error", foreground="#ff4444", font=("Consolas", 10, "bold"))
+        self.tab_sintactico.tag_config("detalle", foreground="#ff8888")
+        
+        self.tab_sintactico.insert(tk.END, "X ERROR DE SINTAXIS\n", "error")
+        #self.tab_sintactico.insert(tk.END, "=" * 80 + "\n\n", "error")
+        self.tab_sintactico.insert(tk.END, error + "\n", "detalle")
+    
+
+
+#====================================================================#
+#============================== HTML ================================#
+#====================================================================#
 
     def generar_html(self):
-        global html
+        """Genera el HTML del programa"""
         texto = self.editor.get(1.0, tk.END).strip()
         if not texto:
-            messagebox.showwarning("Advertencia", "No hay código para analizar")
+            messagebox.showwarning("Advertencia", "No hay código para generar HTML")
             return
-
-        #lexer.lineno = 1; lexer.input(texto.upper()) #para resetear posición del lexer
         
-        self.notebook.select(self.tab_sintactico)
+        try:
+            # Realizar análisis léxico si no se ha hecho
+            if not self.tokens_encontrados:
+                cargar_datos(texto)
+                self.tokens_encontrados = obtener_tokens()
+            
+            # Generar HTML pasándole el texto y los tokens originales
+            html = self.crear_html(texto, self.tokens_encontrados)
+            
+            # Mostrar en pestaña HTML
+            self.notebook.select(self.tab_html)
+            self.tab_html.delete(1.0, tk.END)
+            self.tab_html.insert(1.0, html)
+            
+            # Habilitar botón de guardar
+            self.btn_guardar.config(state=tk.NORMAL)
+
+        except Exception as e:
+            messagebox.showerror("Error", f"Error al generar HTML:\n{str(e)}")
+    
+    def crear_html(self, codigo, tokens):
+        """Crea el documento HTML según los requerimientos de la consigna"""
+        html = "<!DOCTYPE html>\n<html lang='es'>\n<head>\n"
+        html += "    <meta charset='UTF-8'>\n"
+        html += "    <title>Traducción Domótica TPI</title>\n"
+        html += "</head>\n<body>\n\n"
+        
+        html += "    \n"
+        html += "    <div style='border: 1px solid green; padding: 20px; margin-bottom: 20px;'>\n"
+        html += "        <h3>Estado de Sensores:</h3>\n"
+        
+        tiene_sensores = False
+        i = 0
+        while i < len(tokens):
+            token = tokens[i]
+            tipo = token['tipo']
+            
+            if tipo.startswith('SENSOR_'):
+                nombre_sensor = token['valor']
+                valor_sensor = ""
+                unidad_sensor = ""
+                
+                # Buscamos el valor numérico y su unidad adelante
+                j = i + 1
+                while j < len(tokens) and j < i + 5:
+                    if tokens[j]['tipo'] in ['VALOR_TEMP_ACT', 'VALOR_TEMP_OBJ', 'VALOR_HUMEDAD', 'VALOR_LUZ', 'NUMERO']:
+                        valor_completo = tokens[j]['valor']
+                        if '°C' in valor_completo:
+                            valor_sensor = valor_completo.replace('°C', '')
+                            unidad_sensor = '°C'
+                        elif '%' in valor_completo:
+                            valor_sensor = valor_completo.replace('%', '')
+                            unidad_sensor = '%'
+                        else:
+                            valor_sensor = valor_completo
+                        break
+                    j += 1
+                
+                html += f"        <p><strong>{nombre_sensor}</strong>: {valor_sensor} {unidad_sensor}</p>\n"
+                tiene_sensores = True
+            i += 1
+            
+        if not tiene_sensores:
+            html += "        <p>No se detectaron sensores.</p>\n"
+        html += "    </div>\n\n"
+        
+        html += "    \n"
+        
+        i = 0
+        while i < len(tokens):
+            token = tokens[i]
+            tipo = token['tipo']
+            
+            if tipo.startswith('ACTUADOR_'):
+                nombre_actuador = token['valor']
+                
+                # Cada actuador en un div con borde 1px gris y padding de 20px
+                html += "    <div style='border: 1px solid gray; padding: 20px; margin-bottom: 20px;'>\n"
+                # Nombre del actuador encerrado en tags <strong>
+                html += f"        <p>Actuador: <strong>{nombre_actuador}</strong></p>\n"
+                html += "        <ul>\n"
+                
+                j = i + 1
+                while j < len(tokens):
+                    if tokens[j]['tipo'].startswith('ACTUADOR_') or tokens[j]['tipo'].startswith('SENSOR_'):
+                        break
+                        
+                    tok_attr = tokens[j]
+                    
+                    # Si el ítem es un EMAIL se traduce como link 'a' con href 'mailto' y texto "Contactar a ..."
+                    if tok_attr['tipo'] == 'ATRIBUTOS_ALTAVOZ_EMAIL' or 'EMAIL' in tok_attr['tipo']:
+                        valor_email = tok_attr['valor']
+                        html += f"            <li>Email: <a href='mailto:{valor_email}'>Contactar a {valor_email}</a></li>\n"
+                        
+                    # Atributos comunes de actuadores como listas ul e ítems li
+                    elif tok_attr['tipo'].startswith('ATRIBUTOS_') or tok_attr['tipo'] == 'ATRIBUTO_ESTADO':
+                        nombre_attr = tok_attr['valor']
+                        valor_attr = ""
+                        
+                        if j + 1 < len(tokens):
+                            sig_tok = tokens[j+1]
+                            if sig_tok['tipo'] in ['NUMERO', 'CADENA', 'VALOR_TEMP_OBJ', 'VALOR_TEMP_ACT']:
+                                valor_attr = f": {sig_tok['valor']}"
+                        
+                        html += f"            <li>{nombre_attr}{valor_attr}</li>\n"
+                        
+                    j += 1
+                    
+                html += "        </ul>\n"
+                html += "    </div>\n\n"
+                i = j - 1
+            i += 1
+            
+        html += "</body>\n</html>"
+        return html
+    
+    def escapar_html(self, texto):
+        """Escapa caracteres especiales para HTML"""
+        escapes = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        }
+        for char, escape in escapes.items():
+            texto = texto.replace(char, escape)
+        return texto
+    
+    def guardar_html(self):
+        """Guarda el HTML generado en un archivo"""
+        if not self.tab_html.get(1.0, tk.END).strip():
+            messagebox.showwarning("Advertencia", "No hay HTML para guardar")
+            return
+            
+        nombre_sugerido = ""
+        if hasattr(self, 'archivo_actual') and self.archivo_actual:
+            import os
+            nombre_sugerido = os.path.splitext(os.path.basename(self.archivo_actual))[0]
+        
+        ruta = filedialog.asksaveasfilename(
+            title="Guardar HTML",
+            initialfile=nombre_sugerido,
+            defaultextension=".html",
+            filetypes=[("Archivos HTML", "*.html;*.htm"), ("Todos los archivos", "*.*")]
+        )
+        
+        if ruta:
+            try:
+                contenido = self.tab_html.get(1.0, tk.END)
+                with open(ruta, 'w', encoding='utf-8') as f:
+                    f.write(contenido)
+                
+                messagebox.showinfo("Éxito", f"Archivo HTML guardado correctamente.")
+            except Exception as e:
+                messagebox.showerror("Error", f"No se pudo guardar el archivo:\n{str(e)}")
+
+    
+    def limpiar_resultados(self):
+        """Limpia todos los paneles de resultados"""
+        self.tab_lexico.delete(1.0, tk.END)
         self.tab_sintactico.delete(1.0, tk.END)
-        self.root.update()
-        
-        parser.parse(texto.upper(), lexer=lexer)
-        
-        html += "\n</body>\n</html>"
-        
-        with tempfile.NamedTemporaryFile("w", delete=False, suffix=".html", encoding="utf-8") as archivo_temporal:
-            archivo_temporal.write(html)
-            ruta_temporal = archivo_temporal.name
-        
-        webbrowser.open("file://" + os.path.abspath(ruta_temporal))
-
+        self.tab_html.delete(1.0, tk.END)
+        self.tokens_encontrados = []
+        self.resultado_sintactico = None
+        self.btn_guardar.config(state=tk.DISABLED)
 
 #====================================================================#
 #=============================== MAIN ===============================#
@@ -989,13 +1364,7 @@ root = tk.Tk()
 app = InterfazAnalizador(root)
 root.mainloop()
 
-#detalles:
-#1-cada vez que se aprieta el botón de "análisis sintáctico" se hace el parsing, y debido a eso, se construye nuevamente el html
-#cada vez que se apriete el boton, como solución para que se construya solo al apretar "abrir HTML" o "Exportar HTML",
-#al acceder a la función "análisis_sintáctico()" mediante el botón "análisis sintáctico" se reinicia la variable y se vuelve a poner
-#la cabecera, aunque estaría bueno que se coloque la cabecera desde sigma...
+#Preguntar qué cosas deberíamos quitar o dejar de la interfaz (dejamos análisis léxico por ej?)
 
-#preguntas:
-#1-a qué se refiere con estado de sensores? si solo se usan para condiciones.
-#2-es correcta nuestra manera de ir construyendo el HTML? se va construyendo a medida que se alcanzan las reglas, es decir
-#en cada regla, se va construyendo concatenándose cada parte del html.
+#No se nos ocurre como procesar el HTML a medida que hacemos el análisis sintáctico, entonces, nos puede tirar un tip
+#de como podríamos hacer, y también le mostramos como tenemos actualmente.
