@@ -170,8 +170,6 @@ def cabecera_html():
     </div>
     """
 
-
-
 def final_html():
     global html
     html += """
@@ -183,8 +181,7 @@ def final_html():
     """ 
     html += "\n</body>\n</html>"
 
-
-imagenes_actuadores = {
+imgagenes_act = {
     'aire': {
         'ON': '../resources/aire_on.png',
         'OFF': '../resources/aire_off.png',
@@ -234,8 +231,8 @@ def formato_actuador_html(nombre_actuador, identif_actuador, atributo, valor_atr
     nombre_act = nombre_actuador.lower().strip(); valor_atrib = texto_real.upper().strip()
 
     ruta_img = ""
-    if nombre_act in imagenes_actuadores:
-        ruta_img = imagenes_actuadores[nombre_act].get(valor_atrib, '')
+    if nombre_act in imgagenes_act:
+        ruta_img = imgagenes_act[nombre_act].get(valor_atrib, '')
 
     # Creamos la etiqueta de la imagen si se encontró la ruta
     html_imagen = f'<img src="{ruta_img}" alt="{nombre_actuador}" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">' if ruta_img else ""
