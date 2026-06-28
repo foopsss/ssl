@@ -184,8 +184,6 @@ def final_html():
     html += "\n</body>\n</html>"
 
 
-
-# Diccionario actualizado con las nuevas imágenes de focos de colores
 imagenes_actuadores = {
     'aire': {
         'ON': '../resources/aire_on.png',
