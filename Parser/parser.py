@@ -234,6 +234,28 @@ def formato_actuador_html(nombre_actuador, identif_actuador, atributo, valor_atr
     if nombre_act in imgagenes_act:
         ruta_img = imgagenes_act[nombre_act].get(valor_atrib, '')
 
+    if nombre_actuador == 'foco':
+        if atributo == 'estado' and valor_atributo == 'ON':
+        elif atributo == 'estado' and valor_atributo == 'OFF':
+        elif atributo == 'brillo' and valor_atributo > '0':
+        elif atributo == 'brillo' and valor_atributo == '0':
+        elif atributo == 'color' and (valor_atributo == 'blanco' or valor_atributo == 'white'):
+        elif atributo == 'color' and (valor_atributo == 'rojo' or valor_atributo == 'red'):
+        elif atributo == 'color' and (valor_atributo == 'azul' or valor_atributo == 'blue'):
+    if nombre_actuador == 'aire':
+        if atributo == 'aire':
+            
+         
+
+
+
+
+
+
+
+
+
+
     # Creamos la etiqueta de la imagen si se encontró la ruta
     html_imagen = f'<img src="{ruta_img}" alt="{nombre_actuador}" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">' if ruta_img else ""
 
