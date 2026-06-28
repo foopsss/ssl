@@ -5,7 +5,6 @@ import tempfile
 import webbrowser
 import os
 
-
 #====================================================================#
 #===============================LEXER================================#
 #====================================================================#
@@ -137,8 +136,6 @@ def t_error(t):
 
 lexer = lex.lex()
 
-
-
 #====================================================================#
 #============================== PARSER ==============================#
 #=========== (Análisis Sintáctico y construcción del HTML) ==========#
@@ -147,22 +144,33 @@ lexer = lex.lex()
 html = ""  #variable global para ir concatenando etiquetas para el html
 def cabecera_html():
     global html
-    html = "" #cada vez que se usa esta función, es para reiniciar la construcción del html
     html = "<!DOCTYPE html>\n<html lang='es'>\n<head>\n"
     html += "  <meta charset='UTF-8'>\n"
     html += "  <title>Smart-Home - Estado de Actuadores y Sensores - Binarybuilders</title>\n"
     html += "</head>\n"
     html += "<body style='margin: 0; font-family: sans-serif; background-color: #f4f6f9;'>\n"
-    html += """
-    <div style="background-color: #0056b3; padding: 25px 40px; margin-bottom: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.15);">
-        <h1 style="color: #ffffff; font-family: 'Franklin Gothic Medium', sans-serif; font-size: 38px; text-transform: uppercase; letter-spacing: 2px; margin: 0; padding-bottom: 5px;">
-            SMART-HOME - Sensores y Actuadores
-        </h1>
-        <h3 style="color: #e0e0e0; font-family: 'Century Gothic', 'Segoe UI', sans-serif; font-size: 16px; font-weight: 300; letter-spacing: 1px; margin: 5px 0 0 0;">
-            Estado de todos los sensores y actuadores del hogar:
-        </h3>
+    html += f"""
+    <div style="background-color: #1a202c; padding: 25px 40px; margin-bottom: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1 style="color: #ffffff; font-family: 'Franklin Gothic Medium', sans-serif; font-size: 38px; text-transform: uppercase; letter-spacing: 2px; margin: 0; padding-bottom: 5px;">
+                SMART-HOME - Sensores y Actuadores
+            </h1>
+            <h3 style="color: #e0e0e0; font-family: 'Century Gothic', 'Segoe UI', sans-serif; font-size: 16px; font-weight: 300; letter-spacing: 1px; margin: 5px 0 0 0;">
+                Estado de todos los sensores y actuadores del hogar:
+            </h3>
+        </div>
+        
+        <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 5px;">
+            <span style="color: #a0aec0; font-family: 'Segoe UI', sans-serif; font-size: 12px; font-weight: 300; font-style: italic; letter-spacing: 0.5px;">
+                Realizado por:
+            </span>
+            <img src="../resources/BinaryBuilders.png" alt="BinaryBuilders Logo" style="height: 70px; width: auto; border-radius: 5px;">
+        </div>
+        
     </div>
     """
+
+
 
 def final_html():
     global html
@@ -174,28 +182,79 @@ def final_html():
     </div>
     """ 
     html += "\n</body>\n</html>"
-    
 
-def formato_actuador_html(nombre_actuador,identif_actuador,atributo,valor_atributo,emoji):
+
+
+# Diccionario actualizado con las nuevas imágenes de focos de colores
+imagenes_actuadores = {
+    'aire': {
+        'ON': '../resources/aire_on.png',
+        'OFF': '../resources/aire_off.png',
+        'FRIO': '../resources/aire_on.png'
+    },
+    'alarma': {
+        'ON': '../resources/alarma_on.png',
+        'OFF': '../resources/alarma_off.png'
+    },
+    'altavoz': {
+        'MAIL': '../resources/altavoz_mail.png',
+        'MENSAJE': '../resources/altavoz_mensaje.png',
+        'VOLUMEN_ON': '../resources/altavoz_volumen_on.png',
+        'VOLUMEN_OFF': '../resources/altavoz_volumen_off.png'
+    },
+    'cerradura': { 
+        'ON': '../resources/cerradura_on.png',
+        'OFF': '../resources/cerradura_off.png'
+    },
+    'foco': {
+        'ON': '../resources/foco_on.png',
+        'OFF': '../resources/foco_off.png',
+        'BLUE': '../resources/foco_azul.png',
+        'AZUL': '../resources/foco_azul.png',
+        'BLANCO': '../resources/foco_blanco.png',
+        'ROJO': '../resources/foco_rojo.png',
+        'RED': '../resources/foco_rojo.png'
+    },
+    'persiana': {
+        'UNICO': '../resources/persiana.png'
+    },
+    'reloj': {
+        'FECHA': '../resources/reloj_fecha.png',
+        'HORA': '../resources/reloj_hora.png'
+    }
+}
+
+def formato_actuador_html(nombre_actuador, identif_actuador, atributo, valor_atributo, emoji):
     global html
-    if identif_actuador:
-        html += f"""
-        <div style="border: 1px solid gray; padding: 20px; margin-bottom: 15px;">
-            <h1 style="display: inline; font-family: 'Franklin Gothic Medium'; font-size: 24px; margin: 0;">{nombre_actuador}{emoji}</h1> (de {identif_actuador})
-            <ul>
-                <li>{atributo}: {valor_atributo}</li>
+
+    texto_real = valor_atributo.value if hasattr(valor_atributo, 'value') else str(valor_atributo)
+
+    es_un_mail = (hasattr(valor_atributo, 'type') and valor_atributo.type == 'EMAIL') or ("@" in texto_real and "." in texto_real)
+    representacion_valor = f'<a href="mailto:{texto_real}" style="color: #0056b3; text-decoration: underline; font-weight: bold;">{texto_real}</a>' if es_un_mail else texto_real
+
+    # Lógica de búsqueda directa ultra limpia
+    nombre_act = nombre_actuador.lower().strip(); valor_atrib = texto_real.upper().strip()
+
+    ruta_img = ""
+    if nombre_act in imagenes_actuadores:
+        ruta_img = imagenes_actuadores[nombre_act].get(valor_atrib, '')
+
+    # Creamos la etiqueta de la imagen si se encontró la ruta
+    html_imagen = f'<img src="{ruta_img}" alt="{nombre_actuador}" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">' if ruta_img else ""
+
+    sufijo_identificador = f" (de {identif_actuador})" if identif_actuador else ""
+    
+    html += f"""
+    <div style="border: 1px solid gray; padding: 20px 40px; margin-bottom: 15px; margin-left: 50px; margin-right: 50px; background-color: #ffffff; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1 style="display: inline; font-family: 'Franklin Gothic Medium'; font-size: 24px; margin: 0;">{nombre_actuador}{emoji}</h1>{sufijo_identificador}
+            <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+                <li>{atributo}: {representacion_valor}</li>
             </ul>
         </div>
-        """         
-    else:
-        html += f"""
-        <div style="border: 1px solid gray; padding: 20px; margin-bottom: 15px;">
-            <h1 style="display: inline; font-family: 'Franklin Gothic Medium'; font-size: 24px; margin: 0;">{nombre_actuador}{emoji}</h1>
-            <ul>
-                <li>{atributo}: {valor_atributo}</li>
-            </ul>
-        </div>
-        """
+        {html_imagen}
+    </div>
+    """
 
 
 #REGLAS DEL ANÁLISIS SINTÁCTICO
@@ -821,7 +880,6 @@ def p_atributos_lectura_alarma(p):
     '''
     p[0] = p[1] + p[2] + p[3]
 
-
 #Regla para manejar errores
 def p_error(p):
     if p:
@@ -833,9 +891,7 @@ def p_error(p):
     
     raise SyntaxError("Error de análisis sintáctico.")
 
-
 parser = yacc.yacc(debug=False, write_tables=False) #Construir el parser
-
 
 #====================================================================#
 #========================= INTERFAZ GRÁFICA =========================#
@@ -861,11 +917,7 @@ class InterfazAnalizador:
         self.color_advertencia = "#ff9800"
         self.root.configure(bg=self.color_fondo)
 
-        #style.configure("TFrame", background=self.color_fondo)
-        #style.configure("TLabelframe", background=self.color_fondo)
-        #style.configure("TLabelframe.Label", background=self.color_fondo, foreground="white")
 
-    
     def crear_widgets(self):
         #frame principal (toda la ventana)
         frame_principal = ttk.Frame(self.root, padding="10")
@@ -909,12 +961,12 @@ class InterfazAnalizador:
         
         ttk.Label(frame_botones, text="Acciones", font=("Arial", 12, "bold")).pack(pady=(0, 10))
         
-        self.btn_sintactico = ttk.Button(frame_botones, text="📝 Análisis Sintáctico", command=self.estado_analisis_sintactico, width=20)
+        self.btn_sintactico = ttk.Button(frame_botones, text="📝 Análisis Sintáctico", command=self.estado_analisis_sintactico, width=25)
         self.btn_sintactico.pack(pady=7, ipady=7)
         
-        self.btn_html = ttk.Button(frame_botones, text="🌐 Abrir HTML", command=self.generar_html, width=20)
+        self.btn_html = ttk.Button(frame_botones, text="💾 Guardar y abrir HTML", command=self.generar_html, width=25)
         self.btn_html.pack(pady=7, ipady=7)    
-        
+
         ttk.Separator(frame_botones, orient=tk.HORIZONTAL).pack(fill=tk.X, pady=20)
         
         frame_resultados = ttk.LabelFrame(frame_principal, text="Resultados", padding="5")
@@ -938,6 +990,7 @@ class InterfazAnalizador:
             self.cargar_archivo(ruta)
     
     def cargar_archivo(self, ruta):
+        global nombre_archivo
         try:
             with open(ruta, 'r', encoding='utf-8') as f:
                 contenido = f.read()
@@ -949,7 +1002,6 @@ class InterfazAnalizador:
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo cargar el archivo:\n{str(e)}")
     
-
     def estado_analisis_sintactico(self):
         global html
         texto = self.editor.get(1.0, tk.END).strip()
@@ -964,9 +1016,7 @@ class InterfazAnalizador:
             self.root.update()
             
             parser.parse(texto.upper(), lexer=lexer)
-            
             cabecera_html() 
-
 
             self.tab_sintactico.tag_config("exito1", foreground="#00ff00", font=("Arial", 15, "bold"))
             self.tab_sintactico.insert(tk.END, "✅ ANÁLISIS SINTÁCTICO EXITOSO\n", "exito1")
@@ -979,31 +1029,39 @@ class InterfazAnalizador:
             self.tab_sintactico.insert(tk.END, "        El HTML puede derivarse incompleto o contener errores.", "error2")
 
     def generar_html(self):
-        global html
+        global html, nombre_archivo
         texto = self.editor.get(1.0, tk.END).strip()
         if not texto:
             messagebox.showwarning("Advertencia", "No hay código para analizar")
             return
 
-        lexer.lineno = 1; lexer.input(texto.upper()) #para resetear posición del lexer
+        lexer.lineno = 1; lexer.input(texto.upper()) # para resetear posición del lexer
         
         self.notebook.select(self.tab_sintactico)
         self.tab_sintactico.delete(1.0, tk.END)
         self.root.update()
         
-        
         cabecera_html()
-        
         parser.parse(texto.upper(), lexer=lexer)
-        
         final_html()
         
-        with tempfile.NamedTemporaryFile("w", delete=False, suffix=".html", encoding="utf-8") as archivo_temporal:
-            archivo_temporal.write(html)
-            ruta_temporal = archivo_temporal.name
+        # 1. Detectamos la ubicación REAL de este archivo parser.py
+        # os.path.dirname(__file__) te da la ruta hasta 'ssl/Parser' o 'ssl/Parser/'
+        ruta_script_actual = os.path.dirname(os.path.abspath(__file__))
         
-        webbrowser.open("file://" + os.path.abspath(ruta_temporal))
-
+        # 2. Construimos la ruta subiendo un nivel para ir a 'ssl/HTMLs' de forma segura
+        carpeta_destino = os.path.abspath(os.path.join(ruta_script_actual, "..", "HTMLs"))
+        
+        if not os.path.exists(carpeta_destino):
+            os.makedirs(carpeta_destino)
+            
+        nombre_archivo = nombre_archivo.replace('.txt', '.html')
+        ruta_archivo = os.path.join(carpeta_destino, nombre_archivo)
+        
+        with open(ruta_archivo, "w", encoding="utf-8") as archivo:
+            archivo.write(html)
+        
+        webbrowser.open("file://" + ruta_archivo)
 
 #====================================================================#
 #=============================== MAIN ===============================#
