@@ -1045,11 +1045,8 @@ class InterfazAnalizador:
         parser.parse(texto.upper(), lexer=lexer)
         final_html()
         
-        # 1. Detectamos la ubicación REAL de este archivo parser.py
-        # os.path.dirname(__file__) te da la ruta hasta 'ssl/Parser' o 'ssl/Parser/'
         ruta_script_actual = os.path.dirname(os.path.abspath(__file__))
         
-        # 2. Construimos la ruta subiendo un nivel para ir a 'ssl/HTMLs' de forma segura
         carpeta_destino = os.path.abspath(os.path.join(ruta_script_actual, "..", "HTMLs"))
         
         if not os.path.exists(carpeta_destino):
