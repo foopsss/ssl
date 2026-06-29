@@ -242,9 +242,9 @@ def formato_actuador_html(nombre_actuador, identif_actuador, atributo, valor_atr
             imagen_actuador = img_act['FOCO']['ON']
         elif atributo == 'ESTADO' and texto_real == 'OFF':
             imagen_actuador = img_act['FOCO']['OFF']
-        elif atributo == 'BRILLO' and texto_real > '0':
+        elif atributo == 'BRILLO' and texto_real != '0%':
             imagen_actuador = img_act['FOCO']['ON']
-        elif atributo == 'BRILLO' and texto_real == '0':
+        elif atributo == 'BRILLO' and texto_real == '0%':
             imagen_actuador = img_act['FOCO']['OFF']
         elif atributo == 'COLOR' and (texto_real == 'BLANCO' or texto_real == 'WHITE'):
             imagen_actuador = img_act['FOCO']['BLANCO']
@@ -1107,7 +1107,7 @@ class InterfazAnalizador:
             parser.parse(texto.upper(), lexer=lexer)
         except Exception:
             pass
-        
+
         final_html()
         
         ruta_script_actual = os.path.dirname(os.path.abspath(__file__))
