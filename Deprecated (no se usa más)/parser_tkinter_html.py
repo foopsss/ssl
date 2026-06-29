@@ -104,8 +104,8 @@ def t_DATE(t): r'([1-2][0-9]|3[0-1]|[0-9])/(1[0-2]|[1-9])/(19[0-9][0-9]|20[0-9][
 def t_EMAIL(t): r'[A-Z0-9\.\+\-]+@[A-Z0-9\.\+\-]+\.[A-Z]{2,4}'; return t
 def t_DISCRETO(t): r'(FRIO|CALOR|VENT)'; return t
 def t_NOMBRE(t): r'(BLANCO|ROJO|AZUL|BLUE|RED|WHITE)'; return t
-def t_OP_COMPARADOR_BOOL(t): r'(==|!=)'; return t
 def t_OP_COMPARADOR(t): r'(==|!=|>|<|>=|<=)'; return t
+def t_OP_COMPARADOR_BOOL(t): r'(==|!=)'; return t
 def t_OP_LOGICO(t): r'(AND|OR)'; return t
 def t_OP_NEGACION(t): r'NOT'; return t
 

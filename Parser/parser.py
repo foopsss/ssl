@@ -39,7 +39,7 @@ tokens = [
     'TEXTO', 'BOOL_DISPOSITIVO',
     'BOOL_ACTUADOR',
     'VALOR_TEMP',
-    'OP_COMPARADOR_BOOL',
+#   'OP_COMPARADOR',
     'PERCENT',
     'TIEMPO',
     'ILUMINANCIA',
@@ -101,11 +101,11 @@ def t_PERCENT(t): r'(([0-9]|[1-9][0-9])|100)%'; return t
 def t_TIEMPO(t): r'([0-9]\s?H|[1-9][0-9]\s?H|[0-9]\s?M|[1-9][0-9]\s?M|[0-9]\s?S|[1-9][0-9]\s?S)'; return t
 def t_ILUMINANCIA(t): r'([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|1000)LUX'; return t
 def t_HORA(t): r'(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]'; return t
-def t_DATE(t): r'([1-2][0-9]|3[0-1]|[0-9])/(1[0-2]|[1-9])/(19[0-9][0-9]|20[0-9][0-9])'; return t
+def t_DATE(t): r'([1-2][0-9]|3[0-1]|[0-9])\/(1[0-2]|[1-9])\/20[0-9][0-9]'; return t
 def t_EMAIL(t): r'[A-Z0-9\.\+\-]+@[A-Z0-9\.\+\-]+\.[A-Z]{2,4}'; return t
 def t_DISCRETO(t): r'(FRIO|CALOR|VENT)'; return t
 def t_NOMBRE(t): r'(BLANCO|ROJO|AZUL|BLUE|RED|WHITE)'; return t
-def t_OP_COMPARADOR_BOOL(t): r'(==|!=)'; return t
+#def t_OP_COMPARADOR(t): r'(==|!=)'; return t
 def t_OP_COMPARADOR(t): r'(==|!=|>|<|>=|<=)'; return t
 def t_OP_LOGICO(t): r'(AND|OR)'; return t
 def t_OP_NEGACION(t): r'NOT'; return t
@@ -228,12 +228,12 @@ def formato_actuador_html(nombre_actuador, identif_actuador, atributo, valor_atr
     es_un_mail = (hasattr(valor_atributo, 'type') and valor_atributo.type == 'EMAIL') or ("@" in texto_real and "." in texto_real)
     representacion_valor = f'<a href="mailto:{texto_real}" style="color: #0056b3; text-decoration: underline; font-weight: bold;">{texto_real}</a>' if es_un_mail else texto_real
 
-    # 2. Normalizamos las cadenas de control a mayúsculas
+    
     nombre_actuador = nombre_actuador.upper().strip()
     atributo = atributo.upper().strip()
     texto_real = texto_real.upper().strip()
 
-    # Inicializamos la variable para evitar NameError si nada coincide
+    
     imagen_actuador = ""
 
     # 3. Selección de la imagen usando el texto real ya limpio
@@ -274,7 +274,7 @@ def formato_actuador_html(nombre_actuador, identif_actuador, atributo, valor_atr
         if atributo == 'HORA':
             imagen_actuador = img_act['RELOJ']['HORA']
         elif atributo == 'FECHA':
-            imagen_actuador = img_act['RELOJ']['HORA']
+            imagen_actuador = img_act['RELOJ']['FECHA']
             
     elif nombre_actuador == 'ALTAVOZ':
         if atributo == 'VOLUMEN':
@@ -283,23 +283,26 @@ def formato_actuador_html(nombre_actuador, identif_actuador, atributo, valor_atr
             else:
                 imagen_actuador = img_act['ALTAVOZ']['VOLUMEN_ON']
         elif atributo == 'MUTE':
-            imagen_actuador = img_act['ALTAVOZ']['VOLUMEN_OFF']
+            if valor_atributo == 'ON':
+                imagen_actuador = img_act['ALTAVOZ']['VOLUMEN_OFF']
+            else:
+                imagen_actuador = img_act['ALTAVOZ']['VOLUMEN_ON']
         elif atributo == 'MENSAJE':
             imagen_actuador = img_act['ALTAVOZ']['MENSAJE']
         elif atributo in ['EMAIL_NOTIF', 'EMAIL']:
             imagen_actuador = img_act['ALTAVOZ']['MAIL']
             
     elif nombre_actuador == 'ALARMA':
-        if texto_real == 'ON':
-            imagen_actuador = img_act['ALARMA']['ON']
-        else:
-            imagen_actuador = img_act['ALARMA']['OFF']
+        if atributo == 'ESTADO' or atributo == 'ACTIVADA':
+            if valor_atributo == 'ON':
+                imagen_actuador = img_act['ALARMA']['ON']
+            else:
+                imagen_actuador = img_act['ALARMA']['OFF']
 
-    # Creamos la etiqueta de la imagen si se encontró la ruta
     html_imagen = f'<img src="{imagen_actuador}" alt="{nombre_actuador}" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">' if imagen_actuador else ""
 
     sufijo_identificador = f" (de {identif_actuador})" if identif_actuador else ""
-    
+
     html += f"""
     <div style="border: 1px solid gray; padding: 20px 40px; margin-bottom: 15px; margin-left: 50px; margin-right: 50px; background-color: #ffffff; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
         <div>
@@ -552,14 +555,14 @@ def p_condicion_luz(p):
             p[0] = ('CONDICION_LUZ', negacion, actuador, None, p[2] + p[3], None)
 
 def p_condicion_movimiento(p):
-    '''condicion : OP_NEGACION SENSOR_MOVIMIENTO identificador OP_COMPARADOR_BOOL BOOL_DISPOSITIVO contcondicion
-                 | OP_NEGACION SENSOR_MOVIMIENTO identificador OP_COMPARADOR_BOOL BOOL_DISPOSITIVO
-                 | OP_NEGACION SENSOR_MOVIMIENTO OP_COMPARADOR_BOOL BOOL_DISPOSITIVO contcondicion
-                 | OP_NEGACION SENSOR_MOVIMIENTO OP_COMPARADOR_BOOL BOOL_DISPOSITIVO
-                 | SENSOR_MOVIMIENTO identificador OP_COMPARADOR_BOOL BOOL_DISPOSITIVO contcondicion
-                 | SENSOR_MOVIMIENTO identificador OP_COMPARADOR_BOOL BOOL_DISPOSITIVO
-                 | SENSOR_MOVIMIENTO OP_COMPARADOR_BOOL BOOL_DISPOSITIVO contcondicion
-                 | SENSOR_MOVIMIENTO OP_COMPARADOR_BOOL BOOL_DISPOSITIVO'''
+    '''condicion : OP_NEGACION SENSOR_MOVIMIENTO identificador OP_COMPARADOR BOOL_DISPOSITIVO contcondicion
+                 | OP_NEGACION SENSOR_MOVIMIENTO identificador OP_COMPARADOR BOOL_DISPOSITIVO
+                 | OP_NEGACION SENSOR_MOVIMIENTO OP_COMPARADOR BOOL_DISPOSITIVO contcondicion
+                 | OP_NEGACION SENSOR_MOVIMIENTO OP_COMPARADOR BOOL_DISPOSITIVO
+                 | SENSOR_MOVIMIENTO identificador OP_COMPARADOR BOOL_DISPOSITIVO contcondicion
+                 | SENSOR_MOVIMIENTO identificador OP_COMPARADOR BOOL_DISPOSITIVO
+                 | SENSOR_MOVIMIENTO OP_COMPARADOR BOOL_DISPOSITIVO contcondicion
+                 | SENSOR_MOVIMIENTO OP_COMPARADOR BOOL_DISPOSITIVO'''
     
     if p[1] != 'SENSOR_MOVIMIENTO':
         negacion = p[1]
@@ -590,14 +593,14 @@ def p_condicion_movimiento(p):
             p[0] = ('CONDICION_MOVIMIENTO', negacion, actuador, None, p[2] + p[3], None)
 
 def p_condicion_humo(p):
-    '''condicion : OP_NEGACION SENSOR_HUMO identificador OP_COMPARADOR_BOOL BOOL_DISPOSITIVO contcondicion
-                 | OP_NEGACION SENSOR_HUMO identificador OP_COMPARADOR_BOOL BOOL_DISPOSITIVO
-                 | OP_NEGACION SENSOR_HUMO OP_COMPARADOR_BOOL BOOL_DISPOSITIVO contcondicion
-                 | OP_NEGACION SENSOR_HUMO OP_COMPARADOR_BOOL BOOL_DISPOSITIVO
-                 | SENSOR_HUMO identificador OP_COMPARADOR_BOOL BOOL_DISPOSITIVO contcondicion
-                 | SENSOR_HUMO identificador OP_COMPARADOR_BOOL BOOL_DISPOSITIVO
-                 | SENSOR_HUMO OP_COMPARADOR_BOOL BOOL_DISPOSITIVO contcondicion
-                 | SENSOR_HUMO OP_COMPARADOR_BOOL BOOL_DISPOSITIVO'''
+    '''condicion : OP_NEGACION SENSOR_HUMO identificador OP_COMPARADOR BOOL_DISPOSITIVO contcondicion
+                 | OP_NEGACION SENSOR_HUMO identificador OP_COMPARADOR BOOL_DISPOSITIVO
+                 | OP_NEGACION SENSOR_HUMO OP_COMPARADOR BOOL_DISPOSITIVO contcondicion
+                 | OP_NEGACION SENSOR_HUMO OP_COMPARADOR BOOL_DISPOSITIVO
+                 | SENSOR_HUMO identificador OP_COMPARADOR BOOL_DISPOSITIVO contcondicion
+                 | SENSOR_HUMO identificador OP_COMPARADOR BOOL_DISPOSITIVO
+                 | SENSOR_HUMO OP_COMPARADOR BOOL_DISPOSITIVO contcondicion
+                 | SENSOR_HUMO OP_COMPARADOR BOOL_DISPOSITIVO'''
     
     if p[1] != 'SENSOR_HUMO':
         negacion = p[1]
@@ -897,14 +900,14 @@ def p_condicion_actuador_alarma(p):
             p[0] = ('CONDICION_ALARMA', negacion, actuador, None, p[2], None)
 
 def p_atributos_lectura_foco(p):
-    '''atributos_lec_foco : ATRIBUTO_ESTADO OP_COMPARADOR_BOOL BOOL_ACTUADOR
+    '''atributos_lec_foco : ATRIBUTO_ESTADO OP_COMPARADOR BOOL_ACTUADOR
                           | ATRIBUTOS_FOCO_BRILLO OP_COMPARADOR PERCENT
                           | ATRIBUTOS_FOCO_COLOR OP_COMPARADOR NOMBRE'''
     p[0] = p[1] + p[2] + p[3]
 
 def p_atributos_lectura_aire(p):
-    '''atributos_lec_aire : ATRIBUTO_ESTADO OP_COMPARADOR_BOOL BOOL_ACTUADOR
-                          | ATRIBUTOS_AIRE_MODO OP_COMPARADOR_BOOL DISCRETO 
+    '''atributos_lec_aire : ATRIBUTO_ESTADO OP_COMPARADOR BOOL_ACTUADOR
+                          | ATRIBUTOS_AIRE_MODO OP_COMPARADOR DISCRETO 
                           | ATRIBUTOS_AIRE_TEMP_OBJ OP_COMPARADOR VALOR_TEMP
                           | ATRIBUTOS_AIRE_TEMP_ACT OP_COMPARADOR VALOR_TEMP'''
     p[0] = p[1] + p[2] + p[3]
@@ -914,7 +917,7 @@ def p_atributos_lectura_persiana(p):
     p[0] = p[1] + p[2] + p[3]
 
 def p_atributos_lectura_cerradura(p):
-    '''atributos_lec_cerradura : ATRIBUTO_ESTADO OP_COMPARADOR_BOOL BOOL_ACTUADOR'''
+    '''atributos_lec_cerradura : ATRIBUTO_ESTADO OP_COMPARADOR BOOL_ACTUADOR'''
     p[0] = p[1] + p[2] + p[3]
 
 def p_atributos_lectura_reloj(p):
@@ -924,15 +927,15 @@ def p_atributos_lectura_reloj(p):
 
 def p_atributos_lectura_altavoz(p):
     '''atributos_lec_altavoz : ATRIBUTOS_ALTAVOZ_VOLUMEN OP_COMPARADOR PERCENT
-                             | ATRIBUTOS_ALTAVOZ_MUTE OP_COMPARADOR_BOOL BOOL_ACTUADOR
+                             | ATRIBUTOS_ALTAVOZ_MUTE OP_COMPARADOR BOOL_ACTUADOR
                              | ATRIBUTOS_ALTAVOZ_MENSAJE OP_COMPARADOR TEXTO
                              | ATRIBUTOS_ALTAVOZ_EMAIL OP_COMPARADOR EMAIL'''
     p[0] = p[1] + p[2] + p[3]
 
 
 def p_atributos_lectura_alarma(p):
-    '''atributos_lec_alarma : ATRIBUTO_ESTADO OP_COMPARADOR_BOOL BOOL_ACTUADOR
-                            | ATRIBUTOS_ALARMA OP_COMPARADOR_BOOL BOOL_ACTUADOR
+    '''atributos_lec_alarma : ATRIBUTO_ESTADO OP_COMPARADOR BOOL_ACTUADOR
+                            | ATRIBUTOS_ALARMA OP_COMPARADOR BOOL_ACTUADOR
     '''
     p[0] = p[1] + p[2] + p[3]
 
@@ -946,6 +949,7 @@ def p_error(p):
         print("Error de sintaxis: Fin de archivo inesperado.")
     
     raise SyntaxError("Error de análisis sintáctico.")
+
 
 parser = yacc.yacc(debug=False, write_tables=False) #Construir el parser
 
@@ -1098,7 +1102,12 @@ class InterfazAnalizador:
         self.root.update()
         
         cabecera_html()
-        parser.parse(texto.upper(), lexer=lexer)
+
+        try:
+            parser.parse(texto.upper(), lexer=lexer)
+        except Exception:
+            pass
+        
         final_html()
         
         ruta_script_actual = os.path.dirname(os.path.abspath(__file__))
@@ -1138,5 +1147,16 @@ root.mainloop()
 
 #preguntas:
 #1-a qué se refiere con estado de sensores? si solo se usan para condiciones.
+
 #2-es correcta nuestra manera de ir construyendo el HTML? se va construyendo a medida que se alcanzan las reglas, es decir
 #en cada regla, se va construyendo concatenándose cada parte del html.
+
+#3-op_comparador y op_comparador están juntos, preguntar al profe por alguna solución, dado que puede permitir
+#sensor_temp >= TRUE, pero es porque una regla está contenida dentro de otra, sin importar el orden en que estén definidas,
+#si se encuentran los ejemplos correctos que contrasten, por más que estén bien escritos sintácticamente, van a dar error.
+#En general, esto pasa para todas las reglas que comparten elementos y no se diferencian, es decir, reglas que están contenidas
+#en otras.
+#(solución): hacer dos reglas aparte comp_basica (==|!=), comp_extendida (>|>=|<|<=), los comp_bool solo usan comp_básica, mientras
+#que los no booleanos, usan comp_bool, y comp_extendida.
+
+#4-para los sensores, es un cuadro donde se agrupan todos los sensores, o es un cuadrito por sensor? 

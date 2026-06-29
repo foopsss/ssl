@@ -4,13 +4,18 @@ WHEN sensor_luz < 250lux DO
     foco_entrada.brillo = 80%
     foco_patio.estado = ON
     foco_patio.color = blue
+    foco_cochera.color = azul
+    foco_comedor.color = blanco
+    foco_habitacion.color = rojo
 END
 // Gestión inteligente del aire acondicionado
-WHEN sensor_movimiento == TRUE DO
+WHEN sensor_movimiento == TRUE and reloj_sala.fecha == 12/12/2025 DO
     IF sensor_temp_int > 26°C THEN
         aire_acondicionado.estado = ON
         aire_acondicionado.modo = FRIO
+        aire_acondicionado.modo = vent
         aire_acondicionado.temp_objetivo = 22°C
+        aire_acondicionado.temp_obj = 15°C
     ELSE
         aire_acondicionado.estado = OFF
     END
@@ -32,4 +37,9 @@ IF sensor_humo == TRUE AND aire_acondicionado.estado == OFF THEN
     persiana_comedor.posicion =100%
     altavoz_comedor.mensaje = “PELIGRO. HUMO DETECTADO”
     altavoz_comedor.email = bomberos@smart-home.com.ar
+    altavoz_sala.volumen = 50%
 END
+altavoz_sala.mute = OFF
+alarma.estado = ON
+alarma.activada = OFF
+
