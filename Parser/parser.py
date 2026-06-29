@@ -181,27 +181,27 @@ def final_html():
     """ 
     html += "\n</body>\n</html>"
 
-imgagenes_act = {
-    'aire': {
+img_act = {
+    'AIRE': {
         'ON': '../resources/aire_on.png',
         'OFF': '../resources/aire_off.png',
         'FRIO': '../resources/aire_on.png'
     },
-    'alarma': {
+    'ALARMA': {
         'ON': '../resources/alarma_on.png',
         'OFF': '../resources/alarma_off.png'
     },
-    'altavoz': {
+    'ALTAVOZ': {
         'MAIL': '../resources/altavoz_mail.png',
         'MENSAJE': '../resources/altavoz_mensaje.png',
         'VOLUMEN_ON': '../resources/altavoz_volumen_on.png',
         'VOLUMEN_OFF': '../resources/altavoz_volumen_off.png'
     },
-    'cerradura': { 
+    'CERRADURA': { 
         'ON': '../resources/cerradura_on.png',
         'OFF': '../resources/cerradura_off.png'
     },
-    'foco': {
+    'FOCO': {
         'ON': '../resources/foco_on.png',
         'OFF': '../resources/foco_off.png',
         'BLUE': '../resources/foco_azul.png',
@@ -210,10 +210,10 @@ imgagenes_act = {
         'ROJO': '../resources/foco_rojo.png',
         'RED': '../resources/foco_rojo.png'
     },
-    'persiana': {
+    'PERSIANA': {
         'UNICO': '../resources/persiana.png'
     },
-    'reloj': {
+    'RELOJ': {
         'FECHA': '../resources/reloj_fecha.png',
         'HORA': '../resources/reloj_hora.png'
     }
@@ -222,42 +222,81 @@ imgagenes_act = {
 def formato_actuador_html(nombre_actuador, identif_actuador, atributo, valor_atributo, emoji):
     global html
 
+    # 1. Extraemos el texto limpio (¡Escondelo en texto_real!)
     texto_real = valor_atributo.value if hasattr(valor_atributo, 'value') else str(valor_atributo)
 
     es_un_mail = (hasattr(valor_atributo, 'type') and valor_atributo.type == 'EMAIL') or ("@" in texto_real and "." in texto_real)
     representacion_valor = f'<a href="mailto:{texto_real}" style="color: #0056b3; text-decoration: underline; font-weight: bold;">{texto_real}</a>' if es_un_mail else texto_real
 
-    # Lógica de búsqueda directa ultra limpia
-    nombre_act = nombre_actuador.lower().strip(); valor_atrib = texto_real.upper().strip()
+    # 2. Normalizamos las cadenas de control a mayúsculas
+    nombre_actuador = nombre_actuador.upper().strip()
+    atributo = atributo.upper().strip()
+    texto_real = texto_real.upper().strip()
 
-    ruta_img = ""
-    if nombre_act in imgagenes_act:
-        ruta_img = imgagenes_act[nombre_act].get(valor_atrib, '')
+    # Inicializamos la variable para evitar NameError si nada coincide
+    imagen_actuador = ""
 
-    if nombre_actuador == 'foco':
-        if atributo == 'estado' and valor_atributo == 'ON':
-        elif atributo == 'estado' and valor_atributo == 'OFF':
-        elif atributo == 'brillo' and valor_atributo > '0':
-        elif atributo == 'brillo' and valor_atributo == '0':
-        elif atributo == 'color' and (valor_atributo == 'blanco' or valor_atributo == 'white'):
-        elif atributo == 'color' and (valor_atributo == 'rojo' or valor_atributo == 'red'):
-        elif atributo == 'color' and (valor_atributo == 'azul' or valor_atributo == 'blue'):
-    if nombre_actuador == 'aire':
-        if atributo == 'aire':
+    # 3. Selección de la imagen usando el texto real ya limpio
+    if nombre_actuador == 'FOCO':
+        if atributo == 'ESTADO' and texto_real == 'ON':
+            imagen_actuador = img_act['FOCO']['ON']
+        elif atributo == 'ESTADO' and texto_real == 'OFF':
+            imagen_actuador = img_act['FOCO']['OFF']
+        elif atributo == 'BRILLO' and texto_real > '0':
+            imagen_actuador = img_act['FOCO']['ON']
+        elif atributo == 'BRILLO' and texto_real == '0':
+            imagen_actuador = img_act['FOCO']['OFF']
+        elif atributo == 'COLOR' and (texto_real == 'BLANCO' or texto_real == 'WHITE'):
+            imagen_actuador = img_act['FOCO']['BLANCO']
+        elif atributo == 'COLOR' and (texto_real == 'ROJO' or texto_real == 'RED'):
+            imagen_actuador = img_act['FOCO']['ROJO']
+        elif atributo == 'COLOR' and (texto_real == 'AZUL' or texto_real == 'BLUE'):
+            imagen_actuador = img_act['FOCO']['AZUL']
             
-         
-
-
-
-
-
-
-
-
-
+    elif nombre_actuador == 'AIRE': # <-- Corregido a Mayúsculas
+        if atributo == 'ESTADO' and texto_real == 'ON':
+            imagen_actuador = img_act['AIRE']['ON']
+        elif atributo == 'ESTADO' and texto_real == 'OFF':
+            imagen_actuador = img_act['AIRE']['OFF']
+        elif atributo == 'MODO' or (atributo in ['TEMP_OBJ', 'TEMP_OBJETIVO', 'TEMP_ACT']):
+            imagen_actuador = img_act['AIRE']['ON']
+            
+    elif nombre_actuador == 'PERSIANA':
+        imagen_actuador = img_act['PERSIANA']['UNICO']
+        
+    elif nombre_actuador == 'CERRADURA':
+        if atributo == 'ESTADO' and texto_real == 'ON': # <-- Corregido el espacio en 'ESTADO'
+            imagen_actuador = img_act['CERRADURA']['ON']
+        elif atributo == 'ESTADO' and texto_real == 'OFF':
+            imagen_actuador = img_act['CERRADURA']['OFF']
+            
+    elif nombre_actuador == 'RELOJ':
+        if atributo == 'HORA':
+            imagen_actuador = img_act['RELOJ']['HORA']
+        elif atributo == 'FECHA':
+            imagen_actuador = img_act['RELOJ']['HORA']
+            
+    elif nombre_actuador == 'ALTAVOZ':
+        if atributo == 'VOLUMEN':
+            if valor_atributo == '0%':
+                imagen_actuador = img_act['ALTAVOZ']['VOLUMEN_OFF']
+            else:
+                imagen_actuador = img_act['ALTAVOZ']['VOLUMEN_ON']
+        elif atributo == 'MUTE':
+            imagen_actuador = img_act['ALTAVOZ']['VOLUMEN_OFF']
+        elif atributo == 'MENSAJE':
+            imagen_actuador = img_act['ALTAVOZ']['MENSAJE']
+        elif atributo in ['EMAIL_NOTIF', 'EMAIL']:
+            imagen_actuador = img_act['ALTAVOZ']['MAIL']
+            
+    elif nombre_actuador == 'ALARMA':
+        if texto_real == 'ON':
+            imagen_actuador = img_act['ALARMA']['ON']
+        else:
+            imagen_actuador = img_act['ALARMA']['OFF']
 
     # Creamos la etiqueta de la imagen si se encontró la ruta
-    html_imagen = f'<img src="{ruta_img}" alt="{nombre_actuador}" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">' if ruta_img else ""
+    html_imagen = f'<img src="{imagen_actuador}" alt="{nombre_actuador}" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">' if imagen_actuador else ""
 
     sufijo_identificador = f" (de {identif_actuador})" if identif_actuador else ""
     
