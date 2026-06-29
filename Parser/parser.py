@@ -135,26 +135,26 @@ def t_error(t):
 
 lexer = lex.lex()
 
-datos = '''
-if sensor_temp >= 25°C then
-    foco.brillo = 25%
-end
-
-'''
-
-datosOriginal = datos          #Para mostrar palabra original en pantalla
-datosUpper = datos.upper()     #Cadena total transformada en mayúsculas
-
-lexer.input(datosUpper)
-
-while True:
-    tok = lexer.token()
-    if not tok: 
-        break
-    inicio = tok.lexpos
-    fin = inicio + len(tok.value)
-
-    print(f"Token encontrado: {datosOriginal[inicio:fin]:<15} de tipo: {tok.type}")
+#datos = '''
+#if sensor_temp >= 25°C then
+#    foco.brillo = 25%
+#end
+#
+#'''
+#
+#datosOriginal = datos          #Para mostrar palabra original en pantalla
+#datosUpper = datos.upper()     #Cadena total transformada en mayúsculas
+#
+#lexer.input(datosUpper)
+#
+#while True:
+#    tok = lexer.token()
+#    if not tok: 
+#        break
+#    inicio = tok.lexpos
+#    fin = inicio + len(tok.value)
+#
+#    print(f"Token encontrado: {datosOriginal[inicio:fin]:<15} de tipo: {tok.type}")
 
 #====================================================================#
 #============================== PARSER ==============================#
@@ -1206,7 +1206,6 @@ def p_condicion_actuador_altavoz(p):
         <img src="../resources/altavoz_volumen_on.png" alt="Altavoz" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">
     </div>
     """
-
 
 def p_condicion_actuador_alarma(p):
     '''condicion : OP_NEGACION ACTUADOR_ALARMA identificador atributos_lec_alarma contcondicion
