@@ -38,7 +38,7 @@ tokens = [
     'TEXTO', 'BOOL_DISPOSITIVO',
     'BOOL_ACTUADOR',
     'VALOR_TEMP',
-    'OP_COMPARADOR_BOOL', #Contiene (==|!=)
+#   'OP_COMPARADOR',
     'PERCENT',
     'TIEMPO',
     'ILUMINANCIA',
@@ -47,7 +47,7 @@ tokens = [
     'EMAIL',
     'DISCRETO',
     'NOMBRE',
-    'OP_COMPARADOR_GRAL', #Contiene (>=|<=|<|>) 
+    'OP_COMPARADOR',
     'OP_LOGICO',
     'OP_NEGACION',
     'ASIGNACION',
@@ -104,8 +104,8 @@ def t_DATE(t): r'([1-2][0-9]|3[0-1]|[0-9])\/(1[0-2]|[1-9])\/20[0-9][0-9]'; retur
 def t_EMAIL(t): r'[A-Z0-9\.\+\-]+@[A-Z0-9\.\+\-]+\.[A-Z]{2,4}'; return t
 def t_DISCRETO(t): r'(FRIO|CALOR|VENT)'; return t
 def t_NOMBRE(t): r'(BLANCO|ROJO|AZUL|BLUE|RED|WHITE)'; return t
-def t_OP_COMPARADOR_BOOL(t): r'(==|!=)'; return t
-def t_OP_COMPARADOR_GRAL(t): r'(>=|=<|>|<)'; return t
+#def t_OP_COMPARADOR(t): r'(==|!=)'; return t
+def t_OP_COMPARADOR(t): r'(==|!=|>=|=<|>|<)'; return t
 def t_OP_LOGICO(t): r'(AND|OR)'; return t
 def t_OP_NEGACION(t): r'NOT'; return t
 
@@ -195,7 +195,7 @@ def cabecera_html():
 def final_html():
     global html
     html += """
-    <div style="background-color: #003d82; padding: 25px 0; text-align: center; margin-top: calc(100vh - 350px);">
+    <div style="background-color: #003d82; margin-top: 50px; padding: 25px 0; text-align: center;">
         <p style="color: #ffffff; font-family: sans-serif; font-size: 14px; margin: 0; letter-spacing: 1px;">
             Binarybuilders© 2026
         </p>
@@ -458,22 +458,14 @@ def p_contcondicion(p):
 
 
 def p_condicion_temperatura(p):
-    '''condicion : OP_NEGACION SENSOR_TEMPERATURA identificador OP_COMPARADOR_GRAL VALOR_TEMP contcondicion
-                 | OP_NEGACION SENSOR_TEMPERATURA identificador OP_COMPARADOR_BOOL VALOR_TEMP contcondicion
-                 | OP_NEGACION SENSOR_TEMPERATURA identificador OP_COMPARADOR_GRAL VALOR_TEMP
-                 | OP_NEGACION SENSOR_TEMPERATURA identificador OP_COMPARADOR_BOOL VALOR_TEMP
-                 | OP_NEGACION SENSOR_TEMPERATURA OP_COMPARADOR_GRAL VALOR_TEMP contcondicion
-                 | OP_NEGACION SENSOR_TEMPERATURA OP_COMPARADOR_BOOL VALOR_TEMP contcondicion
-                 | OP_NEGACION SENSOR_TEMPERATURA OP_COMPARADOR_GRAL VALOR_TEMP
-                 | OP_NEGACION SENSOR_TEMPERATURA OP_COMPARADOR_BOOL VALOR_TEMP
-                 | SENSOR_TEMPERATURA identificador OP_COMPARADOR_GRAL VALOR_TEMP contcondicion
-                 | SENSOR_TEMPERATURA identificador OP_COMPARADOR_BOOL VALOR_TEMP contcondicion
-                 | SENSOR_TEMPERATURA identificador OP_COMPARADOR_GRAL VALOR_TEMP
-                 | SENSOR_TEMPERATURA identificador OP_COMPARADOR_BOOL VALOR_TEMP
-                 | SENSOR_TEMPERATURA OP_COMPARADOR_GRAL VALOR_TEMP contcondicion
-                 | SENSOR_TEMPERATURA OP_COMPARADOR_BOOL VALOR_TEMP contcondicion
-                 | SENSOR_TEMPERATURA OP_COMPARADOR_GRAL VALOR_TEMP
-                 | SENSOR_TEMPERATURA OP_COMPARADOR_BOOL VALOR_TEMP'''
+    '''condicion : OP_NEGACION SENSOR_TEMPERATURA identificador OP_COMPARADOR VALOR_TEMP contcondicion
+                 | OP_NEGACION SENSOR_TEMPERATURA identificador OP_COMPARADOR VALOR_TEMP
+                 | OP_NEGACION SENSOR_TEMPERATURA OP_COMPARADOR VALOR_TEMP contcondicion
+                 | OP_NEGACION SENSOR_TEMPERATURA OP_COMPARADOR VALOR_TEMP
+                 | SENSOR_TEMPERATURA identificador OP_COMPARADOR VALOR_TEMP contcondicion
+                 | SENSOR_TEMPERATURA identificador OP_COMPARADOR VALOR_TEMP
+                 | SENSOR_TEMPERATURA OP_COMPARADOR VALOR_TEMP contcondicion
+                 | SENSOR_TEMPERATURA OP_COMPARADOR VALOR_TEMP'''
     global html
     def val(obj):
         return obj.value if hasattr(obj, 'value') else str(obj)
@@ -523,22 +515,14 @@ def p_condicion_temperatura(p):
     """
 
 def p_condicion_humedad(p):
-    '''condicion : OP_NEGACION SENSOR_HUMEDAD identificador OP_COMPARADOR_GRAL PERCENT contcondicion
-                 | OP_NEGACION SENSOR_HUMEDAD identificador OP_COMPARADOR_BOOL PERCENT contcondicion
-                 | OP_NEGACION SENSOR_HUMEDAD identificador OP_COMPARADOR_GRAL PERCENT
-                 | OP_NEGACION SENSOR_HUMEDAD identificador OP_COMPARADOR_BOOL PERCENT
-                 | OP_NEGACION SENSOR_HUMEDAD OP_COMPARADOR_GRAL PERCENT contcondicion
-                 | OP_NEGACION SENSOR_HUMEDAD OP_COMPARADOR_BOOL PERCENT contcondicion
-                 | OP_NEGACION SENSOR_HUMEDAD OP_COMPARADOR_GRAL PERCENT
-                 | OP_NEGACION SENSOR_HUMEDAD OP_COMPARADOR_BOOL PERCENT
-                 | SENSOR_HUMEDAD identificador OP_COMPARADOR_GRAL PERCENT contcondicion
-                 | SENSOR_HUMEDAD identificador OP_COMPARADOR_BOOL PERCENT contcondicion
-                 | SENSOR_HUMEDAD identificador OP_COMPARADOR_GRAL PERCENT
-                 | SENSOR_HUMEDAD identificador OP_COMPARADOR_BOOL PERCENT
-                 | SENSOR_HUMEDAD OP_COMPARADOR_GRAL PERCENT contcondicion
-                 | SENSOR_HUMEDAD OP_COMPARADOR_BOOL PERCENT contcondicion
-                 | SENSOR_HUMEDAD OP_COMPARADOR_GRAL PERCENT
-                 | SENSOR_HUMEDAD OP_COMPARADOR_BOOL PERCENT'''
+    '''condicion : OP_NEGACION SENSOR_HUMEDAD identificador OP_COMPARADOR PERCENT contcondicion
+                 | OP_NEGACION SENSOR_HUMEDAD identificador OP_COMPARADOR PERCENT
+                 | OP_NEGACION SENSOR_HUMEDAD OP_COMPARADOR PERCENT contcondicion
+                 | OP_NEGACION SENSOR_HUMEDAD OP_COMPARADOR PERCENT
+                 | SENSOR_HUMEDAD identificador OP_COMPARADOR PERCENT contcondicion
+                 | SENSOR_HUMEDAD identificador OP_COMPARADOR PERCENT
+                 | SENSOR_HUMEDAD OP_COMPARADOR PERCENT contcondicion
+                 | SENSOR_HUMEDAD OP_COMPARADOR PERCENT'''
     global html
     
     if p[1] != 'SENSOR_HUMEDAD':
@@ -593,22 +577,14 @@ def p_condicion_humedad(p):
     """
 
 def p_condicion_luz(p):
-    '''condicion : OP_NEGACION SENSOR_LUZ identificador OP_COMPARADOR_GRAL ILUMINANCIA contcondicion
-                 | OP_NEGACION SENSOR_LUZ identificador OP_COMPARADOR_BOOL ILUMINANCIA contcondicion
-                 | OP_NEGACION SENSOR_LUZ identificador OP_COMPARADOR_GRAL ILUMINANCIA
-                 | OP_NEGACION SENSOR_LUZ identificador OP_COMPARADOR_BOOL ILUMINANCIA
-                 | OP_NEGACION SENSOR_LUZ OP_COMPARADOR_GRAL ILUMINANCIA contcondicion
-                 | OP_NEGACION SENSOR_LUZ OP_COMPARADOR_BOOL ILUMINANCIA contcondicion
-                 | OP_NEGACION SENSOR_LUZ OP_COMPARADOR_GRAL ILUMINANCIA
-                 | OP_NEGACION SENSOR_LUZ OP_COMPARADOR_BOOL ILUMINANCIA
-                 | SENSOR_LUZ identificador OP_COMPARADOR_GRAL ILUMINANCIA contcondicion
-                 | SENSOR_LUZ identificador OP_COMPARADOR_BOOL ILUMINANCIA contcondicion
-                 | SENSOR_LUZ identificador OP_COMPARADOR_GRAL ILUMINANCIA
-                 | SENSOR_LUZ identificador OP_COMPARADOR_BOOL ILUMINANCIA
-                 | SENSOR_LUZ OP_COMPARADOR_GRAL ILUMINANCIA contcondicion
-                 | SENSOR_LUZ OP_COMPARADOR_BOOL ILUMINANCIA contcondicion
-                 | SENSOR_LUZ OP_COMPARADOR_GRAL ILUMINANCIA
-                 | SENSOR_LUZ OP_COMPARADOR_BOOL ILUMINANCIA'''
+    '''condicion : OP_NEGACION SENSOR_LUZ identificador OP_COMPARADOR ILUMINANCIA contcondicion
+                 | OP_NEGACION SENSOR_LUZ identificador OP_COMPARADOR ILUMINANCIA 
+                 | OP_NEGACION SENSOR_LUZ OP_COMPARADOR ILUMINANCIA contcondicion
+                 | OP_NEGACION SENSOR_LUZ OP_COMPARADOR ILUMINANCIA
+                 | SENSOR_LUZ identificador OP_COMPARADOR ILUMINANCIA contcondicion
+                 | SENSOR_LUZ identificador OP_COMPARADOR ILUMINANCIA
+                 | SENSOR_LUZ OP_COMPARADOR ILUMINANCIA contcondicion
+                 | SENSOR_LUZ OP_COMPARADOR ILUMINANCIA'''
     global html
     
     if p[1] != 'SENSOR_LUZ':
@@ -664,14 +640,14 @@ def p_condicion_luz(p):
     """
 
 def p_condicion_movimiento(p):
-    '''condicion : OP_NEGACION SENSOR_MOVIMIENTO identificador OP_COMPARADOR_BOOL BOOL_DISPOSITIVO contcondicion
-                 | OP_NEGACION SENSOR_MOVIMIENTO identificador OP_COMPARADOR_BOOL BOOL_DISPOSITIVO
-                 | OP_NEGACION SENSOR_MOVIMIENTO OP_COMPARADOR_BOOL BOOL_DISPOSITIVO contcondicion
-                 | OP_NEGACION SENSOR_MOVIMIENTO OP_COMPARADOR_BOOL BOOL_DISPOSITIVO
-                 | SENSOR_MOVIMIENTO identificador OP_COMPARADOR_BOOL BOOL_DISPOSITIVO contcondicion
-                 | SENSOR_MOVIMIENTO identificador OP_COMPARADOR_BOOL BOOL_DISPOSITIVO
-                 | SENSOR_MOVIMIENTO OP_COMPARADOR_BOOL BOOL_DISPOSITIVO contcondicion
-                 | SENSOR_MOVIMIENTO OP_COMPARADOR_BOOL BOOL_DISPOSITIVO'''
+    '''condicion : OP_NEGACION SENSOR_MOVIMIENTO identificador OP_COMPARADOR BOOL_DISPOSITIVO contcondicion
+                 | OP_NEGACION SENSOR_MOVIMIENTO identificador OP_COMPARADOR BOOL_DISPOSITIVO
+                 | OP_NEGACION SENSOR_MOVIMIENTO OP_COMPARADOR BOOL_DISPOSITIVO contcondicion
+                 | OP_NEGACION SENSOR_MOVIMIENTO OP_COMPARADOR BOOL_DISPOSITIVO
+                 | SENSOR_MOVIMIENTO identificador OP_COMPARADOR BOOL_DISPOSITIVO contcondicion
+                 | SENSOR_MOVIMIENTO identificador OP_COMPARADOR BOOL_DISPOSITIVO
+                 | SENSOR_MOVIMIENTO OP_COMPARADOR BOOL_DISPOSITIVO contcondicion
+                 | SENSOR_MOVIMIENTO OP_COMPARADOR BOOL_DISPOSITIVO'''
     global html
     
     if p[1] != 'SENSOR_MOVIMIENTO':
@@ -727,14 +703,14 @@ def p_condicion_movimiento(p):
     """
 
 def p_condicion_humo(p):
-    '''condicion : OP_NEGACION SENSOR_HUMO identificador OP_COMPARADOR_BOOL BOOL_DISPOSITIVO contcondicion
-                 | OP_NEGACION SENSOR_HUMO identificador OP_COMPARADOR_BOOL BOOL_DISPOSITIVO
-                 | OP_NEGACION SENSOR_HUMO OP_COMPARADOR_BOOL BOOL_DISPOSITIVO contcondicion
-                 | OP_NEGACION SENSOR_HUMO OP_COMPARADOR_BOOL BOOL_DISPOSITIVO
-                 | SENSOR_HUMO identificador OP_COMPARADOR_BOOL BOOL_DISPOSITIVO contcondicion
-                 | SENSOR_HUMO identificador OP_COMPARADOR_BOOL BOOL_DISPOSITIVO
-                 | SENSOR_HUMO OP_COMPARADOR_BOOL BOOL_DISPOSITIVO contcondicion
-                 | SENSOR_HUMO OP_COMPARADOR_BOOL BOOL_DISPOSITIVO'''
+    '''condicion : OP_NEGACION SENSOR_HUMO identificador OP_COMPARADOR BOOL_DISPOSITIVO contcondicion
+                 | OP_NEGACION SENSOR_HUMO identificador OP_COMPARADOR BOOL_DISPOSITIVO
+                 | OP_NEGACION SENSOR_HUMO OP_COMPARADOR BOOL_DISPOSITIVO contcondicion
+                 | OP_NEGACION SENSOR_HUMO OP_COMPARADOR BOOL_DISPOSITIVO
+                 | SENSOR_HUMO identificador OP_COMPARADOR BOOL_DISPOSITIVO contcondicion
+                 | SENSOR_HUMO identificador OP_COMPARADOR BOOL_DISPOSITIVO
+                 | SENSOR_HUMO OP_COMPARADOR BOOL_DISPOSITIVO contcondicion
+                 | SENSOR_HUMO OP_COMPARADOR BOOL_DISPOSITIVO'''
     global html
     
     if p[1] != 'SENSOR_HUMO':
@@ -1203,7 +1179,7 @@ def p_condicion_actuador_altavoz(p):
                 <li>{valor}</li>
             </ul>
         </div>
-        <img src="../resources/altavoz_volumen_on.png" alt="Altavoz" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">
+        <img src="../resources/altavoz_on.png" alt="Altavoz" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">
     </div>
     """
 
@@ -1280,53 +1256,42 @@ def p_condicion_actuador_alarma(p):
     """
 
 def p_atributos_lectura_foco(p):
-    '''atributos_lec_foco : ATRIBUTO_ESTADO OP_COMPARADOR_BOOL BOOL_ACTUADOR
-                          | ATRIBUTOS_FOCO_BRILLO OP_COMPARADOR_GRAL PERCENT
-                          | ATRIBUTOS_FOCO_BRILLO OP_COMPARADOR_BOOL PERCENT
-                          | ATRIBUTOS_FOCO_COLOR OP_COMPARADOR_GRAL NOMBRE
-                          | ATRIBUTOS_FOCO_COLOR OP_COMPARADOR_BOOL NOMBRE'''
+    '''atributos_lec_foco : ATRIBUTO_ESTADO OP_COMPARADOR BOOL_ACTUADOR
+                          | ATRIBUTOS_FOCO_BRILLO OP_COMPARADOR PERCENT
+                          | ATRIBUTOS_FOCO_COLOR OP_COMPARADOR NOMBRE'''
     p[0] = p[1] + p[2] + p[3]
 
 def p_atributos_lectura_aire(p):
-    '''atributos_lec_aire : ATRIBUTO_ESTADO OP_COMPARADOR_BOOL BOOL_ACTUADOR
-                          | ATRIBUTOS_AIRE_MODO OP_COMPARADOR_GRAL DISCRETO 
-                          | ATRIBUTOS_AIRE_MODO OP_COMPARADOR_BOOL DISCRETO 
-                          | ATRIBUTOS_AIRE_TEMP_OBJ OP_COMPARADOR_GRAL VALOR_TEMP
-                          | ATRIBUTOS_AIRE_TEMP_OBJ OP_COMPARADOR_BOOL VALOR_TEMP
-                          | ATRIBUTOS_AIRE_TEMP_ACT OP_COMPARADOR_GRAL VALOR_TEMP
-                          | ATRIBUTOS_AIRE_TEMP_ACT OP_COMPARADOR_BOOL VALOR_TEMP'''
+    '''atributos_lec_aire : ATRIBUTO_ESTADO OP_COMPARADOR BOOL_ACTUADOR
+                          | ATRIBUTOS_AIRE_MODO OP_COMPARADOR DISCRETO 
+                          | ATRIBUTOS_AIRE_TEMP_OBJ OP_COMPARADOR VALOR_TEMP
+                          | ATRIBUTOS_AIRE_TEMP_ACT OP_COMPARADOR VALOR_TEMP'''
     p[0] = p[1] + p[2] + p[3]
 
 def p_atributos_lectura_persiana(p):
-    '''atributos_lec_persiana : ATRIBUTOS_PERSIANA OP_COMPARADOR_GRAL PERCENT
-                              | ATRIBUTOS_PERSIANA OP_COMPARADOR_BOOL PERCENT'''
+    '''atributos_lec_persiana : ATRIBUTOS_PERSIANA OP_COMPARADOR PERCENT'''
     p[0] = p[1] + p[2] + p[3]
 
 def p_atributos_lectura_cerradura(p):
-    '''atributos_lec_cerradura : ATRIBUTO_ESTADO OP_COMPARADOR_BOOL BOOL_ACTUADOR'''
+    '''atributos_lec_cerradura : ATRIBUTO_ESTADO OP_COMPARADOR BOOL_ACTUADOR'''
     p[0] = p[1] + p[2] + p[3]
 
 def p_atributos_lectura_reloj(p):
-    '''atributos_lec_reloj : ATRIBUTOS_RELOJ_HORA OP_COMPARADOR_GRAL HORA
-                           | ATRIBUTOS_RELOJ_HORA OP_COMPARADOR_BOOL HORA
-                           | ATRIBUTOS_RELOJ_FECHA OP_COMPARADOR_GRAL DATE
-                           | ATRIBUTOS_RELOJ_FECHA OP_COMPARADOR_BOOL DATE'''
+    '''atributos_lec_reloj : ATRIBUTOS_RELOJ_HORA OP_COMPARADOR HORA
+                           | ATRIBUTOS_RELOJ_FECHA OP_COMPARADOR DATE'''
     p[0] = p[1] + p[2] + p[3]
 
 def p_atributos_lectura_altavoz(p):
-    '''atributos_lec_altavoz : ATRIBUTOS_ALTAVOZ_VOLUMEN OP_COMPARADOR_GRAL PERCENT
-                             | ATRIBUTOS_ALTAVOZ_VOLUMEN OP_COMPARADOR_BOOL PERCENT
-                             | ATRIBUTOS_ALTAVOZ_MUTE OP_COMPARADOR_BOOL BOOL_ACTUADOR
-                             | ATRIBUTOS_ALTAVOZ_MENSAJE OP_COMPARADOR_GRAL TEXTO
-                             | ATRIBUTOS_ALTAVOZ_MENSAJE OP_COMPARADOR_BOOL TEXTO
-                             | ATRIBUTOS_ALTAVOZ_EMAIL OP_COMPARADOR_GRAL EMAIL
-                             | ATRIBUTOS_ALTAVOZ_EMAIL OP_COMPARADOR_BOOL EMAIL'''
+    '''atributos_lec_altavoz : ATRIBUTOS_ALTAVOZ_VOLUMEN OP_COMPARADOR PERCENT
+                             | ATRIBUTOS_ALTAVOZ_MUTE OP_COMPARADOR BOOL_ACTUADOR
+                             | ATRIBUTOS_ALTAVOZ_MENSAJE OP_COMPARADOR TEXTO
+                             | ATRIBUTOS_ALTAVOZ_EMAIL OP_COMPARADOR EMAIL'''
     p[0] = p[1] + p[2] + p[3]
 
 
 def p_atributos_lectura_alarma(p):
-    '''atributos_lec_alarma : ATRIBUTO_ESTADO OP_COMPARADOR_BOOL BOOL_ACTUADOR
-                            | ATRIBUTOS_ALARMA OP_COMPARADOR_BOOL BOOL_ACTUADOR
+    '''atributos_lec_alarma : ATRIBUTO_ESTADO OP_COMPARADOR BOOL_ACTUADOR
+                            | ATRIBUTOS_ALARMA OP_COMPARADOR BOOL_ACTUADOR
     '''
     p[0] = p[1] + p[2] + p[3]
 
@@ -1527,9 +1492,8 @@ app = InterfazAnalizador(root)
 root.mainloop()
 
 #detalles:
-#1-Al derivar el HTML con errores sintácticos, al encontrar un error, se derivarárn todos bloques que estén
-#antes y después del bloque del error, es decir que si el error está en la condición de un bloque, el bloque entero no se deriva,
-#pero sí aquellos que estén antes, esto incluye para asignaciones, condiciones y bucles. 
+#1-Al derivar el HTML con errores sintácticos, en el HTML solo se mostrarán todos los actuadores y/o sensores encontrados
+#antes del error.
 
 #2-importante, siempre que haya un error en el programa se mostrará el mensaje de que hay un error sintáctico (en la interfaz, en rojo)
 #independientemente de si es o no realmente un error de sintáxis, puede ser un error en el código. Posiblemente corregir
