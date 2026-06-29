@@ -162,6 +162,8 @@ while True:
 #====================================================================#
 
 html = ""  #variable global para ir concatenando etiquetas para el html
+nombre_archivo= "" #variable global para inicializar el nombre del archivo al generar HTML
+
 def cabecera_html():
     global html
     html = "<!DOCTYPE html>\n<html lang='es'>\n<head>\n"
@@ -324,12 +326,11 @@ def formato_actuador_html(nombre_actuador, identif_actuador, atributo, valor_atr
 
     html_imagen = f'<img src="{imagen_actuador}" alt="{nombre_actuador}" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">' if imagen_actuador else ""
 
-    sufijo_identificador = f" (de {identif_actuador})" if identif_actuador else ""
-
+    sufijo_identificador = f" ({identif_actuador})" if identif_actuador else ""
     html += f"""
     <div style="border: 1px solid gray; padding: 20px 40px; margin-bottom: 15px; margin-left: 50px; margin-right: 50px; background-color: #ffffff; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
         <div>
-            <h1 style="display: inline; font-family: 'Franklin Gothic Medium'; font-size: 24px; margin: 0;">{nombre_actuador}{emoji}</h1>{sufijo_identificador}
+            <h1 style="display: inline; font-family: 'Franklin Gothic Medium'; font-size: 24px; margin: 0;">{nombre_actuador}{emoji}</h1>{sufijo_identificador} <span style="font-family: inherit; color: #888888; font-style: italic; font-weight: 300; font-size: 14px; margin-left: 5px;">(asignado)</span>
             <ul style="margin: 10px 0 0 0; padding-left: 20px;">
                 <li>{atributo}: {representacion_valor}</li>
             </ul>
@@ -499,15 +500,19 @@ def p_condicion_temperatura(p):
     # Armamos el nodo del árbol de forma consistente
     p[0] = ('CONDICION_TEMP', negacion, sensor, identificador, comparacion_completa, cont_cond)
 
-    sensor_completo = f"{sensor} ({identificador})" if identificador else sensor
+    if identificador:
+        identificador = f"({identificador.replace('_', '')})"
+    else:
+        identificador = ""
 
     html += f"""
-    <div style="border: 1px solid green; padding: 20px;">
-        <b>{sensor_completo}</b> {comparacion_completa}<br>
+    <div style="border: 1px solid green; padding: 20px 40px; margin-bottom: 15px; margin-left: 50px; margin-right: 50px; display: flex; justify-content: space-between; align-items: center; border-radius: 8px;">
+        <div>
+            <h2 style="display: inline; font-family: 'Franklin Gothic Medium'; font-size: 24px; margin: 0;"><b>Sensor de temperatura ⚙️</b>{identificador}: {valor} <span style="font-family: inherit; color: #888888; font-style: italic; font-weight: 300 !important; font-size: 14px; margin-left: 5px;">(lectura)</span></h2>
+        </div>
+        <img src="../resources/sensor.png" alt="Sensor" style="width: 50px; height: 50px; margin-right: 10px;">
     </div>
     """
-
-
 
 def p_condicion_humedad(p):
     '''condicion : OP_NEGACION SENSOR_HUMEDAD identificador OP_COMPARADOR PERCENT contcondicion
@@ -518,6 +523,7 @@ def p_condicion_humedad(p):
                  | SENSOR_HUMEDAD identificador OP_COMPARADOR PERCENT
                  | SENSOR_HUMEDAD OP_COMPARADOR PERCENT contcondicion
                  | SENSOR_HUMEDAD OP_COMPARADOR PERCENT'''
+    global html
     
     if p[1] != 'SENSOR_HUMEDAD':
         negacion = p[1]
@@ -525,27 +531,50 @@ def p_condicion_humedad(p):
         
         if len(p) == 7:
             p[0] = ('CONDICION_HUMEDAD', negacion, actuador, p[3], p[4] + p[5], p[6])
+            valor = p[5]
         elif len(p) == 6:
             if p[3].startswith('_'):
                 p[0] = ('CONDICION_HUMEDAD', negacion, actuador, p[3], p[4] + p[5], None)
+                valor = p[5]
             else:
                 p[0] = ('CONDICION_HUMEDAD', negacion, actuador, None, p[3] + p[4], p[5])
+                valor = p[4]
         else:
             p[0] = ('CONDICION_HUMEDAD', negacion, actuador, None, p[3] + p[4], None)
-
+            valor = p[4]
     else:
         negacion = None
         actuador = p[1]
         
         if len(p) == 6:
             p[0] = ('CONDICION_HUMEDAD', negacion, actuador, p[2], p[3] + p[4], p[5])
+            valor = p[4]
         elif len(p) == 5:
             if p[2].startswith('_'):
                 p[0] = ('CONDICION_HUMEDAD', negacion, actuador, p[2], p[3] + p[4], None)
+                valor = p[4]
             else:
                 p[0] = ('CONDICION_HUMEDAD', negacion, actuador, None, p[2] + p[3], p[4])
+                valor = p[3]
         else:
             p[0] = ('CONDICION_HUMEDAD', negacion, actuador, None, p[2] + p[3], None)
+            valor = p[3]
+
+    identificador = p[0][3] if p[0][3] else ""
+
+    if identificador:
+        identificador = f"({identificador.replace('_', '')})"
+    else:
+        identificador = ""
+
+    html += f"""
+    <div style="border: 1px solid green; padding: 20px 40px; margin-bottom: 15px; margin-left: 50px; margin-right: 50px; display: flex; justify-content: space-between; align-items: center; border-radius: 8px;">
+        <div>
+            <h2 style="display: inline; font-family: 'Franklin Gothic Medium'; font-size: 24px; margin: 0;"><b>Sensor de humedad ⚙️</b>{identificador}: {valor} <span style="font-family: inherit; color: #888888; font-style: italic; font-weight: 300 !important; font-size: 14px; margin-left: 5px;">(lectura)</span></h2>
+        </div>
+        <img src="../resources/sensor.png" alt="Sensor" style="width: 50px; height: 50px; margin-right: 10px;">
+    </div>
+    """
 
 def p_condicion_luz(p):
     '''condicion : OP_NEGACION SENSOR_LUZ identificador OP_COMPARADOR ILUMINANCIA contcondicion
@@ -556,6 +585,7 @@ def p_condicion_luz(p):
                  | SENSOR_LUZ identificador OP_COMPARADOR ILUMINANCIA
                  | SENSOR_LUZ OP_COMPARADOR ILUMINANCIA contcondicion
                  | SENSOR_LUZ OP_COMPARADOR ILUMINANCIA'''
+    global html
     
     if p[1] != 'SENSOR_LUZ':
         negacion = p[1]
@@ -563,13 +593,17 @@ def p_condicion_luz(p):
         
         if len(p) == 7:
             p[0] = ('CONDICION_LUZ', negacion, actuador, p[3], p[4] + p[5], p[6])
+            valor = p[5]
         elif len(p) == 6:
             if p[3].startswith('_'):
                 p[0] = ('CONDICION_LUZ', negacion, actuador, p[3], p[4] + p[5], None)
+                valor = p[5]
             else:
                 p[0] = ('CONDICION_LUZ', negacion, actuador, None, p[3] + p[4], p[5])
+                valor = p[4]
         else:
             p[0] = ('CONDICION_LUZ', negacion, actuador, None, p[3] + p[4], None)
+            valor = p[4]
 
     else:
         negacion = None
@@ -577,13 +611,33 @@ def p_condicion_luz(p):
         
         if len(p) == 6:
             p[0] = ('CONDICION_LUZ', negacion, actuador, p[2], p[3] + p[4], p[5])
+            valor = p[4]
         elif len(p) == 5:
             if p[2].startswith('_'):
                 p[0] = ('CONDICION_LUZ', negacion, actuador, p[2], p[3] + p[4], None)
+                valor = p[4]
             else:
                 p[0] = ('CONDICION_LUZ', negacion, actuador, None, p[2] + p[3], p[4])
+                valor = p[3]
         else:
             p[0] = ('CONDICION_LUZ', negacion, actuador, None, p[2] + p[3], None)
+            valor = p[3]
+
+    identificador = p[0][3] if p[0][3] else ""
+
+    if identificador:
+        identificador = f" ({identificador.replace('_', '')})"
+    else:
+        identificador = ""
+
+    html += f"""    
+    <div style="border: 1px solid green; padding: 20px 40px; margin-bottom: 15px; margin-left: 50px; margin-right: 50px; display: flex; justify-content: space-between; align-items: center; border-radius: 8px;">
+        <div>
+            <h2 style="display: inline; font-family: 'Franklin Gothic Medium'; font-size: 24px; margin: 0;"><b>Sensor de luz ⚙️</b>{identificador}: {valor} <span style="font-family: inherit; color: #888888; font-style: italic; font-weight: 300 !important; font-size: 14px; margin-left: 5px;">(lectura)</span></h2>
+        </div>
+        <img src="../resources/sensor.png" alt="Sensor" style="width: 50px; height: 50px; margin-right: 10px;">
+    </div>
+    """
 
 def p_condicion_movimiento(p):
     '''condicion : OP_NEGACION SENSOR_MOVIMIENTO identificador OP_COMPARADOR BOOL_DISPOSITIVO contcondicion
@@ -594,6 +648,7 @@ def p_condicion_movimiento(p):
                  | SENSOR_MOVIMIENTO identificador OP_COMPARADOR BOOL_DISPOSITIVO
                  | SENSOR_MOVIMIENTO OP_COMPARADOR BOOL_DISPOSITIVO contcondicion
                  | SENSOR_MOVIMIENTO OP_COMPARADOR BOOL_DISPOSITIVO'''
+    global html
     
     if p[1] != 'SENSOR_MOVIMIENTO':
         negacion = p[1]
@@ -601,13 +656,17 @@ def p_condicion_movimiento(p):
         
         if len(p) == 7:
             p[0] = ('CONDICION_MOVIMIENTO', negacion, actuador, p[3], p[4] + p[5], p[6])
+            valor = p[5] 
         elif len(p) == 6:
             if p[3].startswith('_'):
                 p[0] = ('CONDICION_MOVIMIENTO', negacion, actuador, p[3], p[4] + p[5], None)
+                valor = p[5]  
             else:
                 p[0] = ('CONDICION_MOVIMIENTO', negacion, actuador, None, p[3] + p[4], p[5])
+                valor = p[4]  
         else:
             p[0] = ('CONDICION_MOVIMIENTO', negacion, actuador, None, p[3] + p[4], None)
+            valor = p[4] 
 
     else:
         negacion = None
@@ -615,13 +674,33 @@ def p_condicion_movimiento(p):
         
         if len(p) == 6:
             p[0] = ('CONDICION_MOVIMIENTO', negacion, actuador, p[2], p[3] + p[4], p[5])
+            valor = p[4]  # Solo BOOL_DISPOSITIVO
         elif len(p) == 5:
             if p[2].startswith('_'):
                 p[0] = ('CONDICION_MOVIMIENTO', negacion, actuador, p[2], p[3] + p[4], None)
+                valor = p[4]  # Solo BOOL_DISPOSITIVO
             else:
                 p[0] = ('CONDICION_MOVIMIENTO', negacion, actuador, None, p[2] + p[3], p[4])
+                valor = p[3]  # Solo BOOL_DISPOSITIVO
         else:
             p[0] = ('CONDICION_MOVIMIENTO', negacion, actuador, None, p[2] + p[3], None)
+            valor = p[3]  # Solo BOOL_DISPOSITIVO
+
+    identificador = p[0][3] if p[0][3] else ""
+
+    if identificador:
+        identificador = f" ({identificador.replace('_', '')})"
+    else:
+        identificador = ""
+
+    html += f"""
+    <div style="border: 1px solid green; padding: 20px 40px; margin-bottom: 15px; margin-left: 50px; margin-right: 50px; display: flex; justify-content: space-between; align-items: center; border-radius: 8px;">
+        <div>
+            <h2 style="display: inline; font-family: 'Franklin Gothic Medium'; font-size: 24px; margin: 0;"><b>Sensor de movimiento ⚙️</b>{identificador}: {valor} <span style="font-family: inherit; color: #888888; font-style: italic; font-weight: 300 !important; font-size: 14px; margin-left: 5px;">(lectura)</span></h2>
+        </div>
+        <img src="../resources/sensor.png" alt="Sensor" style="width: 50px; height: 50px; margin-right: 10px;">
+    </div>
+    """
 
 def p_condicion_humo(p):
     '''condicion : OP_NEGACION SENSOR_HUMO identificador OP_COMPARADOR BOOL_DISPOSITIVO contcondicion
@@ -632,6 +711,7 @@ def p_condicion_humo(p):
                  | SENSOR_HUMO identificador OP_COMPARADOR BOOL_DISPOSITIVO
                  | SENSOR_HUMO OP_COMPARADOR BOOL_DISPOSITIVO contcondicion
                  | SENSOR_HUMO OP_COMPARADOR BOOL_DISPOSITIVO'''
+    global html
     
     if p[1] != 'SENSOR_HUMO':
         negacion = p[1]
@@ -639,13 +719,17 @@ def p_condicion_humo(p):
         
         if len(p) == 7:
             p[0] = ('CONDICION_HUMO', negacion, actuador, p[3], p[4] + p[5], p[6])
+            valor = p[5] 
         elif len(p) == 6:
             if p[3].startswith('_'):
                 p[0] = ('CONDICION_HUMO', negacion, actuador, p[3], p[4] + p[5], None)
+                valor = p[5] 
             else:
                 p[0] = ('CONDICION_HUMO', negacion, actuador, None, p[3] + p[4], p[5])
+                valor = p[4]
         else:
             p[0] = ('CONDICION_HUMO', negacion, actuador, None, p[3] + p[4], None)
+            valor = p[4] 
 
     else:
         negacion = None
@@ -653,13 +737,33 @@ def p_condicion_humo(p):
         
         if len(p) == 6:
             p[0] = ('CONDICION_HUMO', negacion, actuador, p[2], p[3] + p[4], p[5])
+            valor = p[4]
         elif len(p) == 5:
             if p[2].startswith('_'):
                 p[0] = ('CONDICION_HUMO', negacion, actuador, p[2], p[3] + p[4], None)
+                valor = p[4]
             else:
                 p[0] = ('CONDICION_HUMO', negacion, actuador, None, p[2] + p[3], p[4])
+                valor = p[3]
         else:
             p[0] = ('CONDICION_HUMO', negacion, actuador, None, p[2] + p[3], None)
+            valor = p[3]
+
+    identificador = p[0][3] if p[0][3] else ""
+
+    if identificador:
+        identificador = f" ({identificador.replace('_', '')})"
+    else:
+        identificador = ""
+
+    html += f"""
+    <div style="border: 1px solid green; padding: 20px 40px; margin-bottom: 15px; margin-left: 50px; margin-right: 50px; display: flex; justify-content: space-between; align-items: center; border-radius: 8px;">
+        <div>
+            <h2 style="display: inline; font-family: 'Franklin Gothic Medium'; font-size: 24px; margin: 0;"><b>Sensor de humo ⚙️</b>{identificador}: {valor} <span style="font-family: inherit; color: #888888; font-style: italic; font-weight: 300 !important; font-size: 14px; margin-left: 5px;">(lectura)</span></h2>
+        </div>
+        <img src="../resources/sensor.png" alt="Sensor" style="width: 50px; height: 50px; margin-right: 10px;">
+    </div>
+    """
 
 def p_condicion_foco(p):
     '''condicion : OP_NEGACION ACTUADOR_FOCO identificador atributos_lec_foco contcondicion
@@ -670,35 +774,58 @@ def p_condicion_foco(p):
                  | ACTUADOR_FOCO identificador atributos_lec_foco
                  | ACTUADOR_FOCO atributos_lec_foco contcondicion
                  | ACTUADOR_FOCO atributos_lec_foco'''
+    global html
     
-    if p[1] != 'ACTUADOR_FOCO':
+    if p[1] != 'FOCO':
         negacion = p[1]
         actuador = p[2]
         
         if len(p) == 6:
             p[0] = ('CONDICION_FOCO', negacion, actuador, p[3], p[4], p[5])
+            valor = p[4]; identificador = p[3]
         elif len(p) == 5:
-            if p[3].startswith('_'):
-                p[0] = ('CONDICION_FOCO', negacion, actuador, p[3], p[4], None)
-            else:
-                p[0] = ('CONDICION_FOCO', negacion, actuador, None, p[3], p[4])
+            p[0] = ('CONDICION_FOCO', negacion, actuador, p[3], p[4], None)
+            valor = p[4]; identificador = p[3]
         else:
             p[0] = ('CONDICION_FOCO', negacion, actuador, None, p[3], None)
-
+            valor = p[3]
     else:
         negacion = None
         actuador = p[1]
         
-        if len(p) == 5:
+        if len(p) == 5: 
             p[0] = ('CONDICION_FOCO', negacion, actuador, p[2], p[3], p[4])
+            valor = p[3]
         elif len(p) == 4:
-            if p[2].startswith('_'):
-                p[0] = ('CONDICION_FOCO', negacion, actuador, p[2], p[3], None)
-            else:
-                p[0] = ('CONDICION_FOCO', negacion, actuador, None, p[2], p[3])
+            p[0] = ('CONDICION_FOCO', negacion, actuador, p[2], p[3], None)
+            valor = p[3]
         else:
             p[0] = ('CONDICION_FOCO', negacion, actuador, None, p[2], None)
+            valor = p[2]
 
+    encontrado = ""
+    for elemento in p[0]:
+        if elemento and str(elemento).startswith('_'):
+            encontrado = str(elemento).replace('_', '')
+            break
+    identificador = encontrado if encontrado else ""
+
+    if identificador:
+        identificador = f" ({identificador.replace('_', '')})"
+    else:
+        identificador = ""
+
+    html += f"""
+    <div style="border: 1px solid gray; padding: 20px 40px; margin-bottom: 15px; margin-left: 50px; margin-right: 50px; background-color: #ffffff; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1 style="display: inline; font-family: 'Franklin Gothic Medium'; font-size: 24px; margin: 0;">FOCO 💡</h1>{identificador} <span style="font-family: inherit; color: #888888; font-style: italic; font-weight: 300; font-size: 14px; margin-left: 5px;">(lectura)</span>
+            <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+                <li>{valor}</li>
+            </ul>
+        </div>
+        <img src="../resources/foco_on.png" alt="Foco" style="width: 50px; height: 50px; margin-right: 10px;">
+    </div>
+    """
 
 #CONDICIONES INCLUYEN ACTUADORES Y SENSORES (SOLO DE LECTURA)
 def p_condicion_actuador_aire(p):
@@ -710,32 +837,65 @@ def p_condicion_actuador_aire(p):
                  | ACTUADOR_AIRE identificador atributos_lec_aire
                  | ACTUADOR_AIRE atributos_lec_aire contcondicion
                  | ACTUADOR_AIRE atributos_lec_aire'''
+    global html
+    
     if p[1] != 'AIRE':
         negacion = p[1]
         actuador = p[2]        
         if len(p) == 6:
             p[0] = ('CONDICION_AIRE', negacion, actuador, p[3], p[4], p[5])
+            valor = p[4]
         elif len(p) == 5:
             if p[3].startswith('_'):
                 p[0] = ('CONDICION_AIRE', negacion, actuador, p[3], p[4], None)
+                valor = p[4]
             else:                    
                 p[0] = ('CONDICION_AIRE', negacion, actuador, None, p[3], p[4])
+                valor = p[3]
         else:             
             p[0] = ('CONDICION_AIRE', negacion, actuador, None, p[3], None)
+            valor = p[3]
     else:
         negacion = None
         actuador = p[1]
 
         if len(p) == 5:
             p[0] = ('CONDICION_AIRE', negacion, actuador, p[2], p[3], p[4])
+            valor = p[3]
         elif len(p) == 4:
             if p[2].startswith('_'):
                 p[0] = ('CONDICION_AIRE', negacion, actuador, p[2], p[3], None)
+                valor = p[3]
             else:                    
                 p[0] = ('CONDICION_AIRE', negacion, actuador, None, p[2], p[3])
+                valor = p[2]
         else: 
             p[0] = ('CONDICION_AIRE', negacion, actuador, None, p[2], None)
-    
+            valor = p[2]
+
+    encontrado = ""
+    for elemento in p[0]:
+        if elemento and str(elemento).startswith('_'):
+            encontrado = str(elemento).replace('_', '')
+            break
+    identificador = encontrado if encontrado else ""
+
+    if identificador:
+        identificador = f" ({identificador.replace('_', '')})"
+    else:
+        identificador = ""
+
+    html += f"""
+    <div style="border: 1px solid gray; padding: 20px 40px; margin-bottom: 15px; margin-left: 50px; margin-right: 50px; background-color: #ffffff; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1 style="display: inline; font-family: 'Franklin Gothic Medium'; font-size: 24px; margin: 0;">AIRE ACONDICIONADO ❄️</h1>{identificador} <span style="font-family: inherit; color: #888888; font-style: italic; font-weight: 300; font-size: 14px; margin-left: 5px;">(lectura)</span>
+            <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+                <li>{valor}</li>
+            </ul>
+        </div>
+        <img src="../resources/aire_on.png" alt="Aire" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">
+    </div>
+    """
 
 def p_condicion_actuador_persiana(p):
     '''condicion : OP_NEGACION ACTUADOR_PERSIANA identificador atributos_lec_persiana contcondicion
@@ -746,6 +906,7 @@ def p_condicion_actuador_persiana(p):
                  | ACTUADOR_PERSIANA identificador atributos_lec_persiana 
                  | ACTUADOR_PERSIANA atributos_lec_persiana contcondicion
                  | ACTUADOR_PERSIANA atributos_lec_persiana'''
+    global html
     
     if p[1] != 'PERSIANA':
         negacion = p[1]
@@ -753,13 +914,17 @@ def p_condicion_actuador_persiana(p):
         
         if len(p) == 6:
             p[0] = ('CONDICION_PERSIANA', negacion, actuador, p[3], p[4], p[5])
+            valor = p[4]
         elif len(p) == 5:
             if p[3].startswith('_'):
                 p[0] = ('CONDICION_PERSIANA', negacion, actuador, p[3], p[4], None)
+                valor = p[4]
             else:
                 p[0] = ('CONDICION_PERSIANA', negacion, actuador, None, p[3], p[4])
+                valor = p[3]
         else:
             p[0] = ('CONDICION_PERSIANA', negacion, actuador, None, p[3], None)
+            valor = p[3]
 
     else:
         negacion = None
@@ -767,13 +932,41 @@ def p_condicion_actuador_persiana(p):
         
         if len(p) == 5:
             p[0] = ('CONDICION_PERSIANA', negacion, actuador, p[2], p[3], p[4])
+            valor = p[3]
         elif len(p) == 4:
             if p[2].startswith('_'):
                 p[0] = ('CONDICION_PERSIANA', negacion, actuador, p[2], p[3], None)
+                valor = p[3]
             else:
                 p[0] = ('CONDICION_PERSIANA', negacion, actuador, None, p[2], p[3])
+                valor = p[2]
         else:
             p[0] = ('CONDICION_PERSIANA', negacion, actuador, None, p[2], None)
+            valor = p[2]
+
+    encontrado = ""
+    for elemento in p[0]:
+        if elemento and str(elemento).startswith('_'):
+            encontrado = str(elemento).replace('_', '')
+            break
+    identificador = encontrado if encontrado else ""
+
+    if identificador:
+        identificador = f" ({identificador.replace('_', '')})"
+    else:
+        identificador = ""
+
+    html += f"""
+    <div style="border: 1px solid gray; padding: 20px 40px; margin-bottom: 15px; margin-left: 50px; margin-right: 50px; background-color: #ffffff; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1 style="display: inline; font-family: 'Franklin Gothic Medium'; font-size: 24px; margin: 0;">PERSIANA 🪟</h1>{identificador} <span style="font-family: inherit; color: #888888; font-style: italic; font-weight: 300; font-size: 14px; margin-left: 5px;">(lectura)</span>
+            <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+                <li>{valor}</li>
+            </ul>
+        </div>
+        <img src="../resources/persiana.png" alt="Persiana" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">
+    </div>
+    """
 
     
 def p_condicion_actuador_cerradura(p):
@@ -785,6 +978,7 @@ def p_condicion_actuador_cerradura(p):
                  | ACTUADOR_CERRADURA identificador atributos_lec_cerradura
                  | ACTUADOR_CERRADURA atributos_lec_cerradura contcondicion
                  | ACTUADOR_CERRADURA atributos_lec_cerradura'''
+    global html
     
     if p[1] != 'CERRADURA':
         negacion = p[1]
@@ -792,13 +986,17 @@ def p_condicion_actuador_cerradura(p):
         
         if len(p) == 6:
             p[0] = ('CONDICION_CERRADURA', negacion, actuador, p[3], p[4], p[5])
+            valor = p[4]
         elif len(p) == 5:
             if p[3].startswith('_'):
                 p[0] = ('CONDICION_CERRADURA', negacion, actuador, p[3], p[4], None)
+                valor = p[4]
             else:
                 p[0] = ('CONDICION_CERRADURA', negacion, actuador, None, p[3], p[4])
+                valor = p[3]
         else:
             p[0] = ('CONDICION_CERRADURA', negacion, actuador, None, p[3], None)
+            valor = p[3]
 
     else:
         negacion = None
@@ -806,13 +1004,41 @@ def p_condicion_actuador_cerradura(p):
         
         if len(p) == 5:
             p[0] = ('CONDICION_CERRADURA', negacion, actuador, p[2], p[3], p[4])
+            valor = p[3]
         elif len(p) == 4:
             if p[2].startswith('_'):
                 p[0] = ('CONDICION_CERRADURA', negacion, actuador, p[2], p[3], None)
+                valor = p[3]
             else:
                 p[0] = ('CONDICION_CERRADURA', negacion, actuador, None, p[2], p[3])
+                valor = p[2]
         else:
             p[0] = ('CONDICION_CERRADURA', negacion, actuador, None, p[2], None)
+            valor = p[2]
+
+    encontrado = ""
+    for elemento in p[0]:
+        if elemento and str(elemento).startswith('_'):
+            encontrado = str(elemento).replace('_', '')
+            break
+    identificador = encontrado if encontrado else ""
+
+    if identificador:
+        identificador = f" ({identificador.replace('_', '')})"
+    else:
+        identificador = ""
+
+    html += f"""
+    <div style="border: 1px solid gray; padding: 20px 40px; margin-bottom: 15px; margin-left: 50px; margin-right: 50px; background-color: #ffffff; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1 style="display: inline; font-family: 'Franklin Gothic Medium'; font-size: 24px; margin: 0;">CERRADURA 🔒</h1>{identificador} <span style="font-family: inherit; color: #888888; font-style: italic; font-weight: 300; font-size: 14px; margin-left: 5px;">(lectura)</span>
+            <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+                <li>{valor}</li>
+            </ul>
+        </div>
+        <img src="../resources/cerradura_on.png" alt="Cerradura" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">
+    </div>
+    """
 
 
 def p_condicion_actuador_reloj(p):
@@ -824,6 +1050,7 @@ def p_condicion_actuador_reloj(p):
                  | ACTUADOR_RELOJ identificador atributos_lec_reloj
                  | ACTUADOR_RELOJ atributos_lec_reloj contcondicion
                  | ACTUADOR_RELOJ atributos_lec_reloj'''
+    global html
     
     if p[1] != 'RELOJ':
         negacion = p[1]
@@ -831,13 +1058,17 @@ def p_condicion_actuador_reloj(p):
         
         if len(p) == 6:
             p[0] = ('CONDICION_RELOJ', negacion, actuador, p[3], p[4], p[5])
+            valor = p[4]
         elif len(p) == 5:
             if p[3].startswith('_'):
                 p[0] = ('CONDICION_RELOJ', negacion, actuador, p[3], p[4], None)
+                valor = p[4]
             else:
                 p[0] = ('CONDICION_RELOJ', negacion, actuador, None, p[3], p[4])
+                valor = p[3]
         else:
             p[0] = ('CONDICION_RELOJ', negacion, actuador, None, p[3], None)
+            valor = p[3]
 
     else:
         negacion = None
@@ -845,13 +1076,41 @@ def p_condicion_actuador_reloj(p):
         
         if len(p) == 5:
             p[0] = ('CONDICION_RELOJ', negacion, actuador, p[2], p[3], p[4])
+            valor = p[3]
         elif len(p) == 4:
             if p[2].startswith('_'):
                 p[0] = ('CONDICION_RELOJ', negacion, actuador, p[2], p[3], None)
+                valor = p[3]
             else:
                 p[0] = ('CONDICION_RELOJ', negacion, actuador, None, p[2], p[3])
+                valor = p[2]
         else:
             p[0] = ('CONDICION_RELOJ', negacion, actuador, None, p[2], None)
+            valor = p[2]
+
+    encontrado = ""
+    for elemento in p[0]:
+        if elemento and str(elemento).startswith('_'):
+            encontrado = str(elemento).replace('_', '')
+            break
+    identificador = encontrado if encontrado else ""
+
+    if identificador:
+        identificador = f" ({identificador.replace('_', '')})"
+    else:
+        identificador = ""
+
+    html += f"""
+    <div style="border: 1px solid gray; padding: 20px 40px; margin-bottom: 15px; margin-left: 50px; margin-right: 50px; background-color: #ffffff; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1 style="display: inline; font-family: 'Franklin Gothic Medium'; font-size: 24px; margin: 0;">RELOJ ⏰</h1>{identificador} <span style="font-family: inherit; color: #888888; font-style: italic; font-weight: 300; font-size: 14px; margin-left: 5px;">(lectura)</span>
+            <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+                <li>{valor}</li>
+            </ul>
+        </div>
+        <img src="../resources/reloj_hora.png" alt="Reloj" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">
+    </div>
+    """
 
 def p_condicion_actuador_altavoz(p):
     '''condicion : OP_NEGACION ACTUADOR_ALTAVOZ identificador atributos_lec_altavoz contcondicion
@@ -862,6 +1121,7 @@ def p_condicion_actuador_altavoz(p):
                  | ACTUADOR_ALTAVOZ identificador atributos_lec_altavoz
                  | ACTUADOR_ALTAVOZ atributos_lec_altavoz contcondicion
                  | ACTUADOR_ALTAVOZ atributos_lec_altavoz'''
+    global html
     
     if p[1] != 'ALTAVOZ':
         negacion = p[1]
@@ -869,13 +1129,17 @@ def p_condicion_actuador_altavoz(p):
         
         if len(p) == 6:
             p[0] = ('CONDICION_ALTAVOZ', negacion, actuador, p[3], p[4], p[5])
+            valor = p[4]
         elif len(p) == 5:
             if p[3].startswith('_'):
                 p[0] = ('CONDICION_ALTAVOZ', negacion, actuador, p[3], p[4], None)
+                valor = p[4]
             else:
                 p[0] = ('CONDICION_ALTAVOZ', negacion, actuador, None, p[3], p[4])
+                valor = p[3]
         else:
             p[0] = ('CONDICION_ALTAVOZ', negacion, actuador, None, p[3], None)
+            valor = p[3]
 
     else:
         negacion = None
@@ -883,13 +1147,41 @@ def p_condicion_actuador_altavoz(p):
         
         if len(p) == 5:
             p[0] = ('CONDICION_ALTAVOZ', negacion, actuador, p[2], p[3], p[4])
+            valor = p[3]
         elif len(p) == 4:
             if p[2].startswith('_'):
                 p[0] = ('CONDICION_ALTAVOZ', negacion, actuador, p[2], p[3], None)
+                valor = p[3]
             else:
                 p[0] = ('CONDICION_ALTAVOZ', negacion, actuador, None, p[2], p[3])
+                valor = p[2]
         else:
             p[0] = ('CONDICION_ALTAVOZ', negacion, actuador, None, p[2], None)
+            valor = p[2]
+
+    encontrado = ""
+    for elemento in p[0]:
+        if elemento and str(elemento).startswith('_'):
+            encontrado = str(elemento).replace('_', '')
+            break
+    identificador = encontrado if encontrado else ""
+
+    if identificador:
+        identificador = f" ({identificador.replace('_', '')})"
+    else:
+        identificador = ""
+
+    html += f"""
+    <div style="border: 1px solid gray; padding: 20px 40px; margin-bottom: 15px; margin-left: 50px; margin-right: 50px; background-color: #ffffff; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1 style="display: inline; font-family: 'Franklin Gothic Medium'; font-size: 24px; margin: 0;">ALTAVOZ 🔊</h1>{identificador} <span style="font-family: inherit; color: #888888; font-style: italic; font-weight: 300; font-size: 14px; margin-left: 5px;">(lectura)</span>
+            <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+                <li>{valor}</li>
+            </ul>
+        </div>
+        <img src="../resources/altavoz_on.png" alt="Altavoz" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">
+    </div>
+    """
 
 
 def p_condicion_actuador_alarma(p):
@@ -901,6 +1193,7 @@ def p_condicion_actuador_alarma(p):
                  | ACTUADOR_ALARMA identificador atributos_lec_alarma
                  | ACTUADOR_ALARMA atributos_lec_alarma contcondicion
                  | ACTUADOR_ALARMA atributos_lec_alarma'''
+    global html
     
     if p[1] != 'ALARMA':
         negacion = p[1]
@@ -908,13 +1201,17 @@ def p_condicion_actuador_alarma(p):
         
         if len(p) == 6:
             p[0] = ('CONDICION_ALARMA', negacion, actuador, p[3], p[4], p[5])
+            valor = p[4]
         elif len(p) == 5:
             if p[3].startswith('_'):
                 p[0] = ('CONDICION_ALARMA', negacion, actuador, p[3], p[4], None)
+                valor = p[4]
             else:
                 p[0] = ('CONDICION_ALARMA', negacion, actuador, None, p[3], p[4])
+                valor = p[3]
         else:
             p[0] = ('CONDICION_ALARMA', negacion, actuador, None, p[3], None)
+            valor = p[3]
 
     else:
         negacion = None
@@ -922,13 +1219,41 @@ def p_condicion_actuador_alarma(p):
         
         if len(p) == 5:
             p[0] = ('CONDICION_ALARMA', negacion, actuador, p[2], p[3], p[4])
+            valor = p[3]
         elif len(p) == 4:
             if p[2].startswith('_'):
                 p[0] = ('CONDICION_ALARMA', negacion, actuador, p[2], p[3], None)
+                valor = p[3]
             else:
                 p[0] = ('CONDICION_ALARMA', negacion, actuador, None, p[2], p[3])
+                valor = p[2]
         else:
             p[0] = ('CONDICION_ALARMA', negacion, actuador, None, p[2], None)
+            valor = p[2]
+
+    encontrado = ""
+    for elemento in p[0]:
+        if elemento and str(elemento).startswith('_'):
+            encontrado = str(elemento).replace('_', '')
+            break
+    identificador = encontrado if encontrado else ""
+
+    if identificador:
+        identificador = f" ({identificador.replace('_', '')})"
+    else:
+        identificador = ""
+
+    html += f"""
+    <div style="border: 1px solid gray; padding: 20px 40px; margin-bottom: 15px; margin-left: 50px; margin-right: 50px; background-color: #ffffff; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1 style="display: inline; font-family: 'Franklin Gothic Medium'; font-size: 24px; margin: 0;">ALARMA 🚨</h1>{identificador} <span style="font-family: inherit; color: #888888; font-style: italic; font-weight: 300; font-size: 14px; margin-left: 5px;">(lectura)</span>
+            <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+                <li>{valor}</li>
+            </ul>
+        </div>
+        <img src="../resources/alarma_on.png" alt="Alarma" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">
+    </div>
+    """
 
 def p_atributos_lectura_foco(p):
     '''atributos_lec_foco : ATRIBUTO_ESTADO OP_COMPARADOR BOOL_ACTUADOR
@@ -982,8 +1307,6 @@ def p_error(p):
     
     raise SyntaxError("Error de análisis sintáctico.")
 
-
-
 parser = yacc.yacc(debug=False, write_tables=False) #Construir el parser
 
 #====================================================================#
@@ -1009,7 +1332,6 @@ class InterfazAnalizador:
         self.color_error = "#f44336"
         self.color_advertencia = "#ff9800"
         self.root.configure(bg=self.color_fondo)
-
 
     def crear_widgets(self):
         #frame principal (toda la ventana)
@@ -1137,7 +1459,7 @@ class InterfazAnalizador:
         cabecera_html()
 
         try: 
-           print(parser.parse(texto.upper(), lexer=lexer))
+           parser.parse(texto.upper(), lexer=lexer)
         except Exception:
             pass #para continuar por más que se detectó un error (y permitir ejecutar el html igual más abajo)
 
@@ -1150,7 +1472,7 @@ class InterfazAnalizador:
         if not os.path.exists(carpeta_destino):
             os.makedirs(carpeta_destino)
         
-        nombre_archivo= ""
+        
         if not nombre_archivo:
             nombre_archivo = 'sin_nombre.txt'
 

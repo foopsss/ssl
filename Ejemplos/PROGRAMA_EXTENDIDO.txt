@@ -1,4 +1,7 @@
 // El sensor de luz (entrada) activa el foco (salida)
+IF altavoz.volumen == 25% then
+    altavoz.mensaje = "volumen al 25%"
+end
 WHEN sensor_luz < 250lux DO
     foco_entrada.estado = ON
     foco_entrada.brillo = 80%
@@ -9,6 +12,15 @@ WHEN sensor_luz < 250lux DO
     foco_comedor.color = blanco
     foco_habitacion.color = rojo
 END
+IF alarma.activada == ON then
+    altavoz.mensaje = "alarma prendida"
+end
+IF aire_cocina.temp_obj == 25°C then
+    aire_acondicionado.modo = vent
+end
+IF reloj_living.fecha == 15/10/2025 then
+    alarma.estado = ON
+end
 // Gestión inteligente del aire acondicionado
 WHEN sensor_movimiento == TRUE and reloj_sala.fecha == 12/12/2025 DO
     IF sensor_temp_int > 26°C THEN
@@ -21,6 +33,9 @@ WHEN sensor_movimiento == TRUE and reloj_sala.fecha == 12/12/2025 DO
         aire_acondicionado.estado = OFF
     END
 END
+IF persiana.posicion == 85% then
+    aire_acondicionado.modo = vent
+end
 EVERY 30m DO
     IF reloj.hora > 22:00 AND alarma.estado == OFF THEN
         persiana_sala.posicion = 0%
@@ -30,6 +45,9 @@ EVERY 30m DO
         altavoz_comedor.email = felipe@smart-home.com.ar
     END
 END
+IF cerradura.estado == ON then
+    alarma.estado = ON
+end
 IF sensor_humo == TRUE AND aire_acondicionado.estado == OFF THEN
     aire_acondicionado.estado = ON
     aire_acondicionado.modo = FRIO
@@ -40,8 +58,11 @@ IF sensor_humo == TRUE AND aire_acondicionado.estado == OFF THEN
     altavoz_comedor.email = bomberos@smart-home.com.ar
     altavoz_sala.volumen = 50%
 END
-altavoz_sala.mute = OFF
-altavoz_living.mute = ON
-alarma.estado = ON
-alarma.activada = OFF
+if sensor_humedad_ext == 25% then
+    alarma.activada = OFF 
+	foco.brillo = 25%
+    altavoz_sala.mute = OFF
+    altavoz_living.mute = ON
+    alarma.estado = ON
+end
 
