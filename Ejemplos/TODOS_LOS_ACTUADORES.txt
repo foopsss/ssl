@@ -1,0 +1,43 @@
+
+// 1. Caso Focos: Probamos estados, brillos y todos los colores mapeados
+WHEN sensor_luz < 100lux DO
+    foco_sala.estado = ON           
+    foco_cocina.estado = OFF         
+    foco_comedor.brillo = 75%         
+    foco_pasillo.brillo = 0         
+    foco_habitacion.color = BLANCO  
+    foco_baño.color = WHITE          
+    foco_patio.color = ROJO           
+    foco_balcon.color = RED          
+    foco_garage.color = AZUL     
+    foco_entrada.color = BLUE   
+END
+// 2. Caso Aire Acondicionado y Persiana
+WHEN sensor_temp_int > 28°C DO
+    aire_principal.estado = ON      
+    aire_secundario.estado = OFF
+    aire_principal.modo = FRIO   
+    aire_principal.temp_obj = 24°C 
+    aire_principal.temp_objetivo = 22°C 
+    aire_principal.temp_act = 26°C 
+    persiana_comedor.posicion = 50%
+END
+// 3. Caso Cerradura, Alarma y Reloj
+EVERY 1h DO
+    IF reloj.hora == 08:00 THEN
+        cerradura_frente.estado = ON  
+        cerradura_patio.estado = OFF   
+        alarma_casa.estado = ON        
+        alarma_quincho.estado = OFF 
+        reloj_pared.hora = 08:00       
+        reloj_digital.fecha = 28/06    
+    END
+END
+// 4. Caso Altavoz: Probamos volumen, silencio, mensajes y correos electrónicos
+IF sensor_movimiento == TRUE THEN
+    altavoz_sala.volumen = 80%  
+    altavoz_cocina.mute = TRUE        
+    altavoz_habitacion.mensaje = "HOLA"
+    altavoz_sala.email = juan@test.com 
+    altavoz_cocina.email_notif = aviso@test.com 
+END
