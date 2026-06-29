@@ -1472,7 +1472,6 @@ class InterfazAnalizador:
         if not os.path.exists(carpeta_destino):
             os.makedirs(carpeta_destino)
         
-        
         if not nombre_archivo:
             nombre_archivo = 'sin_nombre.txt'
 
