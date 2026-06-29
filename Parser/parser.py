@@ -1,7 +1,6 @@
 from ply import lex, yacc
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
-import tempfile
 import webbrowser
 import os
 
@@ -106,7 +105,7 @@ def t_EMAIL(t): r'[A-Z0-9\.\+\-]+@[A-Z0-9\.\+\-]+\.[A-Z]{2,4}'; return t
 def t_DISCRETO(t): r'(FRIO|CALOR|VENT)'; return t
 def t_NOMBRE(t): r'(BLANCO|ROJO|AZUL|BLUE|RED|WHITE)'; return t
 #def t_OP_COMPARADOR(t): r'(==|!=)'; return t
-def t_OP_COMPARADOR(t): r'(==|!=|>|<|>=|<=)'; return t
+def t_OP_COMPARADOR(t): r'(==|!=|>=|=<|>|<)'; return t
 def t_OP_LOGICO(t): r'(AND|OR)'; return t
 def t_OP_NEGACION(t): r'NOT'; return t
 
@@ -135,6 +134,27 @@ def t_error(t):
     return(t)
 
 lexer = lex.lex()
+
+datos = '''
+if sensor_temp >= 25°C then
+    foco.brillo = 25%
+end
+
+'''
+
+datosOriginal = datos          #Para mostrar palabra original en pantalla
+datosUpper = datos.upper()     #Cadena total transformada en mayúsculas
+
+lexer.input(datosUpper)
+
+while True:
+    tok = lexer.token()
+    if not tok: 
+        break
+    inicio = tok.lexpos
+    fin = inicio + len(tok.value)
+
+    print(f"Token encontrado: {datosOriginal[inicio:fin]:<15} de tipo: {tok.type}")
 
 #====================================================================#
 #============================== PARSER ==============================#
@@ -219,24 +239,19 @@ img_act = {
     }
 }
 
-def formato_actuador_html(nombre_actuador, identif_actuador, atributo, valor_atributo, emoji):
+def formato_actuador_html(nombre_actuador, identif_actuador, atributo, valor_atributo):
     global html
 
-    # 1. Extraemos el texto limpio (¡Escondelo en texto_real!)
     texto_real = valor_atributo.value if hasattr(valor_atributo, 'value') else str(valor_atributo)
 
     es_un_mail = (hasattr(valor_atributo, 'type') and valor_atributo.type == 'EMAIL') or ("@" in texto_real and "." in texto_real)
     representacion_valor = f'<a href="mailto:{texto_real}" style="color: #0056b3; text-decoration: underline; font-weight: bold;">{texto_real}</a>' if es_un_mail else texto_real
 
-    
     nombre_actuador = nombre_actuador.upper().strip()
     atributo = atributo.upper().strip()
     texto_real = texto_real.upper().strip()
 
-    
     imagen_actuador = ""
-
-    # 3. Selección de la imagen usando el texto real ya limpio
     if nombre_actuador == 'FOCO':
         if atributo == 'ESTADO' and texto_real == 'ON':
             imagen_actuador = img_act['FOCO']['ON']
@@ -299,6 +314,14 @@ def formato_actuador_html(nombre_actuador, identif_actuador, atributo, valor_atr
             else:
                 imagen_actuador = img_act['ALARMA']['OFF']
 
+    if nombre_actuador == "FOCO": emoji = "💡"
+    elif nombre_actuador == "AIRE": emoji = "❄️"
+    elif nombre_actuador == "PERSIANA": emoji = "🪟"
+    elif nombre_actuador == "CERRADURA": emoji = "🔒"
+    elif nombre_actuador == "ALTAVOZ": emoji = "🔊"
+    elif nombre_actuador == "ALARMA": emoji = "🚨"
+
+
     html_imagen = f'<img src="{imagen_actuador}" alt="{nombre_actuador}" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">' if imagen_actuador else ""
 
     sufijo_identificador = f" (de {identif_actuador})" if identif_actuador else ""
@@ -315,7 +338,6 @@ def formato_actuador_html(nombre_actuador, identif_actuador, atributo, valor_atr
     </div>
     """
 
-
 #REGLAS DEL ANÁLISIS SINTÁCTICO
 def p_programa(p):
     '''sigma : accion'''
@@ -330,9 +352,9 @@ def p_acciones(p):
               | asignacion accion
               | asignacion'''
     if len(p) == 3:
-        p[0] = [p[1]] + p[2] 
+        p[0] = ('BLOQUE_ACCIONES', p[1], p[2]) 
     else:
-        p[0] = [p[1]]
+        p[0] = p[1]
 
 #CICLOS WHEN Y EVERT
 def p_ciclos(p):
@@ -373,13 +395,6 @@ def p_asignaciones(p):
                   | ACTUADOR_ALARMA atributos_esc_alarma'''
     global html #var. globales van debajo de las reglas siempre sino se rompe todo
     
-    if "FOCO" in p[1]: emoji = "💡"
-    elif "AIRE" in p[1]: emoji = "❄️"
-    elif "PERSIANA" in p[1]: emoji = "🪟"
-    elif "CERRADURA" in p[1]: emoji = "🔒"
-    elif "ALTAVOZ" in p[1]: emoji = "🔊"
-    elif "ALARMA" in p[1]: emoji = "🚨"
-
     if len(p) == 4:
         p[0] = ('ASIGNACION', p[1], p[2], p[3])
         nombre_actuador = p[1]
@@ -389,7 +404,7 @@ def p_asignaciones(p):
         atributo = partes_atributo[0].replace('.', '').strip()
         valor_atributo = partes_atributo[1].strip()
         
-        formato_actuador_html(nombre_actuador, identif_act, atributo, valor_atributo, emoji)
+        formato_actuador_html(nombre_actuador, identif_act, atributo, valor_atributo)
 
     else:
         p[0] = ('ASIGNACION', p[1], None, p[2])
@@ -399,7 +414,7 @@ def p_asignaciones(p):
         atributo = partes_atributo[0].replace('.', '').strip()
         valor_atributo = partes_atributo[1].strip()
         
-        formato_actuador_html(nombre_actuador, None, atributo, valor_atributo, emoji)
+        formato_actuador_html(nombre_actuador, None, atributo, valor_atributo)
 
 
 #ATRIBUTOS CON ESTRUCTURA DE ESCRITURA PARA CADA ACTUADOR 
@@ -438,6 +453,8 @@ def p_atributos_escritura_alarma(p):
 #CONDICIONES (LECTURA DE SENSORES)
 def p_contcondicion(p):
     '''contcondicion : OP_LOGICO condicion'''
+    p[0] = (p[1], p[2])
+
 
 def p_condicion_temperatura(p):
     '''condicion : OP_NEGACION SENSOR_TEMPERATURA identificador OP_COMPARADOR VALOR_TEMP contcondicion
@@ -448,34 +465,48 @@ def p_condicion_temperatura(p):
                  | SENSOR_TEMPERATURA identificador OP_COMPARADOR VALOR_TEMP
                  | SENSOR_TEMPERATURA OP_COMPARADOR VALOR_TEMP contcondicion
                  | SENSOR_TEMPERATURA OP_COMPARADOR VALOR_TEMP'''
-    
-    if p[1] != 'SENSOR_TEMPERATURA':
-        negacion = p[1]
-        actuador = p[2]
-        
-        if len(p) == 7:
-            p[0] = ('CONDICION_TEMP', negacion, actuador, p[3], p[4] + p[5], p[6])
-        elif len(p) == 6:
-            if p[3].startswith('_'):
-                p[0] = ('CONDICION_TEMP', negacion, actuador, p[3], p[4] + p[5], None)
-            else:
-                p[0] = ('CONDICION_TEMP', negacion, actuador, None, p[3] + p[4], p[5])
-        else:
-            p[0] = ('CONDICION_TEMP', negacion, actuador, None, p[3] + p[4], None)
+    global html
+    def val(obj):
+        return obj.value if hasattr(obj, 'value') else str(obj)
 
-    else:
-        negacion = None
-        actuador = p[1]
+    elementos = [val(p[i]) for i in range(1, len(p))]
+    
+    negacion = None
+    identificador = None
+    cont_cond = None
+    
+    # 1. Detectar si tiene negación al principio
+    if elementos[0] == 'NOT':
+        negacion = elementos.pop(0)
         
-        if len(p) == 6:
-            p[0] = ('CONDICION_TEMP', negacion, actuador, p[2], p[3] + p[4], p[5])
-        elif len(p) == 5:
-            if p[2].startswith('_'):
-                p[0] = ('CONDICION_TEMP', negacion, actuador, p[2], p[3] + p[4], None)
-            else:
-                p[0] = ('CONDICION_TEMP', negacion, actuador, None, p[2] + p[3], p[4])
-        else:
-            p[0] = ('CONDICION_TEMP', negacion, actuador, None, p[2] + p[3], None)
+    # Ahora el primer elemento restante SÍ O SÍ es el sensor
+    sensor = elementos.pop(0) # Remueve 'SENSOR_TEMP'
+    
+    # 2. Detectar si el siguiente elemento es un identificador (empieza con _)
+    if elementos[0].startswith('_'):
+        identificador = elementos.pop(0)
+        
+    # 3. Los siguientes dos elementos obligatorios son el COMPARADOR y el VALOR
+    comp = elementos.pop(0)
+    valor = elementos.pop(0)
+    comparacion_completa = comp + valor
+    
+    # 4. Si todavía queda algo en la lista, es el contcondicion
+    if len(elementos) > 0:
+        # p[len(p)-1] contiene la tupla devuelta por p_contcondicion, la dejamos intacta
+        cont_cond = p[len(p)-1]
+    
+    # Armamos el nodo del árbol de forma consistente
+    p[0] = ('CONDICION_TEMP', negacion, sensor, identificador, comparacion_completa, cont_cond)
+
+    sensor_completo = f"{sensor} ({identificador})" if identificador else sensor
+
+    html += f"""
+    <div style="border: 1px solid green; padding: 20px;">
+        <b>{sensor_completo}</b> {comparacion_completa}<br>
+    </div>
+    """
+
 
 
 def p_condicion_humedad(p):
@@ -945,10 +976,12 @@ def p_error(p):
         line_start = p.lexer.lexdata.rfind('\n', 0, p.lexpos) + 1
         columna = (p.lexpos - line_start) + 1
         print(f"Error de sintaxis: Se detectó un error en la Línea {p.lineno}, Columna {columna}.")
+        print("token incorrecto", p)
     else:
         print("Error de sintaxis: Fin de archivo inesperado.")
     
     raise SyntaxError("Error de análisis sintáctico.")
+
 
 
 parser = yacc.yacc(debug=False, write_tables=False) #Construir el parser
@@ -1103,10 +1136,10 @@ class InterfazAnalizador:
         
         cabecera_html()
 
-        try:
-            parser.parse(texto.upper(), lexer=lexer)
+        try: 
+           print(parser.parse(texto.upper(), lexer=lexer))
         except Exception:
-            pass
+            pass #para continuar por más que se detectó un error (y permitir ejecutar el html igual más abajo)
 
         final_html()
         
@@ -1116,7 +1149,11 @@ class InterfazAnalizador:
         
         if not os.path.exists(carpeta_destino):
             os.makedirs(carpeta_destino)
-            
+        
+        nombre_archivo= ""
+        if not nombre_archivo:
+            nombre_archivo = 'sin_nombre.txt'
+
         nombre_archivo = nombre_archivo.replace('.txt', '.html')
         ruta_archivo = os.path.join(carpeta_destino, nombre_archivo)
         
@@ -1134,18 +1171,15 @@ app = InterfazAnalizador(root)
 root.mainloop()
 
 #detalles:
-#1-cada vez que se aprieta el botón de "análisis sintáctico" se hace el parsing, y debido a eso, se construye nuevamente el html
-#cada vez que se apriete el boton, como solución para que se construya solo al apretar "abrir HTML" o "Exportar HTML",
-#al acceder a la función "análisis_sintáctico()" mediante el botón "análisis sintáctico" se reinicia la variable y se vuelve a poner
-#la cabecera, aunque estaría bueno que se coloque la cabecera desde sigma...
+#1-Al derivar el HTML con errores sintácticos, en el HTML solo se mostrarán todos los actuadores y/o sensores encontrados
+#antes del error.
 
-#2-Agregar imágenes a los actuadores dependiendo del actuador, atributo y valor, por ejemplo foco.estado = ON (imágen_foco_prendido)
-#al html, y también agregar el ícono del grupo.
+#2-importante, siempre que haya un error en el programa se mostrará el mensaje de que hay un error sintáctico (en la interfaz, en rojo)
+#independientemente de si es o no realmente un error de sintáxis, puede ser un error en el código. Posiblemente corregir
 
-#3-Agregar todo lo pedido en la consigna en cuanto al HTML (cosas para los sensores, etc), y agregar cantidad total de
-#sensores y actuadores en el HTML.
+#----------------------------------------#
 
-#preguntas:
+#preguntas y cosas para hacer:
 #1-a qué se refiere con estado de sensores? si solo se usan para condiciones.
 
 #2-es correcta nuestra manera de ir construyendo el HTML? se va construyendo a medida que se alcanzan las reglas, es decir
@@ -1160,3 +1194,11 @@ root.mainloop()
 #que los no booleanos, usan comp_bool, y comp_extendida.
 
 #4-para los sensores, es un cuadro donde se agrupan todos los sensores, o es un cuadrito por sensor? 
+
+#5-Agregar todo lo pedido en la consigna en cuanto al HTML (cosas para los sensores, etc), y agregar cantidad total de
+#sensores y actuadores en el HTML.
+
+#6-Quitar partes redundantes e innecesarias del código y ordenarlo
+
+#7-POR ALGUNA RAZÓN NO ANDA CUANDO SE COMPARA CON SENSOR_TEMP
+#después de mucho tiempo buscando se solucionó pero hay que simplificar la función de las condiciones del sensor.
