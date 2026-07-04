@@ -247,7 +247,6 @@ def formato_actuador_html(nombre_actuador, identif_actuador, atributo, valor_atr
     global html
 
     texto_real = valor_atributo.value if hasattr(valor_atributo, 'value') else str(valor_atributo)
-
     es_un_mail = (hasattr(valor_atributo, 'type') and valor_atributo.type == 'EMAIL') or ("@" in texto_real and "." in texto_real)
     representacion_valor = f'<a href="mailto:{texto_real}" style="color: #0056b3; text-decoration: underline; font-weight: bold;">{texto_real}</a>' if es_un_mail else texto_real
 
@@ -324,7 +323,6 @@ def formato_actuador_html(nombre_actuador, identif_actuador, atributo, valor_atr
     elif nombre_actuador == "CERRADURA": emoji = "🔒"
     elif nombre_actuador == "ALTAVOZ": emoji = "🔊"
     elif nombre_actuador == "ALARMA": emoji = "🚨"
-
 
     html_imagen = f'<img src="{imagen_actuador}" alt="{nombre_actuador}" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">' if imagen_actuador else ""
 
@@ -419,7 +417,6 @@ def p_asignaciones(p):
         
         formato_actuador_html(nombre_actuador, None, atributo, valor_atributo)
 
-
 #ATRIBUTOS CON ESTRUCTURA DE ESCRITURA PARA CADA ACTUADOR 
 def p_atributos_escritura_foco(p):
     '''atributos_esc_foco : ATRIBUTO_ESTADO ASIGNACION BOOL_ACTUADOR
@@ -458,7 +455,6 @@ def p_contcondicion(p):
     '''contcondicion : OP_LOGICO condicion'''
     p[0] = (p[1], p[2])
 
-
 def p_condicion_temperatura(p):
     '''condicion : OP_NEGACION SENSOR_TEMPERATURA identificador OP_COMPARADOR_GRAL VALOR_TEMP contcondicion
                  | OP_NEGACION SENSOR_TEMPERATURA identificador OP_COMPARADOR_BOOL VALOR_TEMP contcondicion
@@ -482,9 +478,7 @@ def p_condicion_temperatura(p):
 
     elementos = [val(p[i]) for i in range(1, len(p))]
     
-    negacion = None
-    identificador = None
-    cont_cond = None
+    negacion = None; identificador = None; cont_cond = None
     
     # 1. Detectar si tiene negación al principio
     if elementos[0] == 'NOT':
@@ -1338,13 +1332,11 @@ def p_error(p):
         line_start = p.lexer.lexdata.rfind('\n', 0, p.lexpos) + 1
         col = (p.lexpos - line_start) + 1
         fil = p.lineno
-        error_sintaxis = f"Error de sintaxis: Se detectó un error en la Línea {fil} columna {col}"
-        
-        
+        error_sintaxis = f"Error de sintaxis: Se detectó un error en la Línea {fil} columna {col}"    
     else:
         error_sintaxis = "Error de sintaxis: Fin de archivo inesperado"
-    print(error_sintaxis)
-    print("token incorrecto", p)
+    #print(error_sintaxis)
+    #print("token incorrecto", p)
     raise SyntaxError("Error de análisis sintáctico.")
 
 parser = yacc.yacc(debug=False, write_tables=False) #Construir el parser
