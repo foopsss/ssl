@@ -100,7 +100,8 @@ def t_PERCENT(t): r'(([0-9]|[1-9][0-9])|100)%'; return t
 def t_TIEMPO(t): r'([0-9]\s?H|[1-9][0-9]\s?H|[0-9]\s?M|[1-9][0-9]\s?M|[0-9]\s?S|[1-9][0-9]\s?S)'; return t
 def t_ILUMINANCIA(t): r'([0-9]|[1-9][0-9]|[1-9][0-9][0-9]|1000)LUX'; return t
 def t_HORA(t): r'(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]'; return t
-def t_DATE(t): r'([1-2][0-9]|3[0-1]|[0-9])\/(1[0-2]|[1-9])\/20[0-9][0-9]'; return t
+def t_DATE(t): r'(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/20[0-9][0-9]'; return t
+#def t_DATE(t): r'([1-2][0-9]|3[0-1]|[0-9])\/(1[0-2]|[1-9])\/20[0-9][0-9]'; return t
 def t_EMAIL(t): r'[A-Z0-9\.\+\-]+@[A-Z0-9\.\+\-]+\.[A-Z]{2,4}'; return t
 def t_DISCRETO(t): r'(FRIO|CALOR|VENT)'; return t
 def t_NOMBRE(t): r'(BLANCO|ROJO|AZUL|BLUE|RED|WHITE)'; return t
