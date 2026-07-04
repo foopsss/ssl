@@ -248,7 +248,7 @@ def formato_actuador_html(nombre_actuador, identif_actuador, atributo, valor_atr
 
     texto_real = valor_atributo.value if hasattr(valor_atributo, 'value') else str(valor_atributo)
 
-    es_un_mail = (hasattr(valor_atributo, 'type') and valor_atributo.type == 'EMAIL') or ("@" in texto_real and "." in texto_real)
+    es_un_mail = (hasattr(valor_atributo, 'type') and valor_atributo.type == 'EMAIL') or (atributo == "email")
     representacion_valor = f'<a href="mailto:{texto_real}" style="color: #0056b3; text-decoration: underline; font-weight: bold;">{texto_real}</a>' if es_un_mail else texto_real
 
     nombre_actuador = nombre_actuador.upper().strip()
