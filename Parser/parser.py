@@ -1503,37 +1503,3 @@ class InterfazAnalizador:
 root = tk.Tk()
 app = InterfazAnalizador(root)
 root.mainloop()
-
-#detalles:
-#1-Al derivar el HTML con errores sintácticos, al encontrar un error, se derivarárn todos bloques que estén
-#antes y después del bloque del error, es decir que si el error está en la condición de un bloque, el bloque entero no se deriva,
-#pero sí aquellos que estén antes, esto incluye para asignaciones, condiciones y bucles. 
-
-#2-importante, siempre que haya un error en el programa se mostrará el mensaje de que hay un error sintáctico (en la interfaz, en rojo)
-#independientemente de si es o no realmente un error de sintáxis, puede ser un error en el código. Posiblemente corregir
-
-#----------------------------------------#
-
-#preguntas y cosas para hacer:
-#1-a qué se refiere con estado de sensores? si solo se usan para condiciones.
-
-#2-es correcta nuestra manera de ir construyendo el HTML? se va construyendo a medida que se alcanzan las reglas, es decir
-#en cada regla, se va construyendo concatenándose cada parte del html.
-
-#3-op_comparador y op_comparador están juntos, preguntar al profe por alguna solución, dado que puede permitir
-#sensor_temp >= TRUE, pero es porque una regla está contenida dentro de otra, sin importar el orden en que estén definidas,
-#si se encuentran los ejemplos correctos que contrasten, por más que estén bien escritos sintácticamente, van a dar error.
-#En general, esto pasa para todas las reglas que comparten elementos y no se diferencian, es decir, reglas que están contenidas
-#en otras.
-#(solución): hacer dos reglas aparte comp_basica (==|!=), comp_extendida (>|>=|<|<=), los comp_bool solo usan comp_básica, mientras
-#que los no booleanos, usan comp_bool, y comp_extendida.
-
-#4-para los sensores, es un cuadro donde se agrupan todos los sensores, o es un cuadrito por sensor? 
-
-#5-Agregar todo lo pedido en la consigna en cuanto al HTML (cosas para los sensores, etc), y agregar cantidad total de
-#sensores y actuadores en el HTML.
-
-#6-Quitar partes redundantes e innecesarias del código y ordenarlo
-
-#7-POR ALGUNA RAZÓN NO ANDA CUANDO SE COMPARA CON SENSOR_TEMP
-#después de mucho tiempo buscando se solucionó pero hay que simplificar la función de las condiciones del sensor.
