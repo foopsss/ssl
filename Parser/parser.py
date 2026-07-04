@@ -129,14 +129,16 @@ def find_column(input_data, token):
     return (token.lexpos - line_start) + 1
 
 def t_error(t):
+    global error_lexer
     columna = find_column(t.lexer.lexdata, t)    
-    print(f"Carácter ilegal '{t.value[0]}' en la Línea {t.lexer.lineno}, Columna {columna}")
+    error_lexer = f"Carácter ilegal '{str(t.value[0])}' en la Línea {str(t.lexer.lineno)}, Columna {str(columna)}"
     return(t)
 
 lexer = lex.lex()
 
 html = ""  #variable global para ir concatenando etiquetas para el html
 nombre_archivo = "" #variable global para inicializar el nombre del archivo al generar HTML
+error_lexer = ""    #para mostrar errores en la interfaz de tkinter, tomados de t_error
 error_sintaxis = "" #para mostrar errores en la interfaz de tkinter, tomados de p_error
 col = ""; fil = ""
 
@@ -1437,7 +1439,7 @@ class InterfazAnalizador:
             messagebox.showerror("Error", f"No se pudo cargar el archivo:\n{str(e)}")
     
     def estado_analisis_sintactico(self):
-        global html,col,fil,error_sintaxis
+        global html,col,fil,error_sintaxis,error_lexer
         texto = self.editor.get(1.0, tk.END).strip()
         if not texto:
             messagebox.showwarning("Advertencia", "No hay código para analizar")
@@ -1462,8 +1464,12 @@ class InterfazAnalizador:
             self.tab_sintactico.tag_config("error2", foreground="#ff4444", font=("Arial", 12))
             self.tab_sintactico.tag_config("error3", foreground="#ff4444", font=("Arial", 10))
             self.tab_sintactico.insert(tk.END,  "        El HTML puede derivarse incompleto o contener errores.\n", "error2")
-            self.tab_sintactico.insert(tk.END,  "        ==============================================\n", "error2")
-            self.tab_sintactico.insert(tk.END, f"        Detalle: {error_sintaxis}.", "error3")
+            self.tab_sintactico.insert(tk.END,  "        ============================================\n", "error2")
+            self.tab_sintactico.insert(tk.END, "        Detalle:\n", "error3")
+            if error_sintaxis: 
+                self.tab_sintactico.insert(tk.END, f"        {error_sintaxis}.\n", "error3")
+            if error_lexer: 
+                self.tab_sintactico.insert(tk.END, f"        {error_lexer}.\n", "error3")
 
     def generar_html(self):
         global html, nombre_archivo
@@ -1497,7 +1503,7 @@ class InterfazAnalizador:
         if not nombre_archivo:
             nombre_archivo = 'sin_nombre.txt'
 
-        nombre_archivo = nombre_archivo.replace('.txt', '.html')
+        nombre_archivo = nombre_archivo.replace('.smart', '.html')
         ruta_archivo = os.path.join(carpeta_destino, nombre_archivo)
         
         with open(ruta_archivo, "w", encoding="utf-8") as archivo:
