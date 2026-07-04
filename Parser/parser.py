@@ -162,7 +162,9 @@ lexer = lex.lex()
 #====================================================================#
 
 html = ""  #variable global para ir concatenando etiquetas para el html
-nombre_archivo= "" #variable global para inicializar el nombre del archivo al generar HTML
+nombre_archivo = "" #variable global para inicializar el nombre del archivo al generar HTML
+error_sintaxis = "" #para mostrar errores en la interfaz de tkinter, tomados de p_error
+col = ""; fil = ""
 
 def cabecera_html():
     global html
@@ -1331,14 +1333,18 @@ def p_atributos_lectura_alarma(p):
 
 #Regla para manejar errores
 def p_error(p):
+    global col,fil,error_sintaxis
     if p:
         line_start = p.lexer.lexdata.rfind('\n', 0, p.lexpos) + 1
-        columna = (p.lexpos - line_start) + 1
-        print(f"Error de sintaxis: Se detectó un error en la Línea {p.lineno}, Columna {columna}.")
-        print("token incorrecto", p)
+        col = (p.lexpos - line_start) + 1
+        fil = p.lineno
+        error_sintaxis = f"Error de sintaxis: Se detectó un error en la Línea {fil} columna {col}"
+        
+        
     else:
-        print("Error de sintaxis: Fin de archivo inesperado.")
-    
+        error_sintaxis = "Error de sintaxis: Fin de archivo inesperado"
+    print(error_sintaxis)
+    print("token incorrecto", p)
     raise SyntaxError("Error de análisis sintáctico.")
 
 parser = yacc.yacc(debug=False, write_tables=False) #Construir el parser
@@ -1452,7 +1458,7 @@ class InterfazAnalizador:
             messagebox.showerror("Error", f"No se pudo cargar el archivo:\n{str(e)}")
     
     def estado_analisis_sintactico(self):
-        global html
+        global html,col,fil,error_sintaxis
         texto = self.editor.get(1.0, tk.END).strip()
         if not texto:
             messagebox.showwarning("Advertencia", "No hay código para analizar")
@@ -1475,7 +1481,10 @@ class InterfazAnalizador:
             self.tab_sintactico.tag_config("error1", foreground="#ff4444", font=("Arial", 15, "bold"))
             self.tab_sintactico.insert(tk.END, "❌ ERROR DE SINTAXIS\n", "error1")
             self.tab_sintactico.tag_config("error2", foreground="#ff4444", font=("Arial", 12))
-            self.tab_sintactico.insert(tk.END, "        El HTML puede derivarse incompleto o contener errores.", "error2")
+            self.tab_sintactico.tag_config("error3", foreground="#ff4444", font=("Arial", 10))
+            self.tab_sintactico.insert(tk.END,  "        El HTML puede derivarse incompleto o contener errores.\n", "error2")
+            self.tab_sintactico.insert(tk.END,  "        ==============================================\n", "error2")
+            self.tab_sintactico.insert(tk.END, f"        Detalle: {error_sintaxis}.", "error3")
 
     def generar_html(self):
         global html, nombre_archivo
