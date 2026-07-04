@@ -177,39 +177,39 @@ def final_html():
 
 img_act = {
     'AIRE': {
-        'ON': '../resources/aire_on.png',
-        'OFF': '../resources/aire_off.png',
-        'FRIO': '../resources/aire_on.png'
+        'ON': 'https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/aire_on.png',
+        'OFF': 'https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/aire_off.png',
+        'FRIO': 'https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/aire_on.png'
     },
     'ALARMA': {
-        'ON': '../resources/alarma_on.png',
-        'OFF': '../resources/alarma_off.png'
+        'ON': 'https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/alarma_on.png',
+        'OFF': 'https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/alarma_off.png'
     },
     'ALTAVOZ': {
-        'MAIL': '../resources/altavoz_mail.png',
-        'MENSAJE': '../resources/altavoz_mensaje.png',
-        'VOLUMEN_ON': '../resources/altavoz_volumen_on.png',
-        'VOLUMEN_OFF': '../resources/altavoz_volumen_off.png'
+        'MAIL': 'https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/altavoz_mail.png',
+        'MENSAJE': 'https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/altavoz_mensaje.png',
+        'VOLUMEN_ON': 'https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/altavoz_volumen_on.png',
+        'VOLUMEN_OFF': 'https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/altavoz_volumen_off.png'
     },
     'CERRADURA': { 
-        'ON': '../resources/cerradura_on.png',
-        'OFF': '../resources/cerradura_off.png'
+        'ON': 'https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/cerradura_on.png',
+        'OFF': 'https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/cerradura_off.png'
     },
     'FOCO': {
-        'ON': '../resources/foco_on.png',
-        'OFF': '../resources/foco_off.png',
-        'BLUE': '../resources/foco_azul.png',
-        'AZUL': '../resources/foco_azul.png',
-        'BLANCO': '../resources/foco_blanco.png',
-        'ROJO': '../resources/foco_rojo.png',
-        'RED': '../resources/foco_rojo.png'
+        'ON': 'https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/foco_on.png',
+        'OFF': 'https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/foco_off.png',
+        'BLUE': 'https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/foco_azul.png',
+        'AZUL': 'https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/foco_azul.png',
+        'BLANCO': 'https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/foco_blanco.png',
+        'ROJO': 'https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/foco_rojo.png',
+        'RED': 'https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/foco_rojo.png'
     },
     'PERSIANA': {
-        'UNICO': '../resources/persiana.png'
+        'UNICO': 'https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/persiana.png'
     },
     'RELOJ': {
-        'FECHA': '../resources/reloj_fecha.png',
-        'HORA': '../resources/reloj_hora.png'
+        'FECHA': 'https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/reloj_fecha.png',
+        'HORA': 'https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/reloj_hora.png'
     }
 }
 
