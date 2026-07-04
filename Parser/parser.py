@@ -199,7 +199,7 @@ def final_html():
     html += """
     <div style="background-color: #003d82; padding: 25px 0; text-align: center; margin-top: calc(100vh - 350px);">
         <p style="color: #ffffff; font-family: sans-serif; font-size: 14px; margin: 0; letter-spacing: 1px;">
-            Binarybuilders© 2026
+            BinaryBuilders© 2026
         </p>
     </div>
     """ 
