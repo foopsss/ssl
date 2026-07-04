@@ -56,6 +56,8 @@ IF sensor_humo == TRUE AND aire_acondicionado.estado == OFF THEN
     persiana_comedor.posicion =100%
     altavoz_comedor.mensaje = “PELIGRO. HUMO DETECTADO”
     altavoz_comedor.email = bomberos@smart-home.com.ar
+    altavoz_comedor.email_notif = bomberos@smart-home.com.ar
+    altavoz_comedor.mensaje = "bomberos@smart-home.com.ar"
     altavoz_sala.volumen = 50%
 END
 if sensor_humedad_ext == 25% then
