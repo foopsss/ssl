@@ -477,7 +477,7 @@ def p_condicion_temperatura(p):
         <div>
             <h2 style="display: inline; font-family: 'Franklin Gothic Medium'; font-size: 24px; margin: 0;"><b>Sensor de temperatura ⚙️</b>{identificador}: {valor} <span style="font-family: inherit; color: #888888; font-style: italic; font-weight: 300 !important; font-size: 14px; margin-left: 5px;">(lectura)</span></h2>
         </div>
-        <img src="../resources/sensor.png" alt="Sensor" style="width: 50px; height: 50px; margin-right: 10px;">
+        <img src="https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/sensor.png" alt="Sensor" style="width: 50px; height: 50px; margin-right: 10px;">
     </div>
     """
 
@@ -547,7 +547,7 @@ def p_condicion_humedad(p):
         <div>
             <h2 style="display: inline; font-family: 'Franklin Gothic Medium'; font-size: 24px; margin: 0;"><b>Sensor de humedad ⚙️</b>{identificador}: {valor} <span style="font-family: inherit; color: #888888; font-style: italic; font-weight: 300 !important; font-size: 14px; margin-left: 5px;">(lectura)</span></h2>
         </div>
-        <img src="../resources/sensor.png" alt="Sensor" style="width: 50px; height: 50px; margin-right: 10px;">
+        <img src="https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/sensor.png" alt="Sensor" style="width: 50px; height: 50px; margin-right: 10px;">
     </div>
     """
 
@@ -618,7 +618,7 @@ def p_condicion_luz(p):
         <div>
             <h2 style="display: inline; font-family: 'Franklin Gothic Medium'; font-size: 24px; margin: 0;"><b>Sensor de luz ⚙️</b>{identificador}: {valor} <span style="font-family: inherit; color: #888888; font-style: italic; font-weight: 300 !important; font-size: 14px; margin-left: 5px;">(lectura)</span></h2>
         </div>
-        <img src="../resources/sensor.png" alt="Sensor" style="width: 50px; height: 50px; margin-right: 10px;">
+        <img src="https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/sensor.png" alt="Sensor" style="width: 50px; height: 50px; margin-right: 10px;">
     </div>
     """
 
@@ -681,7 +681,7 @@ def p_condicion_movimiento(p):
         <div>
             <h2 style="display: inline; font-family: 'Franklin Gothic Medium'; font-size: 24px; margin: 0;"><b>Sensor de movimiento ⚙️</b>{identificador}: {valor} <span style="font-family: inherit; color: #888888; font-style: italic; font-weight: 300 !important; font-size: 14px; margin-left: 5px;">(lectura)</span></h2>
         </div>
-        <img src="../resources/sensor.png" alt="Sensor" style="width: 50px; height: 50px; margin-right: 10px;">
+        <img src="https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/sensor.png" alt="Sensor" style="width: 50px; height: 50px; margin-right: 10px;">
     </div>
     """
 
@@ -744,7 +744,7 @@ def p_condicion_humo(p):
         <div>
             <h2 style="display: inline; font-family: 'Franklin Gothic Medium'; font-size: 24px; margin: 0;"><b>Sensor de humo ⚙️</b>{identificador}: {valor} <span style="font-family: inherit; color: #888888; font-style: italic; font-weight: 300 !important; font-size: 14px; margin-left: 5px;">(lectura)</span></h2>
         </div>
-        <img src="../resources/sensor.png" alt="Sensor" style="width: 50px; height: 50px; margin-right: 10px;">
+        <img src="https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/sensor.png" alt="Sensor" style="width: 50px; height: 50px; margin-right: 10px;">
     </div>
     """
 
@@ -806,7 +806,7 @@ def p_condicion_foco(p):
                 <li>{valor}</li>
             </ul>
         </div>
-        <img src="../resources/foco_on.png" alt="Foco" style="width: 50px; height: 50px; margin-right: 10px;">
+        <img src="https://github.com/foopsss/ssl/blob/main/resources/foco_on.png" alt="Foco" style="width: 50px; height: 50px; margin-right: 10px;">
     </div>
     """
 
@@ -876,7 +876,7 @@ def p_condicion_actuador_aire(p):
                 <li>{valor}</li>
             </ul>
         </div>
-        <img src="../resources/aire_on.png" alt="Aire" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">
+        <img src="https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/aire_on.png" alt="Aire" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">
     </div>
     """
 
@@ -947,7 +947,7 @@ def p_condicion_actuador_persiana(p):
                 <li>{valor}</li>
             </ul>
         </div>
-        <img src="../resources/persiana.png" alt="Persiana" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">
+        <img src="https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/persiana.png" alt="Persiana" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">
     </div>
     """
 
@@ -1019,7 +1019,7 @@ def p_condicion_actuador_cerradura(p):
                 <li>{valor}</li>
             </ul>
         </div>
-        <img src="../resources/cerradura_on.png" alt="Cerradura" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">
+        <img src="https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/cerradura_on.png" alt="Cerradura" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">
     </div>
     """
 
@@ -1091,7 +1091,7 @@ def p_condicion_actuador_reloj(p):
                 <li>{valor}</li>
             </ul>
         </div>
-        <img src="../resources/reloj_hora.png" alt="Reloj" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">
+        <img src="https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/reloj_hora.png" alt="Reloj" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">
     </div>
     """
 
@@ -1162,7 +1162,7 @@ def p_condicion_actuador_altavoz(p):
                 <li>{valor}</li>
             </ul>
         </div>
-        <img src="../resources/altavoz_volumen_on.png" alt="Altavoz" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">
+        <img src="https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/altavoz_volumen_on.png" alt="Altavoz" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">
     </div>
     """
 
@@ -1233,7 +1233,7 @@ def p_condicion_actuador_alarma(p):
                 <li>{valor}</li>
             </ul>
         </div>
-        <img src="../resources/alarma_on.png" alt="Alarma" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">
+        <img src="https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/alarma_on.png" alt="Alarma" style="height: 65px; width: auto; object-fit: contain; margin-left: 20px;">
     </div>
     """
 
