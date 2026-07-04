@@ -152,26 +152,23 @@ def cabecera_html():
     html += "</head>\n"
     html += "<body style='margin: 0; font-family: sans-serif; background-color: #f4f6f9;'>\n"
     html += f"""
-    <div style="background-color: #1a202c; padding: 20px; margin-bottom: 30px; box-shadow:10px rgba(0,0,0,0.15); display: flex; flex-direction:row; justify-content: space-between; align-items: center;">
-        <div>
-            <h1 style="color: white; font-family: 'Franklin Gothic Medium', sans-serif; font-size: 40px;">SMART-HOME - SENSORES Y ACTUADORES</h1>
-            <h3 style="color: grey; font-family: 'Century Gothic', sans-serif; font-size: 16px;">Estado de todos los sensores y actuadores del hogar</h3>
-        </div>
-        <div style="display: flex; flex-direction: column; justify-content: space-between; align-items: center;">
-            <span style="color: grey; font-family: 'Segoe UI', sans-serif; font-size: 16px; font-style: italic; padding: 10px;">REALIZADO POR</span>
-            <img src="https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/Binary%20Builders.png" alt="BinaryBuilders Logo" style="height: 80px; width: auto;">
-        </div>
-
-    </div>
-    """
+            <div style="background-color: #1a202c; padding: 20px; margin-bottom: 30px; box-shadow:10px rgba(0,0,0,0.15); display: flex; flex-direction:row; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1 style="color: white; font-family: 'Franklin Gothic Medium', sans-serif; font-size: 40px;">SMART-HOME - SENSORES Y ACTUADORES</h1>
+                    <h3 style="color: grey; font-family: 'Century Gothic', sans-serif; font-size: 16px;">Estado de todos los sensores y actuadores del hogar</h3>
+                </div>
+                <div style="display: flex; flex-direction: column; justify-content: space-between; align-items: left;">
+                    <span style="color: grey; font-family: 'Segoe UI', sans-serif; font-size: 16px; font-style: italic; padding: 10px;">Rrealizado por</span>
+                    <img src="https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/Binary%20Builders.png" alt="BinaryBuilders Logo" style="height: 80px; width: auto;">
+                </div>
+            </div>"""
 
 def final_html():
     global html
     html += """
     <div style="background-color: #003d82; padding: 25px; text-align: center;">
         <p style="color: #ffffff; font-family: sans-serif; font-size: 14px;">BinaryBuilders© 2026</p>
-    </div>
-    """
+    </div>"""
     html += "\n</body>\n</html>"
 
 img_act = {
@@ -306,8 +303,7 @@ def formato_actuador_html(nombre_actuador, identif_actuador, atributo, valor_atr
             </ul>
         </div>
         {html_imagen}
-    </div>
-    """
+    </div>"""
 
 #REGLAS DEL ANÁLISIS SINTÁCTICO
 def p_programa(p):
@@ -1482,7 +1478,6 @@ class InterfazAnalizador:
         
         if not nombre_archivo:
             nombre_archivo = 'sin_nombre.txt'
-
 
         if ".txt" in nombre_archivo:
             nombre_archivo = nombre_archivo.replace('.txt', '.html')
