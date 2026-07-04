@@ -1406,10 +1406,22 @@ class InterfazAnalizador:
         scroll_sin.pack(side=tk.RIGHT, fill=tk.Y)
         self.tab_sintactico.configure(yscrollcommand=scroll_sin.set)
         
+#    def buscar_archivo(self):
+#        ruta = filedialog.askopenfilename(title="Seleccionar archivo de programa", filetypes=[("Archivos de texto", "*.txt", "*.smart"), ("Todos los archivos", "*.*")])
+#        if ruta:
+#            self.cargar_archivo(ruta)
+
     def buscar_archivo(self):
-        ruta = filedialog.askopenfilename(title="Seleccionar archivo de programa", filetypes=[("Archivos de texto", "*.txt"), ("Todos los archivos", "*.*")])
+        ruta = filedialog.askopenfilename(
+            title="Seleccionar archivo de programa", 
+            filetypes=[
+                ("Archivos de programa (*.txt, *.smart)", "*.txt *.smart"), 
+                ("Todos los archivos", "*.*")
+            ]
+        )
         if ruta:
             self.cargar_archivo(ruta)
+
     
     def cargar_archivo(self, ruta):
         global nombre_archivo
