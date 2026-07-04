@@ -146,28 +146,21 @@ col = ""; fil = ""
 def cabecera_html():
     global html
     html = "<!DOCTYPE html>\n<html lang='es'>\n<head>\n"
-    html += "  <meta charset='UTF-8'>\n"
-    html += "  <title>Smart-Home - Estado de Actuadores y Sensores - Binarybuilders</title>\n"
+    html += "   <meta charset='UTF-8'>\n"
+    html += "   <title>Smart-Home - Estado de Actuadores y Sensores - Binarybuilders</title>\n"
+    html += "   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css'/>"
     html += "</head>\n"
     html += "<body style='margin: 0; font-family: sans-serif; background-color: #f4f6f9;'>\n"
     html += f"""
-    <div style="background-color: #1a202c; padding: 25px 40px; margin-bottom: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); display: flex; justify-content: space-between; align-items: center;">
+    <div style="background-color: #1a202c; padding: 20px; margin-bottom: 30px; box-shadow:10px rgba(0,0,0,0.15); display: flex; flex-direction:row; justify-content: space-between; align-items: center;">
         <div>
-            <h1 style="color: #ffffff; font-family: 'Franklin Gothic Medium', sans-serif; font-size: 38px; text-transform: uppercase; letter-spacing: 2px; margin: 0; padding-bottom: 5px;">
-                SMART-HOME - Sensores y Actuadores
-            </h1>
-            <h3 style="color: #e0e0e0; font-family: 'Century Gothic', 'Segoe UI', sans-serif; font-size: 16px; font-weight: 300; letter-spacing: 1px; margin: 5px 0 0 0;">
-                Estado de todos los sensores y actuadores del hogar:
-            </h3>
+            <h1 style="color: white; font-family: 'Franklin Gothic Medium', sans-serif; font-size: 40px;">SMART-HOME - SENSORES Y ACTUADORES</h1>
+            <h3 style="color: grey; font-family: 'Century Gothic', sans-serif; font-size: 16px;">Estado de todos los sensores y actuadores del hogar</h3>
         </div>
-        
-        <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 5px;">
-            <span style="color: #a0aec0; font-family: 'Segoe UI', sans-serif; font-size: 12px; font-weight: 300; font-style: italic; letter-spacing: 0.5px;">
-                Realizado por:
-            </span>
-            <img src="../resources/BinaryBuilders.png" alt="BinaryBuilders Logo" style="height: 70px; width: auto; border-radius: 5px;">
+        <div style="display: flex; flex-direction: column; justify-content: space-between; align-items: left;">
+            <span style="color: grey; font-family: 'Segoe UI', sans-serif; font-size: 16px; font-style: italic;">Realizado por:</span>
+            <img src="https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/Binary%20Builders.png" alt="BinaryBuilders Logo" style="height: 80px; width: auto;">
         </div>
-        
     </div>
     """
 
@@ -225,7 +218,7 @@ def formato_actuador_html(nombre_actuador, identif_actuador, atributo, valor_atr
 
     texto_real = valor_atributo.value if hasattr(valor_atributo, 'value') else str(valor_atributo)
 
-    es_un_mail = (hasattr(valor_atributo, 'type') and valor_atributo.type == 'EMAIL') or (atributo == "email")
+    es_un_mail = (hasattr(valor_atributo, 'type') and valor_atributo.type == 'EMAIL') or (atributo == "EMAIL") or (atributo == "EMAIL_NOTIF")
     representacion_valor = f'<a href="mailto:{texto_real}" style="color: #0056b3; text-decoration: underline; font-weight: bold;">{texto_real}</a>' if es_un_mail else texto_real
 
     nombre_actuador = nombre_actuador.upper().strip()
@@ -458,28 +451,21 @@ def p_condicion_temperatura(p):
     
     negacion = None; identificador = None; cont_cond = None
     
-    # 1. Detectar si tiene negación al principio
     if elementos[0] == 'NOT':
         negacion = elementos.pop(0)
         
-    # Ahora el primer elemento restante SÍ O SÍ es el sensor
     sensor = elementos.pop(0) # Remueve 'SENSOR_TEMP'
     
-    # 2. Detectar si el siguiente elemento es un identificador (empieza con _)
     if elementos[0].startswith('_'):
         identificador = elementos.pop(0)
         
-    # 3. Los siguientes dos elementos obligatorios son el COMPARADOR y el VALOR
     comp = elementos.pop(0)
     valor = elementos.pop(0)
     comparacion_completa = comp + valor
     
-    # 4. Si todavía queda algo en la lista, es el contcondicion
     if len(elementos) > 0:
-        # p[len(p)-1] contiene la tupla devuelta por p_contcondicion, la dejamos intacta
         cont_cond = p[len(p)-1]
     
-    # Armamos el nodo del árbol de forma consistente
     p[0] = ('CONDICION_TEMP', negacion, sensor, identificador, comparacion_completa, cont_cond)
 
     if identificador:
@@ -1409,11 +1395,6 @@ class InterfazAnalizador:
         scroll_sin.pack(side=tk.RIGHT, fill=tk.Y)
         self.tab_sintactico.configure(yscrollcommand=scroll_sin.set)
         
-#    def buscar_archivo(self):
-#        ruta = filedialog.askopenfilename(title="Seleccionar archivo de programa", filetypes=[("Archivos de texto", "*.txt", "*.smart"), ("Todos los archivos", "*.*")])
-#        if ruta:
-#            self.cargar_archivo(ruta)
-
     def buscar_archivo(self):
         ruta = filedialog.askopenfilename(
             title="Seleccionar archivo de programa", 
@@ -1425,7 +1406,6 @@ class InterfazAnalizador:
         if ruta:
             self.cargar_archivo(ruta)
 
-    
     def cargar_archivo(self, ruta):
         global nombre_archivo
         try:
@@ -1504,7 +1484,11 @@ class InterfazAnalizador:
         if not nombre_archivo:
             nombre_archivo = 'sin_nombre.txt'
 
-        nombre_archivo = nombre_archivo.replace('.smart', '.html')
+
+        if ".txt" in nombre_archivo:
+            nombre_archivo = nombre_archivo.replace('.txt', '.html')
+        elif ".smart" in nombre_archivo:
+            nombre_archivo = nombre_archivo.replace('.smart', '.html')
         ruta_archivo = os.path.join(carpeta_destino, nombre_archivo)
         
         with open(ruta_archivo, "w", encoding="utf-8") as archivo:
