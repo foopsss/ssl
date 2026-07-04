@@ -148,7 +148,6 @@ def cabecera_html():
     html = "<!DOCTYPE html>\n<html lang='es'>\n<head>\n"
     html += "   <meta charset='UTF-8'>\n"
     html += "   <title>Smart-Home - Estado de Actuadores y Sensores - Binarybuilders</title>\n"
-    html += "   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css'/>"
     html += "</head>\n"
     html += "<body style='margin: 0; font-family: sans-serif; background-color: #f4f6f9;'>\n"
     html += f"""
