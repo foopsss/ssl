@@ -148,6 +148,7 @@ def cabecera_html():
     html = "<!DOCTYPE html>\n<html lang='es'>\n<head>\n"
     html += "   <meta charset='UTF-8'>\n"
     html += "   <title>Smart-Home - Estado de Actuadores y Sensores - Binarybuilders</title>\n"
+    html += "   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css'/>"
     html += "</head>\n"
     html += "<body style='margin: 0; font-family: sans-serif; background-color: #f4f6f9;'>\n"
     html += f"""
@@ -156,22 +157,21 @@ def cabecera_html():
             <h1 style="color: white; font-family: 'Franklin Gothic Medium', sans-serif; font-size: 40px;">SMART-HOME - SENSORES Y ACTUADORES</h1>
             <h3 style="color: grey; font-family: 'Century Gothic', sans-serif; font-size: 16px;">Estado de todos los sensores y actuadores del hogar</h3>
         </div>
-        <div style="display: flex; flex-direction: column; justify-content: space-between; align-items: left;">
-            <span style="color: grey; font-family: 'Segoe UI', sans-serif; font-size: 16px; font-style: italic;">Realizado por:</span>
+        <div style="display: flex; flex-direction: column; justify-content: space-between; align-items: center;">
+            <span style="color: grey; font-family: 'Segoe UI', sans-serif; font-size: 16px; font-style: italic; padding: 10px;">REALIZADO POR</span>
             <img src="https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/Binary%20Builders.png" alt="BinaryBuilders Logo" style="height: 80px; width: auto;">
         </div>
+
     </div>
     """
 
 def final_html():
     global html
     html += """
-    <div style="background-color: #003d82; padding: 25px 0; text-align: center; margin-top: calc(100vh - 350px);">
-        <p style="color: #ffffff; font-family: sans-serif; font-size: 14px; margin: 0; letter-spacing: 1px;">
-            BinaryBuilders© 2026
-        </p>
+    <div style="background-color: #003d82; padding: 25px; text-align: center;">
+        <p style="color: #ffffff; font-family: sans-serif; font-size: 14px;">BinaryBuilders© 2026</p>
     </div>
-    """ 
+    """
     html += "\n</body>\n</html>"
 
 img_act = {
