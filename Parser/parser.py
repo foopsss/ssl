@@ -135,32 +135,6 @@ def t_error(t):
 
 lexer = lex.lex()
 
-#datos = '''
-#if sensor_temp >= 25°C then
-#    foco.brillo = 25%
-#end
-#
-#'''
-#
-#datosOriginal = datos          #Para mostrar palabra original en pantalla
-#datosUpper = datos.upper()     #Cadena total transformada en mayúsculas
-#
-#lexer.input(datosUpper)
-#
-#while True:
-#    tok = lexer.token()
-#    if not tok: 
-#        break
-#    inicio = tok.lexpos
-#    fin = inicio + len(tok.value)
-#
-#    print(f"Token encontrado: {datosOriginal[inicio:fin]:<15} de tipo: {tok.type}")
-
-#====================================================================#
-#============================== PARSER ==============================#
-#=========== (Análisis Sintáctico y construcción del HTML) ==========#
-#====================================================================#
-
 html = ""  #variable global para ir concatenando etiquetas para el html
 nombre_archivo = "" #variable global para inicializar el nombre del archivo al generar HTML
 error_sintaxis = "" #para mostrar errores en la interfaz de tkinter, tomados de p_error
