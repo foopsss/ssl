@@ -1493,11 +1493,9 @@ class InterfazAnalizador:
             os.makedirs(carpeta_destino)
         
         if not nombre_archivo:
-            nombre_archivo = 'sin_nombre.txt'
+            nombre_archivo = 'sin_nombre.smart'
 
-        if ".txt" in nombre_archivo:
-            nombre_archivo = nombre_archivo.replace('.txt', '.html')
-        elif ".smart" in nombre_archivo:
+        if ".smart" in nombre_archivo:
             nombre_archivo = nombre_archivo.replace('.smart', '.html')
         ruta_archivo = os.path.join(carpeta_destino, nombre_archivo)
         
