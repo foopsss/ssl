@@ -1477,7 +1477,7 @@ class InterfazAnalizador:
             self.tab_sintactico.tag_config("error2", foreground="#ff4444", font=("Arial", 12))
             self.tab_sintactico.tag_config("error3", foreground="#ff4444", font=("Arial", 10))
             self.tab_sintactico.insert(tk.END,  "        El HTML pudo derivarse incompleto o contener errores.\n", "error2")
-            self.tab_sintactico.insert(tk.END,  "        ============================================\n", "error2")
+            self.tab_sintactico.insert(tk.END,  "        ===========================================\n", "error2")
             self.tab_sintactico.insert(tk.END, "        Detalle:\n", "error3")
             if error_sintaxis: 
                 self.tab_sintactico.insert(tk.END, f"        {error_sintaxis}.\n", "error3")
