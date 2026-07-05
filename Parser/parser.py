@@ -145,6 +145,7 @@ col = ""; fil = ""
 
 def cabecera_html():
     global html
+    html = "" #reinicia el html y prepara la cabecera cada vez que es llamada la función  
     html = "<!DOCTYPE html>\n<html lang='es'>\n<head>\n"
     html += "   <meta charset='UTF-8'>\n"
     html += "   <title>Smart-Home - Estado de Actuadores y Sensores - Binarybuilders</title>\n"
@@ -157,7 +158,7 @@ def cabecera_html():
                     <h3 style="color: grey; font-family: 'Century Gothic', sans-serif; font-size: 16px;">Estado de todos los sensores y actuadores del hogar</h3>
                 </div>
                 <div style="display: flex; flex-direction: column; justify-content: space-between; align-items: left;">
-                    <span style="color: grey; font-family: 'Segoe UI', sans-serif; font-size: 16px; font-style: italic; padding: 10px;">Rrealizado por</span>
+                    <span style="color: grey; font-family: 'Segoe UI', sans-serif; font-size: 16px; font-style: italic; padding: 10px;">Realizado por</span>
                     <img src="https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/Binary%20Builders.png" alt="BinaryBuilders Logo" style="height: 80px; width: auto;">
                 </div>
             </div>"""
