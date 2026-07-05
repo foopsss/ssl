@@ -148,7 +148,6 @@ def cabecera_html():
     html = "<!DOCTYPE html>\n<html lang='es'>\n<head>\n"
     html += "   <meta charset='UTF-8'>\n"
     html += "   <title>Smart-Home - Estado de Actuadores y Sensores - Binarybuilders</title>\n"
-    html += "   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css'/>"
     html += "</head>\n"
     html += "<body style='margin: 0; font-family: sans-serif; background-color: #f4f6f9;'>\n"
     html += f"""
@@ -215,7 +214,8 @@ def formato_actuador_html(nombre_actuador, identif_actuador, atributo, valor_atr
     texto_real = valor_atributo.value if hasattr(valor_atributo, 'value') else str(valor_atributo)
 
     es_un_mail = (hasattr(valor_atributo, 'type') and valor_atributo.type == 'EMAIL') or (atributo == "EMAIL") or (atributo == "EMAIL_NOTIF")
-    representacion_valor = f'<a href="mailto:{texto_real}" style="color: #0056b3; text-decoration: underline; font-weight: bold;">{texto_real}</a>' if es_un_mail else texto_real
+    usuario = texto_real.split('@')[0]
+    representacion_valor = f'<a href="mailto:{texto_real}" style="color: #0056b3; text-decoration: underline; font-weight: bold;">Contactar a: {usuario}</a>' if es_un_mail else texto_real
 
     nombre_actuador = nombre_actuador.upper().strip()
     atributo = atributo.upper().strip()
@@ -1367,7 +1367,7 @@ class InterfazAnalizador:
         
         ttk.Label(frame_botones, text="Acciones", font=("Arial", 12, "bold")).pack(pady=(0, 10))
         
-        self.btn_sintactico = ttk.Button(frame_botones, text="📝 Análisis Sintáctico", command=self.estado_analisis_sintactico, width=25)
+        self.btn_sintactico = ttk.Button(frame_botones, text="📝 Verificar sintaxis", command=self.estado_analisis_sintactico, width=25)
         self.btn_sintactico.pack(pady=7, ipady=7)
         
         self.btn_html = ttk.Button(frame_botones, text="💾 Guardar y abrir HTML", command=self.generar_html, width=25)
@@ -1461,16 +1461,30 @@ class InterfazAnalizador:
         self.root.update()
         
         cabecera_html()
-
         try: 
-           parser.parse(texto.upper(), lexer=lexer)
+            parser.parse(texto.upper(), lexer=lexer)
+        
+            self.tab_sintactico.tag_config("exito1", foreground="#00ff00", font=("Arial", 15, "bold"))
+            self.tab_sintactico.insert(tk.END, "✅ ANÁLISIS SINTÁCTICO EXITOSO\n", "exito1")
+            self.tab_sintactico.tag_config("exito2", foreground="#008800", font=("Arial", 12))
+            self.tab_sintactico.insert(tk.END, "        HTML generado exitosamente.", "exito2")
+        
         except Exception:
             pass #para continuar por más que se detectó un error (y permitir ejecutar el html igual más abajo)
+            self.tab_sintactico.tag_config("error1", foreground="#ff4444", font=("Arial", 15, "bold"))
+            self.tab_sintactico.insert(tk.END, "❌ ERROR DE SINTAXIS\n", "error1")
+            self.tab_sintactico.tag_config("error2", foreground="#ff4444", font=("Arial", 12))
+            self.tab_sintactico.tag_config("error3", foreground="#ff4444", font=("Arial", 10))
+            self.tab_sintactico.insert(tk.END,  "        El HTML pudo derivarse incompleto o contener errores.\n", "error2")
+            self.tab_sintactico.insert(tk.END,  "        ============================================\n", "error2")
+            self.tab_sintactico.insert(tk.END, "        Detalle:\n", "error3")
+            if error_sintaxis: 
+                self.tab_sintactico.insert(tk.END, f"        {error_sintaxis}.\n", "error3")
+            if error_lexer: 
+                self.tab_sintactico.insert(tk.END, f"        {error_lexer}.\n", "error3")
 
         final_html()
-        
         ruta_script_actual = os.path.dirname(os.path.abspath(__file__))
-        
         carpeta_destino = os.path.abspath(os.path.join(ruta_script_actual, "..", "HTMLs"))
         
         if not os.path.exists(carpeta_destino):
