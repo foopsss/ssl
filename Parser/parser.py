@@ -802,7 +802,7 @@ def p_condicion_foco(p):
                 <li>{valor}</li>
             </ul>
         </div>
-        <img src="https://github.com/foopsss/ssl/blob/main/resources/foco_on.png" alt="Foco" style="width: 50px; height: 50px; margin-right: 10px;">
+        <img src="https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/foco_on.png" alt="Foco" style="width: 50px; height: 50px; margin-right: 10px;">
     </div>
     """
 
