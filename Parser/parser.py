@@ -159,7 +159,7 @@ def cabecera_html():
                 </div>
                 <div style="display: flex; flex-direction: column; justify-content: space-between; align-items: left;">
                     <span style="color: grey; font-family: 'Segoe UI', sans-serif; font-size: 16px; font-style: italic; padding: 10px;">Realizado por</span>
-                    <img src="https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/Binary%20Builders.png" alt="BinaryBuilders Logo" style="height: 80px; width: auto;">
+                    <img src="https://raw.githubusercontent.com/foopsss/ssl/refs/heads/main/resources/BinaryBuilders.png" alt="BinaryBuilders Logo" style="height: 80px; width: auto;">
                 </div>
             </div>"""
 
